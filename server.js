@@ -3,10 +3,19 @@ const path = require('path');
 const app = express();
 const db = require('./db');
 
+// 환경변수 출력 (디버깅용)
+console.log('PORT environment variable:', process.env.PORT);
+
+// 정적 파일 제공 (HTML, JS, CSS 등)
+app.use(express.static(path.join(__dirname)));
+
+// JSON 파싱
 app.use(express.json());
 
 // 검색 라우트
 app.get('/search', (req, res) => {
+  console.log('🔍 Search request received:', req.query); // 요청 확인
+
   const { car_number, car_type, car_color, owner_name, phone_number } = req.query;
   let sql = `SELECT * FROM car_info WHERE 1=1`;
   const params = [];
@@ -34,8 +43,8 @@ app.get('/search', (req, res) => {
 
   db.query(sql, params, (err, results) => {
     if (err) {
-      console.error(err);
-      return res.status(500).send('Database query error');
+      console.error('❌ DB query error:', err);
+      return res.status(500).json({ error: err.message });
     }
     res.json(results);
   });
@@ -43,29 +52,31 @@ app.get('/search', (req, res) => {
 
 // 등록 라우트
 app.post('/add', (req, res) => {
+  console.log('➕ Add request received:', req.body); // 요청 확인
+
   const { car_number, car_type, car_color, owner_name, phone_number } = req.body;
 
-  const sql = `INSERT INTO car_info (car_number, car_type, car_color, owner_name, phone_number)
-               VALUES (?, ?, ?, ?, ?)`;
+  const sql = `
+    INSERT INTO car_info (car_number, car_type, car_color, owner_name, phone_number)
+    VALUES (?, ?, ?, ?, ?)
+  `;
 
   db.query(sql, [car_number, car_type, car_color, owner_name, phone_number], (err, result) => {
     if (err) {
-      console.error(err);
-      return res.status(500).send('Database insert error');
+      console.error('❌ DB insert error:', err);
+      return res.status(500).json({ error: err.message });
     }
     res.json({ message: 'Car info added successfully!' });
   });
 });
 
-const PORT = process.env.PORT || 3000;
-
-app.use(express.static(path.join(__dirname)));
-
+// 기본 루트 (index.html 반환)
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+// 서버 시작
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚗 Server running on port ${PORT}`);
 });
-console.log('PORT environment variable:', process.env.PORT);
