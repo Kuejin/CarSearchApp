@@ -1,12 +1,12 @@
+// server.js
 const express = require('express');
 const path = require('path');
-const app = express();
 const db = require('./db');
+require('dotenv').config();
 
-// 환경변수 출력 (디버깅용)
-console.log('PORT environment variable:', process.env.PORT);
+const app = express();
 
-// 정적 파일 제공 (HTML, JS, CSS 등)
+// 정적 파일 제공
 app.use(express.static(path.join(__dirname)));
 
 // JSON 파싱
@@ -14,8 +14,6 @@ app.use(express.json());
 
 // 검색 라우트
 app.get('/search', (req, res) => {
-  console.log('🔍 Search request received:', req.query); // 요청 확인
-
   const { car_number, car_type, car_color, owner_name, phone_number } = req.query;
   let sql = `SELECT * FROM car_info WHERE 1=1`;
   const params = [];
@@ -42,18 +40,13 @@ app.get('/search', (req, res) => {
   }
 
   db.query(sql, params, (err, results) => {
-    if (err) {
-      console.error('❌ DB query error:', err);
-      return res.status(500).json({ error: err.message });
-    }
+    if (err) return res.status(500).json({ error: err.message });
     res.json(results);
   });
 });
 
 // 등록 라우트
 app.post('/add', (req, res) => {
-  console.log('➕ Add request received:', req.body); // 요청 확인
-
   const { car_number, car_type, car_color, owner_name, phone_number } = req.body;
 
   const sql = `
@@ -62,15 +55,12 @@ app.post('/add', (req, res) => {
   `;
 
   db.query(sql, [car_number, car_type, car_color, owner_name, phone_number], (err, result) => {
-    if (err) {
-      console.error('❌ DB insert error:', err);
-      return res.status(500).json({ error: err.message });
-    }
-    res.json({ message: 'Car info added successfully!' });
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ message: '등록 성공!' });
   });
 });
 
-// 기본 루트 (index.html 반환)
+// index.html 반환
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
@@ -78,5 +68,5 @@ app.get('/', (req, res) => {
 // 서버 시작
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`🚗 Server running on port ${PORT}`);
+  console.log(`🚗 서버가 포트 ${PORT}에서 실행 중!`);
 });
