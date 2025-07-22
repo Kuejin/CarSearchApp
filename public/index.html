@@ -8,7 +8,7 @@
     body {
       margin: 0;
       font-family: sans-serif;
-      background-color: #1b8870;
+      background-color: #0d223a;
       color: white;
       display: flex;
       flex-direction: column;
@@ -38,8 +38,8 @@
     }
 
     .tab-button.active {
-      border-bottom: 2px solid white;
-      background-color: #16364d;
+      border-bottom: 1px solid rgb(1, 90, 75);
+      background-color: #0d223a;
       font-weight: bold;
     }
 
@@ -50,21 +50,10 @@
       background-color: #0d223a;
       padding: 20px;
       border-radius: 10px;
-      margin-bottom: 40px;
     }
 
     .section.active {
       display: block;
-    }
-
-    h1 {
-      font-size: 28px;
-      margin-top: 0;
-      margin-bottom: 20px;
-      color: white;
-      text-align: center;
-      border-bottom: 2px solid white;
-      padding-bottom: 10px;
     }
 
     input {
@@ -155,7 +144,6 @@
 
   <!-- 차량 검색 -->
   <div id="search" class="section active">
-    <h1>차량 검색</h1>
     <form id="search-form" onsubmit="event.preventDefault(); searchCar();">
       <input placeholder="차 번호" id="car_number">
       <div class="input-group">
@@ -172,7 +160,6 @@
 
   <!-- 차량 추가 -->
   <div id="add" class="section">
-    <h1>차량 추가</h1>
     <form id="add-form" onsubmit="event.preventDefault(); addCar();">
       <input placeholder="차 번호" id="add_car_number">
       <div class="input-group">
