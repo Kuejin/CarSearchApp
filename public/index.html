@@ -8,7 +8,7 @@
     body {
       margin: 0;
       font-family: sans-serif;
-      background-color: #0d223a;
+      background-color: white;
       color: white;
       display: flex;
       flex-direction: column;
@@ -29,17 +29,17 @@
       padding: 10px 0;
       font-size: 16px;
       border: none;
-      background-color: #2e5b7f;
+      background-color: white;
       color: white;
       border-radius: 0;
       cursor: pointer;
-      border-bottom: 2px solid transparent;
+      border-bottom: 1.5px solid transparent;
       transition: border-color 0.5s;
     }
 
     .tab-button.active {
-      border-bottom: 1px solid rgb(1, 90, 75);
-      background-color: #0d223a;
+      border-bottom: 2px solid rgb(1, 90, 75);
+      background-color: white;
       font-weight: bold;
     }
 
@@ -47,7 +47,7 @@
       display: none;
       width: 100%;
       max-width: 550px;
-      background-color: #0d223a;
+      background-color: white;
       padding: 20px;
       border-radius: 10px;
     }
@@ -58,6 +58,7 @@
 
     input {
       display: block;
+      width: 500px;
       margin: 10px auto;
       padding: 10px;
       font-size: 16px;
@@ -65,7 +66,7 @@
       border-radius: 9999px;
       box-sizing: border-box;
       outline: none;
-      width: 500px;
+      box-shadow: 0 0 10px 2px skyblue;
     }
 
     input.invalid {
