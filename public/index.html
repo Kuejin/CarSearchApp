@@ -16,24 +16,30 @@
       padding: 20px;
     }
 
-    .tabs {
+    .tabs {   
       display: flex;
       justify-content: center;
       margin-bottom: 20px;
-      gap: 10px;
+      gap: 0; /* 버튼 사이 여백 제거 */
+      width: 100%;
+      max-width: 550px;
     }
 
     .tab-button {
-      padding: 10px 20px;
+      flex: 1; /* 각 버튼이 절반 너비 차지 */
+      padding: 10px 0;
       font-size: 16px;
       border: none;
       background-color: #2e5b7f;
       color: white;
-      border-radius: 5px;
+      border-radius: 0;
       cursor: pointer;
+      border-bottom: 2px solid transparent; /* 기본 상태에서 선 없음 */
+      transition: border-color 0.3s;
     }
 
     .tab-button.active {
+      border-bottom: 2px solid white; /* 활성 탭 하단 흰색 선 */
       background-color: #16364d;
       font-weight: bold;
     }
@@ -134,7 +140,6 @@
   </div>
 
   <div id="search" class="section active">
-    <h1>차량 검색</h1>
     <form id="search-form" onsubmit="event.preventDefault(); searchCar();">
       <input placeholder="차 번호" id="car_number">
       <input placeholder="차 종류" id="car_type">
@@ -146,7 +151,6 @@
   </div>
 
   <div id="add" class="section">
-    <h1>차량 추가</h1>
     <form id="add-form" onsubmit="event.preventDefault(); addCar();">
       <input placeholder="차 번호" id="add_car_number">
       <input placeholder="차 종류" id="add_car_type">
@@ -200,11 +204,11 @@
           const item = document.createElement('div');
           item.className = 'result-item';
           item.innerHTML = `
-            <div><strong>차 번호:</strong> ${car.car_number}</div>
-            <div><strong>차 종류:</strong> ${car.car_type}</div>
-            <div><strong>차 색상:</strong> ${car.car_color}</div>
-            <div><strong>차 주인:</strong> ${car.owner_name}</div>
-            <div><strong>폰 번호:</strong> ${car.phone_number}</div>
+            <div>${car.car_number}</div>
+            <div>${car.car_type}</div>
+            <div>${car.car_color}</div>
+            <div>${car.owner_name}</div>
+            <div>${car.phone_number}</div>
           `;
           resultDiv.appendChild(item);
         });
