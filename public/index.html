@@ -1,24 +1,96 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Car Search</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background-color: #4a7da0; /* 스카이블루와 네이비 중간색 */
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    h1, h2 {
+      margin-top: 30px;
+      margin-bottom: 10px;
+    }
+
+    .section {
+      width: 100%;
+      max-width: 600px;
+      margin-bottom: 40px;
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    input {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #2e5b7f;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #244d6c;
+    }
+
+    #result {
+      white-space: pre-wrap;
+      background-color: rgba(0,0,0,0.2);
+      padding: 15px;
+      border-radius: 10px;
+      max-width: 600px;
+      width: 100%;
+      word-break: break-all;
+    }
+
+    @media (max-width: 600px) {
+      input, button {
+        font-size: 14px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>Search Car</h1>
-  <input placeholder="Car Number" id="car_number">
-  <input placeholder="Car Type" id="car_type">
-  <input placeholder="Car Color" id="car_color">
-  <input placeholder="Owner Name" id="owner_name">
-  <input placeholder="Phone Number" id="phone_number">
-  <button onclick="searchCar()">Search</button>
+  <div class="section">
+    <h1>차량 검색</h1>
+    <input placeholder="차 번호" id="car_number">
+    <input placeholder="차 종류" id="car_type">
+    <input placeholder="차 색상" id="car_color">
+    <input placeholder="차 주인" id="owner_name">
+    <input placeholder="폰 번호" id="phone_number">
+    <button onclick="searchCar()">검색</button>
+  </div>
 
-  <h2>Add Car</h2>
-  <input placeholder="Car Number" id="add_car_number">
-  <input placeholder="Car Type" id="add_car_type">
-  <input placeholder="Car Color" id="add_car_color">
-  <input placeholder="Owner Name" id="add_owner_name">
-  <input placeholder="Phone Number" id="add_phone_number">
-  <button onclick="addCar()">Add</button>
+  <div class="section">
+    <h2>차량 추가</h2>
+    <input placeholder="차 번호" id="add_car_number">
+    <input placeholder="차 종류" id="add_car_type">
+    <input placeholder="차 색상" id="add_car_color">
+    <input placeholder="차 주인" id="add_owner_name">
+    <input placeholder="폰 번호" id="add_phone_number">
+    <button onclick="addCar()">추가</button>
+  </div>
 
   <div id="result"></div>
 
