@@ -6,53 +6,47 @@
   <title>Car Search</title>
   <style>
     body {
-      margin: 0;
-      font-family: sans-serif;
-      background-color: #2b3d56;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-    }
+  background-color: #16364d;
+  color: white;
+  font-family: sans-serif;
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
 
-    .tabs {   
-      display: flex;
-      justify-content: center;
-      margin-bottom: 20px;
-      gap: 0; /* 버튼 사이 여백 제거 */
-      width: 100%;
-      max-width: 550px;
-    }
+    .tabs {
+  display: flex;
+  width: 100%;
+  max-width: 550px;
+  margin-bottom: 20px;
+}
 
     .tab-button {
-      flex: 1; /* 각 버튼이 절반 너비 차지 */
-      padding: 10px 0;
-      font-size: 16px;
-      border: none;
-      background-color: #2e5b7f;
-      color: white;
-      border-radius: 0;
-      cursor: pointer;
-      border-bottom: 2px solid transparent; /* 기본 상태에서 선 없음 */
-      transition: border-color 0.3s;
-    }
+  width: 50%; /* ✅ 딱 절반씩 */
+  padding: 12px 0;
+  font-size: 16px;
+  background-color: #2e5b7f;
+  color: white;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: border-bottom 0.3s;
+}
 
     .tab-button.active {
-      border-bottom: 2px solid white; /* 활성 탭 하단 흰색 선 */
-      background-color: #16364d;
-      font-weight: bold;
-    }
+  border-bottom: 2px solid white;
+  background-color: #16364d;
+  font-weight: bold;
+}
 
     .section {
-      display: none;
-      width: 100%;
-      max-width: 550px;
-      background-color: rgba(255, 255, 255, 0.1);
-      padding: 20px;
-      border-radius: 10px;
-      margin-bottom: 40px;
-    }
+  max-width: 550px;
+  width: 100%;
+  background-color: #16364d; /* ✅ 배경과 동일하게 설정 */
+  padding: 20px;
+  border-radius: 12px;
+}
 
     .section.active {
       display: block;
@@ -69,15 +63,14 @@
     }
 
     input {
-      display: block;
-      width: 500px;
-      margin: 10px auto;
-      padding: 10px;
-      font-size: 16px;
-      border: none;
-      border-radius: 10px;
-      box-sizing: border-box;
-    }
+  width: 500px;
+  padding: 10px 14px;
+  margin-bottom: 10px;
+  border: none;
+  border-radius: 9999px;
+  font-size: 16px;
+  outline: none;
+}
 
     input.invalid {
       border: 2px solid red;
@@ -135,9 +128,12 @@
 </head>
 <body>
   <div class="tabs">
-    <button class="tab-button active" onclick="showTab('search')">차량 검색</button>
-    <button class="tab-button" onclick="showTab('add')">차량 추가</button>
-  </div>
+  <button class="tab-button active" onclick="showTab('search')">차량 검색</button>
+  <button class="tab-button" onclick="showTab('add')">차량 추가</button>
+</div>
+<div id="search" class="section active">
+  <!-- 검색 input들 -->
+</div>
 
   <div id="search" class="section active">
     <form id="search-form" onsubmit="event.preventDefault(); searchCar();">
