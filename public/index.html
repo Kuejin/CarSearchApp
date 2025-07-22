@@ -8,7 +8,7 @@
     body {
       margin: 0;
       font-family: sans-serif;
-      background-color: #4a7da0; /* 스카이블루와 네이비 중간색 */
+      background-color: #4a7da0;
       color: white;
       display: flex;
       flex-direction: column;
@@ -16,18 +16,40 @@
       padding: 20px;
     }
 
-    h1, h2 {
-      margin-top: 30px;
-      margin-bottom: 10px;
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+
+    .tab-button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      background-color: #2e5b7f;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .tab-button.active {
+      background-color: #16364d;
+      font-weight: bold;
     }
 
     .section {
+      display: none;
       width: 100%;
-      max-width: 600px;
-      margin-bottom: 40px;
+      max-width: 550px;
       background-color: rgba(255, 255, 255, 0.1);
       padding: 20px;
       border-radius: 10px;
+      margin-bottom: 40px;
+    }
+
+    .section.active {
+      display: block;
     }
 
     input {
@@ -59,7 +81,7 @@
       background-color: rgba(0,0,0,0.2);
       padding: 15px;
       border-radius: 10px;
-      max-width: 600px;
+      max-width: 550px;
       width: 100%;
       word-break: break-all;
     }
@@ -72,7 +94,12 @@
   </style>
 </head>
 <body>
-  <div class="section">
+  <div class="tabs">
+    <button class="tab-button active" onclick="showTab('search')">차량 검색</button>
+    <button class="tab-button" onclick="showTab('add')">차량 추가</button>
+  </div>
+
+  <div id="search" class="section active">
     <h1>차량 검색</h1>
     <input placeholder="차 번호" id="car_number">
     <input placeholder="차 종류" id="car_type">
@@ -82,7 +109,7 @@
     <button onclick="searchCar()">검색</button>
   </div>
 
-  <div class="section">
+  <div id="add" class="section">
     <h2>차량 추가</h2>
     <input placeholder="차 번호" id="add_car_number">
     <input placeholder="차 종류" id="add_car_type">
@@ -95,6 +122,24 @@
   <div id="result"></div>
 
   <script>
+    function showTab(tabName) {
+      // 탭 버튼 클래스 변경
+      document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.classList.remove('active');
+      });
+
+      // 해당 버튼에 active 적용
+      const activeButton = Array.from(document.querySelectorAll('.tab-button'))
+        .find(btn => btn.textContent.includes(tabName === 'search' ? '검색' : '추가'));
+      activeButton.classList.add('active');
+
+      // 섹션 전환
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.remove('active');
+      });
+      document.getElementById(tabName).classList.add('active');
+    }
+
     async function searchCar() {
       const params = new URLSearchParams({
         car_number: document.getElementById('car_number').value,
