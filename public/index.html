@@ -8,7 +8,7 @@
     body {
       margin: 0;
       font-family: sans-serif;
-      background-color: #4a7da0;
+      background-color: #2b3d56;
       color: white;
       display: flex;
       flex-direction: column;
@@ -52,7 +52,7 @@
       display: block;
     }
 
-    h1, h2 {
+    h1 {
       font-size: 28px;
       margin-top: 0;
       margin-bottom: 20px;
@@ -64,15 +64,19 @@
 
     input {
       display: block;
-      width: 100%;
-      margin-bottom: 10px;
+      width: 500px;
+      margin: 10px auto;
       padding: 10px;
       font-size: 16px;
       border: none;
-      border-radius: 5px;
+      border-radius: 10px;
+      box-sizing: border-box;
     }
 
-    /* 차 번호 입력만 높이 2배 */
+    input.invalid {
+      border: 2px solid red;
+    }
+
     #car_number,
     #add_car_number {
       padding: 20px;
@@ -87,6 +91,8 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      display: block;
+      margin: 0 auto;
     }
 
     button:hover {
@@ -100,28 +106,23 @@
       background-color: rgba(0, 0, 0, 0.2);
       padding: 15px;
       border-radius: 10px;
+      max-height: 400px;
+      overflow-y: auto;
     }
 
     .result-item {
-      margin-bottom: 15px;
+      margin-bottom: 20px;
       border-bottom: 1px solid rgba(255,255,255,0.3);
       padding-bottom: 10px;
     }
 
-    .top-row, .bottom-row {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-    }
-
-    .top-row div, .bottom-row div {
-      flex: 1 1 30%;
+    .result-item div {
       margin: 5px 0;
     }
 
     @media (max-width: 600px) {
-      input, button {
-        font-size: 14px;
+      input {
+        width: 100%;
       }
     }
   </style>
@@ -134,22 +135,26 @@
 
   <div id="search" class="section active">
     <h1>차량 검색</h1>
-    <input placeholder="차 번호" id="car_number">
-    <input placeholder="차 종류" id="car_type">
-    <input placeholder="차 색상" id="car_color">
-    <input placeholder="차 주인" id="owner_name">
-    <input placeholder="폰 번호" id="phone_number">
-    <button onclick="searchCar()">검색</button>
+    <form id="search-form" onsubmit="event.preventDefault(); searchCar();">
+      <input placeholder="차 번호" id="car_number">
+      <input placeholder="차 종류" id="car_type">
+      <input placeholder="차 색상" id="car_color">
+      <input placeholder="차 주인" id="owner_name">
+      <input placeholder="폰 번호" id="phone_number">
+      <button type="submit">검색</button>
+    </form>
   </div>
 
   <div id="add" class="section">
-    <h1>차량 추가</h1> <!-- h2 → h1, 디자인 통일 -->
-    <input placeholder="차 번호" id="add_car_number">
-    <input placeholder="차 종류" id="add_car_type">
-    <input placeholder="차 색상" id="add_car_color">
-    <input placeholder="차 주인" id="add_owner_name">
-    <input placeholder="폰 번호" id="add_phone_number">
-    <button onclick="addCar()">추가</button>
+    <h1>차량 추가</h1>
+    <form id="add-form" onsubmit="event.preventDefault(); addCar();">
+      <input placeholder="차 번호" id="add_car_number">
+      <input placeholder="차 종류" id="add_car_type">
+      <input placeholder="차 색상" id="add_car_color">
+      <input placeholder="차 주인" id="add_owner_name">
+      <input placeholder="폰 번호" id="add_phone_number">
+      <button type="submit">추가</button>
+    </form>
   </div>
 
   <div id="result"></div>
@@ -165,13 +170,23 @@
       document.getElementById(tabName).classList.add('active');
     }
 
+    function validateInputs(inputIds) {
+      let valid = true;
+      inputIds.forEach(id => {
+        const input = document.getElementById(id);
+        if (!input.value.trim()) {
+          valid = false;
+        } else {
+        }
+      });
+      return valid;
+    }
+
     async function searchCar() {
-      const params = new URLSearchParams({
-        car_number: document.getElementById('car_number').value,
-        car_type: document.getElementById('car_type').value,
-        car_color: document.getElementById('car_color').value,
-        owner_name: document.getElementById('owner_name').value,
-        phone_number: document.getElementById('phone_number').value,
+      const inputIds = ['car_number', 'car_type', 'car_color', 'owner_name', 'phone_number'];
+      const params = new URLSearchParams();
+      inputIds.forEach(id => {
+        params.append(id, document.getElementById(id).value);
       });
 
       const res = await fetch(`/search?${params}`);
@@ -180,20 +195,16 @@
       const resultDiv = document.getElementById('result');
       resultDiv.innerHTML = '';
 
-      if (Array.isArray(data)) {
+      if (Array.isArray(data) && data.length > 0) {
         data.forEach(car => {
           const item = document.createElement('div');
           item.className = 'result-item';
           item.innerHTML = `
-            <div class="top-row">
-              <div><strong>차 종류:</strong> ${car.car_type}</div>
-              <div><strong>차 색상:</strong> ${car.car_color}</div>
-              <div><strong>차 번호:</strong> ${car.car_number}</div>
-            </div>
-            <div class="bottom-row">
-              <div><strong>차 주인:</strong> ${car.owner_name}</div>
-              <div><strong>폰 번호:</strong> ${car.phone_number}</div>
-            </div>
+            <div><strong>차 번호:</strong> ${car.car_number}</div>
+            <div><strong>차 종류:</strong> ${car.car_type}</div>
+            <div><strong>차 색상:</strong> ${car.car_color}</div>
+            <div><strong>차 주인:</strong> ${car.owner_name}</div>
+            <div><strong>폰 번호:</strong> ${car.phone_number}</div>
           `;
           resultDiv.appendChild(item);
         });
@@ -203,13 +214,16 @@
     }
 
     async function addCar() {
-      const body = {
-        car_number: document.getElementById('add_car_number').value,
-        car_type: document.getElementById('add_car_type').value,
-        car_color: document.getElementById('add_car_color').value,
-        owner_name: document.getElementById('add_owner_name').value,
-        phone_number: document.getElementById('add_phone_number').value,
-      };
+      const inputIds = ['add_car_number', 'add_car_type', 'add_car_color', 'add_owner_name', 'add_phone_number'];
+      if (!validateInputs(inputIds)) {
+        alert("모든 입력값을 채워주세요.");
+        return;
+      }
+
+      const body = {};
+      inputIds.forEach(id => {
+        body[id.replace('add_', '')] = document.getElementById(id).value;
+      });
 
       const res = await fetch('/add', {
         method: 'POST',
@@ -220,6 +234,8 @@
       const data = await res.json();
       if (data.message && data.message.includes('성공')) {
         alert('등록 성공했습니다');
+        // 입력값 초기화
+        inputIds.forEach(id => document.getElementById(id).value = '');
       } else {
         alert(data.message || '등록 실패');
       }
