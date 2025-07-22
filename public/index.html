@@ -8,7 +8,7 @@
     body {
       margin: 0;
       font-family: sans-serif;
-      background-color: #2b3d56;
+      background-color: #1b8870;
       color: white;
       display: flex;
       flex-direction: column;
@@ -16,17 +16,16 @@
       padding: 20px;
     }
 
-    .tabs {   
+    .tabs {
       display: flex;
       justify-content: center;
       margin-bottom: 20px;
-      gap: 0; /* 버튼 사이 여백 제거 */
       width: 100%;
       max-width: 550px;
     }
 
     .tab-button {
-      flex: 1; /* 각 버튼이 절반 너비 차지 */
+      flex: 1;
       padding: 10px 0;
       font-size: 16px;
       border: none;
@@ -34,12 +33,12 @@
       color: white;
       border-radius: 0;
       cursor: pointer;
-      border-bottom: 2px solid transparent; /* 기본 상태에서 선 없음 */
+      border-bottom: 2px solid transparent;
       transition: border-color 0.5s;
     }
 
     .tab-button.active {
-      border-bottom: 2px solid white; /* 활성 탭 하단 흰색 선 */
+      border-bottom: 2px solid white;
       background-color: #16364d;
       font-weight: bold;
     }
@@ -48,7 +47,7 @@
       display: none;
       width: 100%;
       max-width: 550px;
-      background-color: #2b3d56;
+      background-color: #0d223a;
       padding: 20px;
       border-radius: 10px;
       margin-bottom: 40px;
@@ -70,7 +69,6 @@
 
     input {
       display: block;
-      width: 500px;
       margin: 10px auto;
       padding: 10px;
       font-size: 16px;
@@ -78,6 +76,7 @@
       border-radius: 9999px;
       box-sizing: border-box;
       outline: none;
+      width: 500px;
     }
 
     input.invalid {
@@ -90,6 +89,16 @@
       font-weight: bold;
     }
 
+    .input-group {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .input-group input {
+      width: 245px;
+    }
+
     button {
       padding: 10px 20px;
       font-size: 16px;
@@ -99,7 +108,7 @@
       border-radius: 5px;
       cursor: pointer;
       display: block;
-      margin: 0 auto;
+      margin: 20px auto 0;
     }
 
     button:hover {
@@ -128,8 +137,12 @@
     }
 
     @media (max-width: 600px) {
-      input {
+      input, .input-group input {
         width: 100%;
+      }
+
+      .input-group {
+        flex-direction: column;
       }
     }
   </style>
@@ -140,24 +153,36 @@
     <button class="tab-button" onclick="showTab('add')">차량 추가</button>
   </div>
 
+  <!-- 차량 검색 -->
   <div id="search" class="section active">
+    <h1>차량 검색</h1>
     <form id="search-form" onsubmit="event.preventDefault(); searchCar();">
       <input placeholder="차 번호" id="car_number">
-      <input placeholder="차 종류" id="car_type">
-      <input placeholder="차 색상" id="car_color">
-      <input placeholder="차 주인" id="owner_name">
-      <input placeholder="폰 번호" id="phone_number">
+      <div class="input-group">
+        <input placeholder="차 종류" id="car_type">
+        <input placeholder="차 색상" id="car_color">
+      </div>
+      <div class="input-group">
+        <input placeholder="차 주인" id="owner_name">
+        <input placeholder="폰 번호" id="phone_number">
+      </div>
       <button type="submit">검색</button>
     </form>
   </div>
 
+  <!-- 차량 추가 -->
   <div id="add" class="section">
+    <h1>차량 추가</h1>
     <form id="add-form" onsubmit="event.preventDefault(); addCar();">
       <input placeholder="차 번호" id="add_car_number">
-      <input placeholder="차 종류" id="add_car_type">
-      <input placeholder="차 색상" id="add_car_color">
-      <input placeholder="차 주인" id="add_owner_name">
-      <input placeholder="폰 번호" id="add_phone_number">
+      <div class="input-group">
+        <input placeholder="차 종류" id="add_car_type">
+        <input placeholder="차 색상" id="add_car_color">
+      </div>
+      <div class="input-group">
+        <input placeholder="차 주인" id="add_owner_name">
+        <input placeholder="폰 번호" id="add_phone_number">
+      </div>
       <button type="submit">추가</button>
     </form>
   </div>
@@ -173,18 +198,6 @@
 
       document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
       document.getElementById(tabName).classList.add('active');
-    }
-
-    function validateInputs(inputIds) {
-      let valid = true;
-      inputIds.forEach(id => {
-        const input = document.getElementById(id);
-        if (!input.value.trim()) {
-          valid = false;
-        } else {
-        }
-      });
-      return valid;
     }
 
     async function searchCar() {
@@ -205,11 +218,9 @@
           const item = document.createElement('div');
           item.className = 'result-item';
           item.innerHTML = `
-            <div>${car.car_number}</div>
-            <div>${car.car_type}</div>
-            <div>${car.car_color}</div>
-            <div>${car.owner_name}</div>
-            <div>${car.phone_number}</div>
+            <div>차 번호: ${car.car_number}</div>
+            <div>차 종류: ${car.car_type}, 차 색상: ${car.car_color}</div>
+            <div>차 주인: ${car.owner_name}, 폰 번호: ${car.phone_number}</div>
           `;
           resultDiv.appendChild(item);
         });
@@ -220,10 +231,6 @@
 
     async function addCar() {
       const inputIds = ['add_car_number', 'add_car_type', 'add_car_color', 'add_owner_name', 'add_phone_number'];
-      if (!validateInputs(inputIds)) {
-        alert("모든 입력값을 채워주세요.");
-        return;
-      }
 
       const body = {};
       inputIds.forEach(id => {
@@ -232,14 +239,13 @@
 
       const res = await fetch('/add', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
       });
 
       const data = await res.json();
       if (data.message && data.message.includes('성공')) {
         alert('등록 성공했습니다');
-        // 입력값 초기화
         inputIds.forEach(id => document.getElementById(id).value = '');
       } else {
         alert(data.message || '등록 실패');
