@@ -176,7 +176,9 @@
       margin-bottom: 20px;
       border-bottom: 1px solid rgb(2, 114, 95);
       padding-bottom: 10px;
-    }
+      font-weight: bold;
+      font-size: 1.5em;
+  }
 
     .result-item div {
       margin: 5px 0;
@@ -251,7 +253,7 @@
       <input placeholder="차량번호" id="car_number">
       <div class="input-group">
         <input placeholder="차종" id="car_type">
-        <input placeholder="차색상" id="car_color">
+        <input placeholder="색상" id="car_color">
       </div>
       <div class="input-group">
         <input placeholder="차주" id="owner_name">
@@ -267,7 +269,7 @@
       <input placeholder="차량번호" id="add_car_number">
       <div class="input-group">
         <input placeholder="차종" id="add_car_type">
-        <input placeholder="차색상" id="add_car_color">
+        <input placeholder="색상" id="add_car_color">
       </div>
       <div class="input-group">
         <input placeholder="차주" id="add_owner_name">
@@ -316,8 +318,8 @@
           const item = document.createElement('div');
           item.className = 'result-item';
           item.innerHTML = `
-            <div>${car.owner_name}    ${car.phone_number}</div>
-            <div>${car.car_number}    ${car.car_type}    ${car.car_color}</div>
+            <div>차주 - ${car.owner_name}  /  ${car.phone_number}</div>
+            <div>차량 - ${car.car_number}  /  ${car.car_type}  /  ${car.car_color}</div>
           `;
           resultDiv.appendChild(item);
         });
