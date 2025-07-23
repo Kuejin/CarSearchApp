@@ -9,11 +9,21 @@
       margin: 0;
       font-family: sans-serif;
       background-color: white;
-      color: rgb(6, 61, 78);
+      color: rgb(2, 114, 95);
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 20px;
+      position: relative;
+    }
+
+    .header {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 24px;
+      font-weight: bold;
+      color: rgb(2, 114, 95);
     }
 
     .tabs {
@@ -22,15 +32,16 @@
       margin-bottom: 20px;
       width: 100%;
       max-width: 550px;
+      margin-top: 60px; /* 헤더 공간 확보 */
     }
 
     .tab-button {
       flex: 1;
-      padding: 10px 0;
-      font-size: 16px;
+      padding: 12px 0;
+      font-size: 17px;
       border: none;
       background-color: white;
-      color: rgb(6, 61, 78);
+      color: rgb(2, 114, 95);
       border-radius: 0;
       cursor: pointer;
       border-bottom: 1.5px solid transparent;
@@ -58,15 +69,16 @@
 
     input {
       display: block;
-      width: 500px;
+      width: 100%;
+      max-width: 500px;
       margin: 10px auto;
-      padding: 10px;
-      font-size: 16px;
+      padding: 12px;
+      font-size: 17px;
       border: none;
       border-radius: 9999px;
       box-sizing: border-box;
       outline: none;
-      box-shadow: 0 0 10px 2px skyblue;
+      box-shadow: 0 0 10px 2px rgb(2, 114, 95);
     }
 
     input.invalid {
@@ -86,22 +98,24 @@
     }
 
     .input-group input {
-      width: 245px;
+      width: 100%;
+      max-width: 245px;
     }
 
     button {
-      padding: 10px 20px;
-      font-size: 16px;
+      width: 100%;
+      max-width: 500px;
+      padding: 14px;
+      font-size: 18px;
       background-color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 9999px;
       cursor: pointer;
-      display: block;
       margin: 20px auto 0;
     }
 
     .enter {
-      background-color: skyblue;
+      background-color: rgb(2, 114, 95);
       color: white;
     }
 
@@ -118,11 +132,20 @@
       border-radius: 10px;
       max-height: 400px;
       overflow-y: auto;
+      margin-top: 20px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    #result.show {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .result-item {
       margin-bottom: 20px;
-      border-bottom: 1px solid rgb(6, 61, 78);
+      border-bottom: 1px solid rgb(2, 114, 95);
       padding-bottom: 10px;
     }
 
@@ -131,17 +154,53 @@
     }
 
     @media (max-width: 600px) {
-      input, .input-group input {
-        width: 100%;
+      body {
+        padding: 16px;
+      }
+
+      .tabs {
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 80px;
+      }
+
+      .tab-button {
+        font-size: 17px;
+        padding: 12px;
       }
 
       .input-group {
         flex-direction: column;
+        gap: 10px;
+      }
+
+      input, .input-group input {
+        width: 100%;
+        font-size: 16px;
+        padding: 14px;
+      }
+
+      .enter {
+        font-size: 18px;
+        padding: 16px;
+      }
+
+      #result {
+        font-size: 15px;
+        padding: 12px;
+      }
+
+      .header {
+        font-size: 22px;
+        top: 12px;
+        left: 12px;
       }
     }
   </style>
 </head>
 <body>
+  <div class="header">Car Info</div>
+
   <div class="tabs">
     <button class="tab-button active" onclick="showTab('search')">차량 검색</button>
     <button class="tab-button" onclick="showTab('add')">차량 추가</button>
@@ -201,8 +260,8 @@
 
       const res = await fetch(`/search?${params}`);
       const data = await res.json();
-
       const resultDiv = document.getElementById('result');
+      resultDiv.classList.remove('show');
       resultDiv.innerHTML = '';
 
       if (Array.isArray(data) && data.length > 0) {
@@ -218,10 +277,19 @@
       } else {
         resultDiv.textContent = '결과가 없습니다.';
       }
+
+      setTimeout(() => resultDiv.classList.add('show'), 10);
     }
 
     async function addCar() {
       const inputIds = ['add_car_number', 'add_car_type', 'add_car_color', 'add_owner_name', 'add_phone_number'];
+      const inputs = inputIds.map(id => document.getElementById(id));
+      const allFilled = inputs.every(input => input.value.trim() !== '');
+
+      if (!allFilled) {
+        alert('정보를 모두 입력해주세요');
+        return;
+      }
 
       const body = {};
       inputIds.forEach(id => {
