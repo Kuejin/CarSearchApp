@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Car Search</title>
   <style>
+    html, body {
+      overflow-x: hidden;
+    }
+
     body {
       margin: 0;
       font-family: sans-serif;
@@ -171,16 +175,17 @@
       body {
         padding: 16px;
       }
-
+      
       .tabs {
-        flex-direction: column;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
         gap: 10px;
         margin-top: 80px;
       }
 
       .tab-button {
-        font-size: 17px;
-        padding: 12px;
+        flex: 1 1 45%;
       }
 
       .input-group {
