@@ -6,64 +6,61 @@
   <title>Car Search</title>
   <style>
     body {
-      margin: 0;
-      font-family: sans-serif;
-      background-color: white;
-      color: rgb(2, 114, 95);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-      position: relative;
-    }
+  margin: 0;
+  font-family: sans-serif;
+  background-color: white;
+  color: rgb(6, 61, 78);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch; /* 기존 center에서 stretch로 수정 */
+  padding: 0; /* 좌우 여백 제거 */
+}
 
     .header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background-color: white; /* 초기 배경 */
-      color: rgb(2, 114, 95);   /* 초기 글씨 */
-      font-size: 24px;
-      font-weight: bold;
-      padding: 12px 20px;
-      z-index: 1000;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      transition: background-color 0.3s, color 0.3s;
-    }
+  width: 100%;
+  background-color: white;
+  color: rgb(2, 114, 95);
+  font-size: 24px;
+  font-weight: bold;
+  padding: 15px 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+  box-shadow: none;
+}
 
-    .header.scrolled {
-      background-color: rgb(2, 114, 95); /* 스크롤 시 배경 */
-      color: white;                      /* 스크롤 시 글씨 */
-    }
+.header.scrolled {
+  background-color: rgb(2, 114, 95);
+  color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
 
     .tabs {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 20px;
-      width: 100%;
-      max-width: 550px;
-      margin-top: 40px; /* 헤더 공간 확보 */
-    }
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 550px;
+  margin: 80px auto 20px; /* header 공간 확보 */
+}
 
     .tab-button {
-      flex: 1;
-      padding: 12px 0;
-      font-size: 17px;
-      border: none;
-      background-color: white;
-      color: rgb(2, 114, 95);
-      border-radius: 0;
-      cursor: pointer;
-      border-bottom: 1.5px solid transparent;
-      transition: border-color 0.5s;
-    }
+  flex: 1;
+  padding: 10px 0;
+  font-size: 16px;
+  border: none;
+  background-color: white;
+  color: rgb(2, 114, 95);
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: border-color 0.3s, background-color 0.3s;
+}
 
     .tab-button.active {
-      border-bottom: 2px solid rgb(2, 114, 95);
-      background-color: white;
-      font-weight: bold;
-    }
+  border-bottom: 2px solid rgb(2, 114, 95);
+  font-weight: bold;
+}
 
     .section {
       display: none;
@@ -103,15 +100,15 @@
     }
 
     .input-group {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-    }
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: nowrap; /* 모바일에서도 가로 정렬 유지 */
+}
 
     .input-group input {
-      width: 100%;
-      max-width: 245px;
-    }
+  width: 245px;
+}
 
     button {
       width: 100%;
@@ -169,48 +166,51 @@
     }
 
     @media (max-width: 600px) {
-      body {
-        padding: 16px;
-      }
+  body {
+    padding: 16px;
+  }
 
-      .tabs {
-        flex-direction: column;
-        gap: 10px;
-        margin-top: 80px;
-      }
+  .tabs {
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 80px;
+  }
 
-      .tab-button {
-        font-size: 17px;
-        padding: 12px;
-      }
+  .tab-button {
+    font-size: 17px;
+    padding: 12px;
+  }
 
-      .input-group {
-        flex-direction: column;
-        gap: 10px;
-      }
+  .input-group {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
 
-      input, .input-group input {
-        width: 100%;
-        font-size: 16px;
-        padding: 14px;
-      }
+  input, .input-group input {
+    width: 100%;
+    max-width: 100%;
+    font-size: 16px;
+    padding: 14px;
+  }
 
-      .enter {
-        font-size: 18px;
-        padding: 16px;
-      }
+  .enter {
+    font-size: 18px;
+    padding: 16px;
+  }
 
-      #result {
-        font-size: 15px;
-        padding: 12px;
-      }
+  #result {
+    font-size: 15px;
+    padding: 12px;
+  }
 
-      .header {
-        font-size: 22px;
-        top: 12px;
-        left: 12px;
-      }
-    }
+  .header {
+    font-size: 22px;
+    top: 12px;
+    left: 12px;
+  }
+}
+
   </style>
 </head>
 <body>
