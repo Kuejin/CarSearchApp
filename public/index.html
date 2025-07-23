@@ -96,7 +96,10 @@
       border-radius: 9999px;
       box-sizing: border-box;
       outline: none;
-      box-shadow: 0 0 10px 2px rgb(2, 139, 117);
+      box-shadow:
+        0 4px 8px -2px rgb(2, 139, 117),
+        -4px 0 8px -2px rgb(2, 139, 117),
+        4px 0 8px -2px rgb(2, 139, 117);
     }
 
     input.invalid {
@@ -140,6 +143,7 @@
 }
     button:hover {
       background-color: white;
+      color: rgb(2, 114, 95);
     }
 
     #result {
