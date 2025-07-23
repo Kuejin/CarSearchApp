@@ -30,6 +30,7 @@
   color: rgb(2, 114, 95);
   font-size: 24px;
   font-weight: bold;
+  text-decoration: underline;
   padding: 12px 20px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   z-index: 1000;
@@ -56,7 +57,7 @@
       font-size: 17px;
       border: none;
       background-color: white;
-      color: rgb(2, 114, 95);
+      color: rgb(130, 148, 148);
       border-radius: 0;
       cursor: pointer;
       border-bottom: 1.5px solid transparent;
@@ -137,7 +138,6 @@
 }
     button:hover {
       background-color: white;
-      color: navy;
     }
 
     #result {
@@ -246,7 +246,7 @@
         <input placeholder="차 주인" id="owner_name">
         <input placeholder="폰 번호" id="phone_number">
       </div>
-      <button type="submit" class="enter">검색</button>
+      <button type="submit" class="enter">검 색</button>
     </form>
   </div>
 
@@ -262,7 +262,7 @@
         <input placeholder="차 주인" id="add_owner_name">
         <input placeholder="폰 번호" id="add_phone_number">
       </div>
-      <button type="submit" class="enter">추가</button>
+      <button type="submit" class="enter">추 가</button>
     </form>
   </div>
 
@@ -305,7 +305,8 @@
           const item = document.createElement('div');
           item.className = 'result-item';
           item.innerHTML = `
-            <div>${car.owner_name}, ${car.phone_number}, ${car.car_number}, ${car.car_type}, ${car.car_color}</div>
+            <div>${car.owner_name}    ${car.phone_number}</div>
+            <div>${car.car_number}    ${car.car_type}    ${car.car_color}</div>
           `;
           resultDiv.appendChild(item);
         });
