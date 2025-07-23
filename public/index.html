@@ -18,12 +18,17 @@
     }
 
     .header {
-      position: absolute;
-      top: 20px;
-      left: 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: rgb(2, 114, 95);
+      color: white;
       font-size: 24px;
       font-weight: bold;
-      color: rgb(2, 114, 95);
+      padding: 12px 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      z-index: 1000;
     }
 
     .tabs {
@@ -32,7 +37,7 @@
       margin-bottom: 20px;
       width: 100%;
       max-width: 550px;
-      margin-top: 60px; /* 헤더 공간 확보 */
+      margin-top: 40px; /* 헤더 공간 확보 */
     }
 
     .tab-button {
@@ -78,7 +83,7 @@
       border-radius: 9999px;
       box-sizing: border-box;
       outline: none;
-      box-shadow: 0 0 10px 2px rgb(2, 114, 95);
+      box-shadow: 0 0 10px 2px rgb(2, 243, 203);
     }
 
     input.invalid {
@@ -111,12 +116,14 @@
       border: none;
       border-radius: 9999px;
       cursor: pointer;
-      margin: 20px auto 0;
+      margin: 0px auto 0;
     }
 
     .enter {
       background-color: rgb(2, 114, 95);
       color: white;
+      margin: 20px auto 0;
+      display: block;
     }
 
     button:hover {
@@ -127,12 +134,14 @@
     #result {
       max-width: 550px;
       width: 100%;
-      background-color: rgba(2, 183, 255, 0.2);
+      background-color: rgb(2, 114, 95);
+      color: white;
+      font-size: 1.3em;
+      font-weight: bold;
       padding: 15px;
       border-radius: 10px;
       max-height: 400px;
       overflow-y: auto;
-      margin-top: 20px;
       opacity: 0;
       transform: translateY(10px);
       transition: opacity 0.3s ease, transform 0.3s ease;
@@ -269,8 +278,7 @@
           const item = document.createElement('div');
           item.className = 'result-item';
           item.innerHTML = `
-            <div>${car.car_number}, ${car.car_type}, ${car.car_color}</div>
-            <div>${car.owner_name}, ${car.phone_number}</div>
+            <div>${car.owner_name}, ${car.phone_number}, ${car.car_number}, ${car.car_type}, ${car.car_color}</div>
           `;
           resultDiv.appendChild(item);
         });
