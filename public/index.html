@@ -22,13 +22,19 @@
       top: 0;
       left: 0;
       width: 100%;
-      background-color: rgb(2, 114, 95);
-      color: white;
+      background-color: white; /* 초기 배경 */
+      color: rgb(2, 114, 95);   /* 초기 글씨 */
       font-size: 24px;
       font-weight: bold;
       padding: 12px 20px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
       z-index: 1000;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .header.scrolled {
+      background-color: rgb(2, 114, 95); /* 스크롤 시 배경 */
+      color: white;                      /* 스크롤 시 글씨 */
     }
 
     .tabs {
@@ -250,6 +256,14 @@
   <div id="result"></div>
 
   <script>
+    window.addEventListener('scroll', () => {
+      const header = document.querySelector('.header');
+      if (window.scrollY > 10) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    }); 
     function showTab(tabName) {
       document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
       const activeButton = Array.from(document.querySelectorAll('.tab-button'))
