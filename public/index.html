@@ -9,7 +9,7 @@
       margin: 0;
       font-family: sans-serif;
       background-color: white;
-      color: grey;
+      color: rgb(6, 61, 78);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -30,7 +30,7 @@
       font-size: 16px;
       border: none;
       background-color: white;
-      color: grey;
+      color: rgb(6, 61, 78);
       border-radius: 0;
       cursor: pointer;
       border-bottom: 1.5px solid transparent;
@@ -66,7 +66,7 @@
       border-radius: 9999px;
       box-sizing: border-box;
       outline: none;
-      box-shadow: 0 0 10px 2px grey;
+      box-shadow: 0 0 10px 2px skyblue;
     }
 
     input.invalid {
@@ -93,7 +93,6 @@
       padding: 10px 20px;
       font-size: 16px;
       background-color: white;
-      color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
@@ -102,15 +101,16 @@
     }
 
     .enter {
-      background-color: grey;
+      background-color: skyblue;
+      color: white;
     }
 
     button:hover {
       background-color: white;
+      color: navy;
     }
 
     #result {
-      margin-top: 20px;
       max-width: 550px;
       width: 100%;
       background-color: rgba(2, 183, 255, 0.2);
@@ -122,7 +122,7 @@
 
     .result-item {
       margin-bottom: 20px;
-      border-bottom: 1px solid rgba(255,255,255,0.3);
+      border-bottom: 1px solid rgb(6, 61, 78);
       padding-bottom: 10px;
     }
 
@@ -210,9 +210,8 @@
           const item = document.createElement('div');
           item.className = 'result-item';
           item.innerHTML = `
-            <div>차 번호: ${car.car_number}</div>
-            <div>차 종류: ${car.car_type}, 차 색상: ${car.car_color}</div>
-            <div>차 주인: ${car.owner_name}, 폰 번호: ${car.phone_number}</div>
+            <div>${car.car_number}, ${car.car_type}, ${car.car_color}</div>
+            <div>${car.owner_name}, ${car.phone_number}</div>
           `;
           resultDiv.appendChild(item);
         });
