@@ -93,7 +93,7 @@
       border-radius: 9999px;
       box-sizing: border-box;
       outline: none;
-      box-shadow: 0 0 10px 2px rgb(2, 243, 203);
+      box-shadow: 0 0 10px 2px rgb(2, 139, 117);
     }
 
     input.invalid {
@@ -175,7 +175,7 @@
       body {
         padding: 16px;
       }
-      
+
       .tabs {
         flex-direction: row;
         flex-wrap: wrap;
@@ -188,9 +188,18 @@
         flex: 1 1 45%;
       }
 
-      .input-group {
-        flex-direction: column;
-        gap: 10px;
+      @media (max-width: 600px) {
+        .input-group {
+          flex-direction: row;     /* ← 모바일에서도 가로 정렬 유지 */
+          flex-wrap: wrap;         /* ← 좁으면 자동 줄바꿈 */
+          gap: 10px;
+          justify-content: center;
+        }
+
+        .input-group input {
+          flex: 1 1 45%;           /* ← input이 두 개씩 줄에 들어가도록 */
+          max-width: none;
+        }
       }
 
       input, .input-group input {
