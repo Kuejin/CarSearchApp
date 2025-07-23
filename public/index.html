@@ -37,6 +37,10 @@
   transition: background-color 0.3s, color 0.3s;
 }
 
+.underline {
+  text-decoration: underline;
+}
+
 .header.scrolled {
   background-color: rgb(2, 114, 95);
   color: white;
@@ -97,9 +101,9 @@
       box-sizing: border-box;
       outline: none;
       box-shadow:
-        0 4px 8px -2px rgb(2, 139, 117),       /* 아래쪽 그림자 */
-        -2px 0 4px -2px rgb(2, 139, 117),      /* 왼쪽 (절반) */
-        6px 0 12px -2px rgb(2, 139, 117);      /* 오른쪽 (1.5배 강하게) */
+        0 5px 10px -2px rgb(2, 139, 117),      
+        -1.6px 0 3.2px -2px rgb(2, 139, 117),  
+        9px 0 18px -2px rgb(2, 139, 117);
     }
 
     input.invalid {
@@ -233,7 +237,7 @@
   </style>
 </head>
 <body>
-  <div class="header">Car Info</div>
+  <div class="header">Car <span class="underline">Info</span></div>
 
   <div class="tabs">
     <button class="tab-button active" onclick="showTab('search')">차량 검색</button>
@@ -243,14 +247,14 @@
   <!-- 차량 검색 -->
   <div id="search" class="section active">
     <form id="search-form" onsubmit="event.preventDefault(); searchCar();">
-      <input placeholder="차 번호" id="car_number">
+      <input placeholder="차량번호" id="car_number">
       <div class="input-group">
-        <input placeholder="차 종류" id="car_type">
-        <input placeholder="차 색상" id="car_color">
+        <input placeholder="차종" id="car_type">
+        <input placeholder="차색상" id="car_color">
       </div>
       <div class="input-group">
-        <input placeholder="차 주인" id="owner_name">
-        <input placeholder="폰 번호" id="phone_number">
+        <input placeholder="차주" id="owner_name">
+        <input placeholder="연락처" id="phone_number">
       </div>
       <button type="submit" class="enter">검 색</button>
     </form>
@@ -259,14 +263,14 @@
   <!-- 차량 추가 -->
   <div id="add" class="section">
     <form id="add-form" onsubmit="event.preventDefault(); addCar();">
-      <input placeholder="차 번호" id="add_car_number">
+      <input placeholder="차량번호" id="add_car_number">
       <div class="input-group">
-        <input placeholder="차 종류" id="add_car_type">
-        <input placeholder="차 색상" id="add_car_color">
+        <input placeholder="차종" id="add_car_type">
+        <input placeholder="차색상" id="add_car_color">
       </div>
       <div class="input-group">
-        <input placeholder="차 주인" id="add_owner_name">
-        <input placeholder="폰 번호" id="add_phone_number">
+        <input placeholder="차주" id="add_owner_name">
+        <input placeholder="연락처" id="add_phone_number">
       </div>
       <button type="submit" class="enter">추 가</button>
     </form>
