@@ -280,7 +280,7 @@
         params.append(id, document.getElementById(id).value);
       });
 
-      const res = await fetch(/search?${params});
+      const res = await fetch(`/search?${params}`);
       const data = await res.json();
       const resultDiv = document.getElementById('result');
       resultDiv.classList.remove('show');
@@ -290,9 +290,9 @@
         data.forEach(car => {
           const item = document.createElement('div');
           item.className = 'result-item';
-          item.innerHTML = 
+          item.innerHTML = `
             <div>${car.owner_name}, ${car.phone_number}, ${car.car_number}, ${car.car_type}, ${car.car_color}</div>
-          ;
+          `;
           resultDiv.appendChild(item);
         });
       } else {
