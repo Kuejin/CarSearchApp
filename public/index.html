@@ -30,7 +30,6 @@
   color: rgb(2, 114, 95);
   font-size: 24px;
   font-weight: bold;
-  text-decoration: underline;
   padding: 12px 20px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   z-index: 1000;
@@ -101,9 +100,9 @@
       box-sizing: border-box;
       outline: none;
       box-shadow:
-        0 5px 10px -2px rgb(2, 139, 117),      
-        -1.6px 0 3.2px -2px rgb(2, 139, 117),  
-        9px 0 18px -2px rgb(2, 139, 117);
+        0 4px 8px -2px rgb(2, 139, 117),       /* 아래쪽 그림자 */
+        -2px 0 4px -2px rgb(2, 139, 117),      /* 왼쪽 (절반) */
+        6px 0 12px -2px rgb(2, 139, 117);      /* 오른쪽 (1.5배 강하게) */
     }
 
     input.invalid {
