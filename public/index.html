@@ -160,7 +160,7 @@
       max-width: 550px;
       width: 100%;
       background-color: white;
-      color: rgb(99, 99, 99);
+      color: rgb(77, 77, 77);
       font-size: 1.2em;
       font-weight: bold;
       padding: 15px;
@@ -171,8 +171,8 @@
       transform: translateY(10px); /* 시작 시 아래쪽 */
       transition: opacity 0.3s ease, transform 0.3s ease;
       font-family: 'Jua', sans-serif;
-      box-shadow: 0 6px 15px rgba(2, 114, 95, 0.35); /* 그림자 1.5배 */
-      margin-top: 40px; /* ✅ 폼과 겹치지 않도록 여백 확보 */
+      box-shadow: 0 6px 15px rgba(2, 114, 95, 0.35);
+      margin-top: 60px; /* 폼과 겹치지 않도록 여백 확보 */
     }
 
     #result.show {
@@ -338,8 +338,8 @@
           const item = document.createElement('div');
           item.className = 'result-item';
           item.innerHTML = `
-            <div>차주 <span class="slash">-</span> ${car.owner_name}  <span class="slash">/</span>  ${car.phone_number}</div>
-            <div>차량 <span class="slash">-</span> ${car.car_number}  <span class="slash">/</span>  ${car.car_type}  <span class="slash">/</span>  ${car.car_color}</div>
+            <div><span class="slash">차주 -</span> ${car.owner_name}  <span class="slash">/</span>  ${car.phone_number}</div>
+            <div><span class="slash">차량 -</span> ${car.car_number}  <span class="slash">/</span>  ${car.car_type}  <span class="slash">/</span>  ${car.car_color}</div>
           `;
           resultDiv.appendChild(item);
         });
