@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet" />
   <title>Car Search</title>
   <style>
     html, body {
@@ -13,7 +14,7 @@
     body {
       margin: 0;
       font-family: sans-serif;
-      background-color: white;
+      background-color: E1DDDB;
       color: rgb(2, 114, 95);
       display: flex;
       flex-direction: column;
@@ -149,14 +150,15 @@
     button:hover {
       background-color: white;
       color: rgb(2, 114, 95);
+      border: 2px rgb(2, 114, 95);
     }
 
     #result {
   max-width: 550px;
   width: 100%;
-  background-color: rgb(2, 114, 95);
-  color: white;
-  font-size: 1.3em;
+  background-color: white;
+  color: rgb(2, 114, 95);
+  font-size: 1.2em;
   font-weight: bold;
   padding: 15px;
   border-radius: 10px;
@@ -165,6 +167,8 @@
   opacity: 0;
   transform: translateY(10px);
   transition: opacity 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 4px 10px rgba(2, 114, 95, 0.3);
+  font-family: 'Jua', sans-serif;
 }
 
     #result.show {
