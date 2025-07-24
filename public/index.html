@@ -7,249 +7,249 @@
   <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet" />
   <title>Car Search</title>
   <style>
-    html, body {
-      overflow-x: hidden;
-    }
+html, body {
+  overflow-x: hidden;
+}
 
-    body {
-      margin: 0;
-      font-family: sans-serif;
-      background-color: #E1DDDB;
-      color: rgb(2, 114, 95);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-      position: relative;
-    }
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background-color: #E1DDDB;
+  color: rgb(2, 114, 95);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  position: relative;
+}
 
-    .header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background-color: #E1DDDB;
-      color: rgb(2, 114, 95);
-      font-family: 'Great Vibes', cursive;
-      font-size: 31px;
-      font-weight: bold;
-      padding: 12px 20px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      z-index: 1000;
-      transition: background-color 0.3s, color 0.3s;
-    }
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #E1DDDB;
+  color: rgb(2, 114, 95);
+  font-family: 'Great Vibes', cursive;
+  font-size: 31px;
+  font-weight: bold;
+  padding: 12px 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 1000;
+  transition: background-color 0.3s, color 0.3s;
+}
 
-    .underline {
-      text-decoration: underline;
-    }
+.underline {
+  text-decoration: underline;
+}
 
-    .header.scrolled {
-      background-color: rgb(2, 114, 95);
-      color: #E1DDDB;
-    }
+.header.scrolled {
+  background-color: rgb(2, 114, 95);
+  color: #E1DDDB;
+}
 
-    .tabs {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 20px;
-      width: 100%;
-      max-width: 550px;
-      margin-top: 40px; /* 헤더 공간 확보 */
-    }
+.tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 550px;
+  margin-top: 40px;
+}
 
-    .tab-button {
-      flex: 1;
-      padding: 12px 0;
-      font-size: 17px;
-      border: none;
-      background-color: #E1DDDB;
-      color: rgb(130, 148, 148);
-      border-radius: 0;
-      cursor: pointer;
-      border-bottom: 1.5px solid transparent;
-      transition: border-color 0.5s, color 0.5s;
-    }
+.tab-button {
+  flex: 1;
+  padding: 12px 0;
+  font-size: 17px;
+  border: none;
+  background-color: #E1DDDB;
+  color: rgb(130, 148, 148);
+  border-radius: 0;
+  cursor: pointer;
+  border-bottom: 1.5px solid transparent;
+  transition: border-color 0.5s, color 0.5s;
+}
 
-    .tab-button.active {
-      border-bottom: 2px solid rgb(2, 114, 95);
-      background-color: #E1DDDB;
-      font-weight: bold;
-      color: rgb(2, 114, 95);
-    }
+.tab-button.active {
+  border-bottom: 2px solid rgb(2, 114, 95);
+  background-color: #E1DDDB;
+  font-weight: bold;
+  color: rgb(2, 114, 95);
+}
 
-    .section {
-      display: none;
-      width: 100%;
-      max-width: 550px;
-      background-color: #E1DDDB;
-      padding: 20px;
-      border-radius: 10px;
-    }
+.section {
+  display: none;
+  width: 100%;
+  max-width: 550px;
+  background-color: #E1DDDB;
+  padding: 20px;
+  border-radius: 10px;
+}
 
-    .section.active {
-      display: block;
-    }
+.section.active {
+  display: block;
+}
 
-    input {
-      display: block;
-      width: 100%;
-      max-width: 500px;
-      margin: 10px auto;
-      padding: 12px;
-      font-size: 17px;
-      border: none;
-      border-radius: 9999px;
-      box-sizing: border-box;
-      outline: none;
-      box-shadow:
-        0 4px 8px -2px rgb(2, 139, 117),       /* 아래쪽 그림자 */
-        -2px 0 4px -2px rgb(2, 139, 117),      /* 왼쪽 (절반) */
-        6px 0 12px -2px rgb(2, 139, 117);      /* 오른쪽 (1.5배 강하게) */
-    }
+input {
+  display: block;
+  width: 100%;
+  max-width: 500px;
+  margin: 10px auto;
+  padding: 12px;
+  font-size: 17px;
+  border: none;
+  border-radius: 9999px;
+  box-sizing: border-box;
+  outline: none;
+  box-shadow:
+    0 4px 8px -2px rgb(2, 139, 117),
+    -2px 0 4px -2px rgb(2, 139, 117),
+    6px 0 12px -2px rgb(2, 139, 117);
+}
 
-    input.invalid {
-      border: 2px solid red;
-    }
+input.invalid {
+  border: 2px solid red;
+}
 
-    #car_number,
-    #add_car_number {
-      padding: 20px;
-      font-weight: bold;
-    }
+#car_number,
+#add_car_number {
+  padding: 20px;
+  font-weight: bold;
+}
 
-    .input-group {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-    }
+.input-group {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
 
-    .input-group input {
-      width: 100%;
-      max-width: 245px;
-    }
+.input-group input {
+  width: 100%;
+  max-width: 245px;
+}
 
-    button {
-      width: 100%;
-      max-width: 500px;
-      padding: 14px;
-      font-size: 18px;
-      background-color: #E1DDDB;
-      border: none;
-      border-radius: 9999px;
-      cursor: pointer;
-      margin: 0px auto 0;
-    }
+button {
+  width: 100%;
+  max-width: 500px;
+  padding: 14px;
+  font-size: 18px;
+  background-color: #E1DDDB;
+  border: none;
+  border-radius: 9999px;
+  cursor: pointer;
+  margin: 0px auto 0;
+}
 
-    .enter {
-      background-color: rgb(2, 114, 95);
-      color: #E1DDDB;
-      margin: 20px auto 0;
-      display: block;
-    }
+.enter {
+  background-color: rgb(2, 114, 95);
+  color: #E1DDDB;
+  margin: 20px auto 0;
+  display: block;
+  border: 2px solid transparent;
+}
 
-    button:hover {
-      background-color: #E1DDDB;
-      color: rgb(2, 114, 95);
-    }
+button:hover {
+  background-color: #E1DDDB;
+  color: rgb(2, 114, 95);
+}
 
-    .enter:hover {
-      border: 2px solid rgb(2, 114, 95);
-    }
+.enter:hover {
+  border: 2px solid rgb(2, 114, 95);
+}
 
-    #result {
-      max-width: 550px;
-      width: 100%;
-      background-color: white;
-      color: rgb(77, 77, 77);
-      font-size: 1.2em;
-      font-weight: bold;
-      padding: 15px;
-      border-radius: 10px;
-      max-height: 400px;
-      overflow-y: auto;
-      opacity: 0;
-      transform: translateY(10px); /* 시작 시 아래쪽 */
-      transition: opacity 0.3s ease, transform 0.3s ease;
-      font-family: 'Jua', sans-serif;
-      box-shadow: 0 6px 15px rgba(2, 114, 95, 0.35);
-      margin-top: 60px; /* 폼과 겹치지 않도록 여백 확보 */
-    }
+#result {
+  max-width: 550px;
+  width: 100%;
+  background-color: white;
+  color: rgb(77, 77, 77);
+  font-size: 1.2em;
+  font-weight: bold;
+  padding: 15px;
+  border-radius: 10px;
+  max-height: 400px;
+  overflow-y: auto;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  font-family: 'Jua', sans-serif;
+  box-shadow: 0 6px 15px rgba(2, 114, 95, 0.35);
+  margin-top: 20px;
+}
 
-    #result.show {
-      opacity: 1;
-      transform: translateY(0); /* 스르륵 올라오기 */
-    }
+#result.show {
+  opacity: 1;
+  transform: translateY(0);
+}
 
-    span.slash {
-      color: rgb(2, 114, 95);
-    }
+span.slash {
+  color: rgb(2, 114, 95);
+}
 
-    .result-item {
-      margin-bottom: 20px;
-      border-bottom: 1px solid rgb(2, 114, 95);
-      padding-bottom: 10px;
-      font-family: 'Pretendard Variable';
-      font-size: 1.2em;
-      font-family: 'Jua', sans-serif;
-    }
+.result-item {
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgb(2, 114, 95);
+  padding-bottom: 10px;
+  font-family: 'Pretendard Variable';
+  font-size: 1.2em;
+  font-family: 'Jua', sans-serif;
+}
 
-    .result-item div {
-      margin: 5px 0;
-    }
+.result-item div {
+  margin: 5px 0;
+}
 
-    @media (max-width: 600px) {
-      body {
-        padding: 16px;
-      }
+@media (max-width: 600px) {
+  body {
+    padding: 16px;
+  }
 
-      .tabs {
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px;
-        margin-top: 80px;
-      }
+  .tabs {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 80px;
+  }
 
-      .tab-button {
-        flex: 1 1 45%;
-      }
+  .tab-button {
+    flex: 1 1 45%;
+  }
 
-      @media (max-width: 600px) {
-        .input-group {
-          flex-direction: row;     /* ← 모바일에서도 가로 정렬 유지 */
-          flex-wrap: wrap;         /* ← 좁으면 자동 줄바꿈 */
-          gap: 10px;
-          justify-content: center;
-        }
+  .input-group {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
 
-        .input-group input {
-          flex: 1 1 45%;           /* ← input이 두 개씩 줄에 들어가도록 */
-          max-width: none;
-        }
-      }
+  .input-group input {
+    flex: 1 1 45%;
+    max-width: none;
+  }
 
-      input, .input-group input {
-        width: 100%;
-        font-size: 16px;
-        padding: 14px;
-      }
+  input, .input-group input {
+    width: 100%;
+    font-size: 16px;
+    padding: 14px;
+  }
 
-      .enter {
-        font-size: 18px;
-        padding: 16px;
-      }
+  .enter {
+    font-size: 18px;
+    padding: 16px;
+  }
 
-      #result {
-        font-size: 15px;
-        padding: 12px;
-      }
+  #result {
+    font-size: 15px;
+    padding: 12px;
+  }
 
-      .header {
-        font-size: 22px;
-        top: 12px;
-        left: 12px;
-      }
-    }
+  .header {
+    font-size: 22px;
+    top: 12px;
+    left: 12px;
+  }
+}
+
   </style>
 </head>
 <body>
