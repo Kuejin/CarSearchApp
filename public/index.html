@@ -160,7 +160,7 @@
       max-width: 550px;
       width: 100%;
       background-color: white;
-      color: rgb(2, 114, 95);
+      color: rgb(99, 99, 99);
       font-size: 1.2em;
       font-weight: bold;
       padding: 15px;
@@ -181,7 +181,7 @@
     }
 
     span.slash {
-      color: rgb(66, 66, 66);
+      color: rgb(2, 114, 95);
     }
 
     .result-item {
@@ -338,8 +338,8 @@
           const item = document.createElement('div');
           item.className = 'result-item';
           item.innerHTML = `
-            <div>차주 - ${car.owner_name}  <span class="slash">/</sapn>  ${car.phone_number}</div>
-            <div>차량 - ${car.car_number}  <span class="slash">/</sapn>  ${car.car_type}  <span class="slash">/</sapn>  ${car.car_color}</div>
+            <div>차주 <span class="slash">-</span> ${car.owner_name}  <span class="slash">/</span>  ${car.phone_number}</div>
+            <div>차량 <span class="slash">-</span> ${car.car_number}  <span class="slash">/</span>  ${car.car_type}  <span class="slash">/</span>  ${car.car_color}</div>
           `;
           resultDiv.appendChild(item);
         });
