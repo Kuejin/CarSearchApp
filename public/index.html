@@ -159,7 +159,7 @@
     #result {
       max-width: 550px;
       width: 100%;
-      background-color: #E1DDDB;
+      background-color: white;
       color: rgb(2, 114, 95);
       font-size: 1.2em;
       font-weight: bold;
@@ -178,6 +178,10 @@
     #result.show {
       opacity: 1;
       transform: translateY(0); /* 스르륵 올라오기 */
+    }
+
+    span.slash {
+      color: rgb(66, 66, 66);
     }
 
     .result-item {
@@ -312,6 +316,13 @@
     async function searchCar() {
       const inputIds = ['car_number', 'car_type', 'car_color', 'owner_name', 'phone_number'];
       const params = new URLSearchParams();
+
+      const hasAnyInput = inputIds.some(id => document.getElementById(id).value.trim() !== '');
+      if (!hasAnyInput) {
+        alert('값을 입력하세요');
+        return; // ✅ 검색 요청 막기
+      }
+
       inputIds.forEach(id => {
         params.append(id, document.getElementById(id).value);
       });
@@ -327,8 +338,8 @@
           const item = document.createElement('div');
           item.className = 'result-item';
           item.innerHTML = `
-            <div>차주 - ${car.owner_name}  /  ${car.phone_number}</div>
-            <div>차량 - ${car.car_number}  /  ${car.car_type}  /  ${car.car_color}</div>
+            <div>차주 - ${car.owner_name}  <span class="slash">/</sapn>  ${car.phone_number}</div>
+            <div>차량 - ${car.car_number}  <span class="slash">/</sapn>  ${car.car_type}  <span class="slash">/</sapn>  ${car.car_color}</div>
           `;
           resultDiv.appendChild(item);
         });
