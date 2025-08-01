@@ -11,7 +11,7 @@ const connection = mysql.createConnection({
   database: dbUrl.pathname.replace('/', ''),
   port: dbUrl.port || 3306,
   ssl: {
-    rejectUnauthorized: true,
+    rejectUnauthorized: false,
   },
 });
 
