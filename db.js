@@ -18,6 +18,14 @@ const pool = mysql.createPool({
   },
 });
 
-console.log('✅ DB 연결 풀 생성 완료');
+// 연결 테스트
+pool.getConnection((err, conn) => {
+  if (err) {
+    console.error('❌ DB 연결 실패:', err.message);
+  } else {
+    console.log('✅ DB 연결 성공!');
+    conn.release();
+  }
+});
 
 module.exports = pool;
