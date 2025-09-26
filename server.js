@@ -42,7 +42,7 @@ app.get('/search', (req, res) => {
 
   db.query(sql, params, (err, results) => {
     if (err) {
-      console.error('❌ 검색 오류!:', err.message);
+      console.error('❌ 검색 오류:', err.message);
       return res.status(500).json({ error: '서버 오류: 검색 실패' });
     }
     res.json(results);
@@ -60,7 +60,7 @@ app.post('/add', (req, res) => {
 
   db.query(sql, [car_number, car_type, car_color, owner_name, phone_number], (err, result) => {
     if (err) {
-      console.error('❌ 등록 오류!:', err.message);
+      console.error('❌ 등록 오류:', err.message);
       return res.status(500).json({ error: '서버 오류: 등록 실패' });
     }
     res.json({ message: '등록 성공!' });
