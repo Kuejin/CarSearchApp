@@ -1,10 +1,19 @@
 require('dotenv').config();
 const mysql = require('mysql2');
 
-// DATABASE_URL 파싱
-const dbUrl = new URL(process.env.DATABASE_URL);
+if (!process.env.DATABASE_URL) {
+  console.error('❌ DATABASE_URL이 설정되지 않았습니다!');
+  process.exit(1);
+}
 
-// 연결 풀 생성
+let dbUrl;
+try {
+  dbUrl = new URL(process.env.DATABASE_URL);
+} catch (err) {
+  console.error('❌ DATABASE_URL 형식 오류:', err.message);
+  process.exit(1);
+}
+
 const pool = mysql.createPool({
   host: dbUrl.hostname,
   user: dbUrl.username,
@@ -13,12 +22,9 @@ const pool = mysql.createPool({
   port: dbUrl.port || 3306,
   waitForConnections: true,
   connectionLimit: 10,
-  ssl: {
-    rejectUnauthorized: false,
-  },
+  ssl: { rejectUnauthorized: false },
 });
 
-// 연결 테스트
 pool.getConnection((err, conn) => {
   if (err) {
     console.error('❌ DB 연결 실패:', err.message);
