@@ -186,27 +186,9 @@ span.slash {
 }
 
 .result-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between; /* 정보는 왼쪽, 버튼은 오른쪽 */
   margin-bottom: 20px;
   border-bottom: 1px solid rgb(2, 114, 95);
   padding-bottom: 10px;
-  font-family: 'Jua', sans-serif;
-  font-size: 1.2em;
-}
-
-.result-item button {
-  width: 28px;
-  height: 28px;
-  padding: 0;
-  margin-left: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #eee;
-  font-size: 12px;
-  cursor: pointer;
-  text-align: center;
 }
 
 @media (max-width: 600px) {
@@ -349,14 +331,7 @@ span.slash {
           const item = document.createElement('div');
           item.className = 'result-item';
           item.innerHTML = `
-            <div class="result-item">
-              <div class="car-info">
-                <span class="slash">차량 -</span> ${car.car_number}   
-                <span class="slash">/</span> ${car.car_type}   
-                <span class="slash">/</span> ${car.car_color}
-              </div>
-              <button onclick="deleteCar(${car.id})">삭제</button>
-            </div>
+            <div><span class="slash">차주 -</span> ${car.owner_name} <span class="slash">/</span> ${car.phone_number}</div> <div><span class="slash">차량 -</span> ${car.car_number} <span class="slash">/</span> ${car.car_type} <span class="slash">/</span> ${car.car_color}</div>
           `;
           resultDiv.appendChild(item);
         });
