@@ -313,43 +313,52 @@ span.slash {
       document.getElementById(tabName).classList.add('active');
     }
 
-async function searchCar() {
-  const inputIds = ['car_number', 'car_type', 'car_color', 'owner_name', 'phone_number'];
-  const params = new URLSearchParams();
+    async function searchCar(silent = false) {
+      const inputIds = ['car_number', 'car_type', 'car_color', 'owner_name', 'phone_number'];
+      const params = new URLSearchParams();
 
-  const hasAnyInput = inputIds.some(id => document.getElementById(id).value.trim() !== '');
-  if (!hasAnyInput) {
-    alert('값을 입력하세요.');
-    return;
-  }
+      const hasAnyInput = inputIds.some(id => document.getElementById(id).value.trim() !== '');
+      if (!hasAnyInput) {
+        if (!silent) alert('값을 입력하세요');
+        return;
+      }
 
-  inputIds.forEach(id => {
-    params.append(id, document.getElementById(id).value);
-  });
+      inputIds.forEach(id => {
+        params.append(id, document.getElementById(id).value);
+      });
 
-  const res = await fetch(`/search?${params}`);
-  const data = await res.json();
-  const resultDiv = document.getElementById('result');
-  resultDiv.classList.remove('show');
-  resultDiv.innerHTML = '';
+      const res = await fetch(`/search?${params}`);
+      const data = await res.json();
+      const resultDiv = document.getElementById('result');
+      resultDiv.classList.remove('show');
+      resultDiv.innerHTML = '';
 
-  if (Array.isArray(data) && data.length > 0) {
-    data.forEach(car => {
-      const item = document.createElement('div');
-      item.className = 'result-item';
-      item.innerHTML = `
-        <div><span class="slash">차주 -</span> ${car.owner_name}  <span class="slash">/</span>  ${car.phone_number}</div>
-        <div><span class="slash">차량 -</span> ${car.car_number}  <span class="slash">/</span>  ${car.car_type}  <span class="slash">/</span>  ${car.car_color}</div>
-        <button onclick="deleteCar(${car.id})">삭제</button>
-      `;
-      resultDiv.appendChild(item);
-    });
-  } else {
-    alert('결과가 없습니다.');
-  }
-  setTimeout(() => resultDiv.classList.add('show'), 10);
-}
-
+      if (Array.isArray(data) && data.length > 0) {
+        data.forEach(car => {
+          const item = document.createElement('div');
+          item.className = 'result-item';
+          item.innerHTML = `
+            <div><span class="slash">차주 -</span> ${car.owner_name}  <span class="slash">/</span>  ${car.phone_number}</div>
+            <div>
+              <span class="slash">차량 -</span> ${car.car_number}  
+              <span class="slash">/</span>  ${car.car_type}  
+              <span class="slash">/</span>  ${car.car_color}
+              <button onclick="deleteCar(${car.id})">삭제</button>
+            </div>
+          `;
+          resultDiv.appendChild(item);
+        });
+        setTimeout(() => resultDiv.classList.add('show'), 10);
+      } else {
+        if (!silent) {
+          alert('결과가 없습니다.');
+        } else {
+          // silent 모드일 땐 박스 자체를 닫아줌
+          resultDiv.classList.remove('show');
+          resultDiv.innerHTML = '';
+        }
+      }
+    }
 
     async function addCar() {
       const inputIds = ['add_car_number', 'add_car_type', 'add_car_color', 'add_owner_name', 'add_phone_number'];
@@ -382,17 +391,17 @@ async function searchCar() {
     }
 
     async function deleteCar(id) {
-      if (!confirm(`차량 정보를 삭제하시겠습니까?`)) return;
+      if (!confirm(`id=${id} 차량 정보를 삭제하시겠습니까?`)) return;
 
       const res = await fetch(`/delete/${id}`, {
         method: 'DELETE',
       });
 
       const data = await res.json();
-      alert(data.message || '삭제 처리 완료');
+      alert("삭제 완료 :)");
       
-      // 삭제 후 결과 새로고침
-      searchCar();
+      // 삭제 후 결과 갱신 (silent 모드)
+      searchCar(true);
     }
   </script>
 </body>
