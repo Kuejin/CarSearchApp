@@ -195,7 +195,16 @@ span.slash {
 }
 
 .result-item div {
-  margin: 5px 0;
+  display: flex;
+  align-items: center;   /* 세로 가운데 정렬 */
+  gap: 6px;
+}
+
+.result-item button {
+  font-size: 12px;
+  padding: 2px 6px;
+  margin-left: 8px;
+  cursor: pointer;
 }
 
 @media (max-width: 600px) {
@@ -391,7 +400,7 @@ span.slash {
     }
 
     async function deleteCar(id) {
-      if (!confirm(`id=${id} 차량 정보를 삭제하시겠습니까?`)) return;
+      if (!confirm(`차량 정보를 삭제하시겠습니까?`)) return;
 
       const res = await fetch(`/delete/${id}`, {
         method: 'DELETE',
