@@ -63,7 +63,27 @@ app.post('/add', (req, res) => {
       console.error('❌ 등록 오류:', err.message);
       return res.status(500).json({ error: '서버 오류: 등록 실패' });
     }
-    res.json({ message: '등록 성공!' });
+    res.json({ message: '등록 완료 :)' });
+  });
+});
+
+// 차량 삭제 라우트 (id 기준)
+app.delete('/delete/:id', (req, res) => {
+  const { id } = req.params;
+
+  const sql = `DELETE FROM car_info WHERE id = ?`;
+
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      console.error('❌ 삭제 오류:', err.message);
+      return res.status(500).json({ error: '서버 오류: 삭제 실패' });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: '해당 차량을 찾을 수 없습니다' });
+    }
+
+    res.json({ message: '삭제 완료 :)' });
   });
 });
 
