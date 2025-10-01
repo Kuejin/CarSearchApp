@@ -43,7 +43,7 @@ body {
   text-decoration: underline;
 }
 
-.header.scrolled {
+.header.picked {
   background-color: rgb(2, 114, 95);
   color: #E1DDDB;
 }
@@ -82,7 +82,7 @@ body {
   width: 100%;
   max-width: 550px;
   background-color: #E1DDDB;
-  padding: 20px;
+  padding: 0 20px 20px 20px;
   border-radius: 10px;
 }
 
@@ -102,9 +102,7 @@ input {
   box-sizing: border-box;
   outline: none;
   box-shadow:
-    0 4px 8px -2px rgb(2, 139, 117),
-    -2px 0 4px -2px rgb(2, 139, 117),
-    6px 0 12px -2px rgb(2, 139, 117);
+    0 0 8px 2px rgb(2, 139, 117, 0.7);
 }
 
 input.invalid {
@@ -302,12 +300,13 @@ span.slash {
   <div id="result"></div>
 
   <script>
-    window.addEventListener('scroll', () => {
-      const header = document.querySelector('.header');
-      if (window.scrollY > 10) {
-        header.classList.add('scrolled');
+    const header = document.querySelector(".header");
+    const input = document.querySelector("input");
+    document.addEventListener("click", (e) => {
+      if (e.target === input) {
+        header.classList.add("picked");
       } else {
-        header.classList.remove('scrolled');
+        header.classList.remove("picked");
       }
     });
     function showTab(tabName) {
@@ -319,7 +318,6 @@ span.slash {
       document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
       document.getElementById(tabName).classList.add('active');
     }
-
     async function searchCar(silent = false) {
       const inputIds = ['car_number', 'car_type', 'car_color', 'owner_name', 'phone_number'];
       const params = new URLSearchParams();
@@ -329,17 +327,14 @@ span.slash {
         if (!silent) alert('값을 입력하세요');
         return;
       }
-
       inputIds.forEach(id => {
         params.append(id, document.getElementById(id).value);
       });
-
       const res = await fetch(`/search?${params}`);
       const data = await res.json();
       const resultDiv = document.getElementById('result');
       resultDiv.classList.remove('show');
       resultDiv.innerHTML = '';
-
       if (Array.isArray(data) && data.length > 0) {
         data.forEach(car => {
           const item = document.createElement('div');
@@ -364,28 +359,23 @@ span.slash {
         }
       }
     }
-
     async function addCar() {
       const inputIds = ['add_car_number', 'add_car_type', 'add_car_color', 'add_owner_name', 'add_phone_number'];
       const inputs = inputIds.map(id => document.getElementById(id));
       const allFilled = inputs.every(input => input.value.trim() !== '');
-
       if (!allFilled) {
         alert('정보를 모두 입력해주세요.');
         return;
       }
-
       const body = {};
       inputIds.forEach(id => {
         body[id.replace('add_', '')] = document.getElementById(id).value;
       });
-
       const res = await fetch('/add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
       });
-
       const data = await res.json();
       if (data.message && data.message.includes('성공')) {
         alert('등록 성공했습니다');
@@ -394,20 +384,19 @@ span.slash {
         alert(data.message || '등록 실패');
       }
     }
-
     async function deleteCar(id) {
       if (!confirm(`차량 정보를 삭제하시겠습니까?`)) return;
-
       const res = await fetch(`/delete/${id}`, {
         method: 'DELETE',
       });
-
       const data = await res.json();
       alert("삭제 완료 :)");
-      
       // 삭제 후 결과 갱신 (silent 모드)
       searchCar(true);
     }
+    document.querySelector(".header").addEventListener("click", function () {
+      window.location.reload(); // 전체 페이지 새로고침
+    })
   </script>
 </body>
 </html>
