@@ -301,9 +301,8 @@ span.slash {
 
   <script>
     const header = document.querySelector(".header");
-    const input = document.querySelector("input");
     document.addEventListener("click", (e) => {
-      if (e.target === input) {
+      if (e.target.tagName.toLowerCase() === "input") {
         header.classList.add("picked");
       } else {
         header.classList.remove("picked");
@@ -343,7 +342,7 @@ span.slash {
             <div>
               <span class="slash">차주 -</span> ${car.owner_name}<span class="slash">/</span> ${car.phone_number}</div>
               <div><span class="slash">차량 -</span> ${car.car_number} <span class="slash">/</span> ${car.car_type} <span class="slash">/</span> ${car.car_color}
-              <button onclick="deleteCar(${car.id})">삭제</button>
+              <button>수정</button><button onclick="deleteCar(${car.id})">삭제</button>
             </div>
           `;
           resultDiv.appendChild(item);
