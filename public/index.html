@@ -7,252 +7,240 @@
   <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet" />
   <title>Car Search</title>
   <style>
-html, body {
-  overflow-x: hidden;
-}
+    html, body {
+      overflow-x: hidden;
+    }
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background-color: #E1DDDB;
+      color: rgb(2, 114, 95);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+    }
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #E1DDDB;
+      color: rgb(2, 114, 95);
+      font-family: 'Great Vibes', cursive;
+      font-size: 31px;
+      font-weight: bold;
+      padding: 12px 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      z-index: 1000;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .underline {
+      text-decoration: underline;
+    }
+    .header.picked {
+      background-color: rgb(2, 114, 95);
+      color: #E1DDDB;
+    }
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+      width: 100%;
+      max-width: 550px;
+      margin-top: 40px;
+    }
+    .tab-button {
+      flex: 1;
+      padding: 12px 0;
+      font-size: 17px;
+      border: none;
+      background-color: #E1DDDB;
+      color: rgb(130, 148, 148);
+      border-radius: 0;
+      cursor: pointer;
+      border-bottom: 1.5px solid transparent;
+      transition: border-color 0.5s, color 0.5s;
+    }
+    .tab-button.active {
+      border-bottom: 2px solid rgb(2, 114, 95);
+      background-color: #E1DDDB;
+      font-weight: bold;
+      color: rgb(2, 114, 95);
+    }
+    .section {
+      display: none;
+      width: 100%;
+      max-width: 550px;
+      background-color: #E1DDDB;
+      padding: 0 20px 20px 20px;
+      border-radius: 10px;
+    }
+    .section.active {
+      display: block;
+    }
+    input {
+      display: block;
+      width: 100%;
+      max-width: 500px;
+      margin: 10px auto;
+      padding: 12px;
+      font-size: 17px;
+      border: none;
+      border-radius: 9999px;
+      box-sizing: border-box;
+      outline: none;
+      box-shadow: 0 0 8px 2px rgb(2, 139, 117, 0.7);
+    }
+    input.invalid {
+      border: 2px solid red;
+    }
+    #car_number,
+    #add_car_number {
+      padding: 20px;
+      font-weight: bold;
+    }
+    .input-group {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    .input-group input {
+      width: 100%;
+      max-width: 245px;
+    }
+    button {
+      width: 100%;
+      max-width: 500px;
+      padding: 14px;
+      font-size: 18px;
+      background-color: #E1DDDB;
+      border: none;
+      border-radius: 9999px;
+      cursor: pointer;
+      margin: 0px auto 0;
+    }
+    .enter {
+      background-color: rgb(2, 114, 95);
+      color: #E1DDDB;
+      margin: 20px auto 0;
+      display: block;
+      border: 2px solid transparent;
+    }
+    button:hover {
+      background-color: #E1DDDB;
+      color: rgb(2, 114, 95);
+    }
+    .enter:hover {
+      border: 2px solid rgb(2, 114, 95);
+    }
+    #result {
+      max-width: 550px;
+      width: 100%;
+      background-color: white;
+      color: rgb(77, 77, 77);
+      font-size: 1.2em;
+      font-weight: bold;
+      padding: 15px;
+      border-radius: 10px;
+      max-height: 400px;
+      overflow-y: auto;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      font-family: 'Jua', sans-serif;
+      box-shadow: 0 6px 15px rgba(2, 114, 95, 0.35);
+      margin-top: 20px;
+    }
+    #result.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    span.slash {
+      color: rgb(2, 114, 95);
+    }
+    .result-item {
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgb(2, 114, 95);
+      padding-bottom: 10px;
+      font-size: 1.2em;
+      font-family: 'Jua', sans-serif;
+    }
+    .result-item button {
+      float: right;
+      width: 2.7em;
+      height: 27px;
+      font-size: 0.7em;
+      font-family: 'Jua', sans-serif;
+      background-color: #E1DDDB;
+      cursor: pointer;
+      color: rgb(255, 57, 57);
+      padding: 0;
+    }
+    .result-item input.inline-edit {
+      display: inline-block;
+      width: auto;          /* 내용에 맞게 */
+      min-width: 80px;      /* 너무 작아지지 않도록 */
+      font-size: inherit;
+      font-family: inherit;
+      padding: 2px 4px;
+      margin: 0 3px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: none;     /* 검색창처럼 강조 안 되게 */
+    }
 
-body {
-  margin: 0;
-  font-family: sans-serif;
-  background-color: #E1DDDB;
-  color: rgb(2, 114, 95);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  position: relative;
-}
+    @media (max-width: 600px) {
+      body {
+        padding: 16px;
+      }
 
-.header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background-color: #E1DDDB;
-  color: rgb(2, 114, 95);
-  font-family: 'Great Vibes', cursive;
-  font-size: 31px;
-  font-weight: bold;
-  padding: 12px 20px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  z-index: 1000;
-  transition: background-color 0.3s, color 0.3s;
-}
+      .tabs {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 80px;
+      }
 
-.underline {
-  text-decoration: underline;
-}
+      .tab-button {
+        flex: 1 1 45%;
+      }
 
-.header.picked {
-  background-color: rgb(2, 114, 95);
-  color: #E1DDDB;
-}
+      .input-group {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+      }
 
-.tabs {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-  width: 100%;
-  max-width: 550px;
-  margin-top: 40px;
-}
+      .input-group input {
+        flex: 1 1 45%;
+        max-width: none;
+      }
 
-.tab-button {
-  flex: 1;
-  padding: 12px 0;
-  font-size: 17px;
-  border: none;
-  background-color: #E1DDDB;
-  color: rgb(130, 148, 148);
-  border-radius: 0;
-  cursor: pointer;
-  border-bottom: 1.5px solid transparent;
-  transition: border-color 0.5s, color 0.5s;
-}
+      input, .input-group input {
+        width: 100%;
+        font-size: 16px;
+        padding: 14px;
+      }
 
-.tab-button.active {
-  border-bottom: 2px solid rgb(2, 114, 95);
-  background-color: #E1DDDB;
-  font-weight: bold;
-  color: rgb(2, 114, 95);
-}
+      .enter {
+        font-size: 18px;
+        padding: 16px;
+      }
 
-.section {
-  display: none;
-  width: 100%;
-  max-width: 550px;
-  background-color: #E1DDDB;
-  padding: 0 20px 20px 20px;
-  border-radius: 10px;
-}
+      #result {
+        font-size: 15px;
+        padding: 12px;
+      }
 
-.section.active {
-  display: block;
-}
-
-input {
-  display: block;
-  width: 100%;
-  max-width: 500px;
-  margin: 10px auto;
-  padding: 12px;
-  font-size: 17px;
-  border: none;
-  border-radius: 9999px;
-  box-sizing: border-box;
-  outline: none;
-  box-shadow:
-    0 0 8px 2px rgb(2, 139, 117, 0.7);
-}
-
-input.invalid {
-  border: 2px solid red;
-}
-
-#car_number,
-#add_car_number {
-  padding: 20px;
-  font-weight: bold;
-}
-
-.input-group {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-}
-
-.input-group input {
-  width: 100%;
-  max-width: 245px;
-}
-
-button {
-  width: 100%;
-  max-width: 500px;
-  padding: 14px;
-  font-size: 18px;
-  background-color: #E1DDDB;
-  border: none;
-  border-radius: 9999px;
-  cursor: pointer;
-  margin: 0px auto 0;
-}
-
-.enter {
-  background-color: rgb(2, 114, 95);
-  color: #E1DDDB;
-  margin: 20px auto 0;
-  display: block;
-  border: 2px solid transparent;
-}
-
-button:hover {
-  background-color: #E1DDDB;
-  color: rgb(2, 114, 95);
-}
-
-.enter:hover {
-  border: 2px solid rgb(2, 114, 95);
-}
-
-#result {
-  max-width: 550px;
-  width: 100%;
-  background-color: white;
-  color: rgb(77, 77, 77);
-  font-size: 1.2em;
-  font-weight: bold;
-  padding: 15px;
-  border-radius: 10px;
-  max-height: 400px;
-  overflow-y: auto;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  font-family: 'Jua', sans-serif;
-  box-shadow: 0 6px 15px rgba(2, 114, 95, 0.35);
-  margin-top: 20px;
-}
-
-#result.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-span.slash {
-  color: rgb(2, 114, 95);
-}
-
-.result-item {
-  margin-bottom: 20px;
-  border-bottom: 1px solid rgb(2, 114, 95);
-  padding-bottom: 10px;
-  font-size: 1.2em;
-  font-family: 'Jua', sans-serif;
-}
-
-.result-item button {
-  float: right;
-  width: 2.7em;
-  height: 27px;
-  font-size: 0.7em;
-  font-family: 'Jua', sans-serif;
-  background-color: #E1DDDB;
-  cursor: pointer;
-  color: rgb(255, 57, 57);
-  padding: 0;
-}
-
-@media (max-width: 600px) {
-  body {
-    padding: 16px;
-  }
-
-  .tabs {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 80px;
-  }
-
-  .tab-button {
-    flex: 1 1 45%;
-  }
-
-  .input-group {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-  }
-
-  .input-group input {
-    flex: 1 1 45%;
-    max-width: none;
-  }
-
-  input, .input-group input {
-    width: 100%;
-    font-size: 16px;
-    padding: 14px;
-  }
-
-  .enter {
-    font-size: 18px;
-    padding: 16px;
-  }
-
-  #result {
-    font-size: 15px;
-    padding: 12px;
-  }
-
-  .header {
-    font-size: 22px;
-    top: 12px;
-    left: 12px;
-  }
+      .header {
+        font-size: 22px;
+        top: 12px;
+        left: 12px;
+      }
 }
 
   </style>
@@ -313,14 +301,12 @@ span.slash {
       const activeButton = Array.from(document.querySelectorAll('.tab-button'))
         .find(btn => btn.textContent.includes(tabName === 'search' ? '검색' : '추가'));
       activeButton.classList.add('active');
-
       document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
       document.getElementById(tabName).classList.add('active');
     }
     async function searchCar(silent = false) {
       const inputIds = ['car_number', 'car_type', 'car_color', 'owner_name', 'phone_number'];
       const params = new URLSearchParams();
-
       const hasAnyInput = inputIds.some(id => document.getElementById(id).value.trim() !== '');
       if (!hasAnyInput) {
         if (!silent) alert('값을 입력하세요');
@@ -336,23 +322,13 @@ span.slash {
       resultDiv.innerHTML = '';
       if (Array.isArray(data) && data.length > 0) {
         data.forEach(car => {
-          const item = document.createElement('div');
-          item.className = 'result-item';
-          item.innerHTML = `
-            <div>
-              <span class="slash">차주 -</span> ${car.owner_name}<span class="slash">/</span> ${car.phone_number}</div>
-              <div><span class="slash">차량 -</span> ${car.car_number} <span class="slash">/</span> ${car.car_type} <span class="slash">/</span> ${car.car_color}
-              <button>수정</button><button onclick="deleteCar(${car.id})">삭제</button>
-            </div>
-          `;
-          resultDiv.appendChild(item);
+          renderCarItem(car);
         });
         setTimeout(() => resultDiv.classList.add('show'), 10);
       } else {
         if (!silent) {
           alert('결과가 없습니다.');
         } else {
-          // silent 모드일 땐 박스 자체를 닫아줌
           resultDiv.classList.remove('show');
           resultDiv.innerHTML = '';
         }
@@ -376,12 +352,76 @@ span.slash {
         body: JSON.stringify(body)
       });
       const data = await res.json();
-      if (data.message && data.message.includes('성공')) {
+      if (data.message && data.message.includes('완료')) {
         alert('등록 성공했습니다');
         inputIds.forEach(id => document.getElementById(id).value = '');
       } else {
         alert(data.message || '등록 실패');
       }
+    }
+    function renderCarItem(car) {
+      const item = document.createElement("div");
+      item.className = "result-item";
+      function renderViewMode() {
+        item.innerHTML = `
+          <div>
+            <span class="slash">차주 -</span> ${car.owner_name}<span class="slash">/</span> ${car.phone_number}
+          </div>
+          <div>
+            <span class="slash">차량 -</span> ${car.car_number} <span class="slash">/</span> ${car.car_type} <span class="slash">/</span> ${car.car_color}
+            <button class="edit-btn">수정</button>
+            <button onclick="deleteCar(${car.id})">삭제</button>
+          </div>
+        `;
+        item.querySelector(".edit-btn").addEventListener("click", renderEditMode);
+      }
+      function renderEditMode() {
+        item.innerHTML = `
+          <div>
+            <span class="slash">차주 -</span>
+            <input class="inline-edit" value="${car.owner_name}" id="edit_owner_${car.id}">
+            <span class="slash">/</span>
+            <input class="inline-edit" value="${car.phone_number}" id="edit_phone_${car.id}">
+          </div>
+          <div>
+            <span class="slash">차량 -</span>
+            <input class="inline-edit" value="${car.car_number}" id="edit_number_${car.id}">
+            <span class="slash">/</span>
+            <input class="inline-edit" value="${car.car_type}" id="edit_type_${car.id}">
+            <span class="slash">/</span>
+            <input class="inline-edit" value="${car.car_color}" id="edit_color_${car.id}">
+            <button class="save-btn">저장</button>
+            <button onclick="deleteCar(${car.id})">삭제</button>
+          </div>
+        `;
+        item.querySelector(".save-btn").addEventListener("click", async () => {
+          if (confirm("수정하시겠습니까?")) {
+            const updatedCar = {
+              owner_name: document.getElementById(`edit_owner_${car.id}`).value,
+              phone_number: document.getElementById(`edit_phone_${car.id}`).value,
+              car_number: document.getElementById(`edit_number_${car.id}`).value,
+              car_type: document.getElementById(`edit_type_${car.id}`).value,
+              car_color: document.getElementById(`edit_color_${car.id}`).value,
+            };
+            try {
+              const res = await fetch(`/update/${car.id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(updatedCar),
+              });
+              const data = await res.json();
+              alert(data.message);
+              Object.assign(car, updatedCar);
+              renderViewMode();
+            } catch (err) {
+              console.error("❌ 수정 오류:", err);
+              alert("수정 실패 :(");
+            }
+          }
+        });
+      }
+      renderViewMode();
+      document.getElementById("result").appendChild(item);
     }
     async function deleteCar(id) {
       if (!confirm(`차량 정보를 삭제하시겠습니까?`)) return;
@@ -390,11 +430,10 @@ span.slash {
       });
       const data = await res.json();
       alert("삭제 완료 :)");
-      // 삭제 후 결과 갱신 (silent 모드)
       searchCar(true);
     }
     document.querySelector(".header").addEventListener("click", function () {
-      window.location.reload(); // 전체 페이지 새로고침
+      window.location.reload();
     })
   </script>
 </body>
