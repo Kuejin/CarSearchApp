@@ -391,9 +391,10 @@
             <span class="slash">/</span>
             <input class="inline-edit" value="${car.car_color}" id="edit_color_${car.id}">
             <button class="save-btn">저장</button>
-            <button onclick="deleteCar(${car.id})">삭제</button>
+            <button class="cancel-btn">취소</button>
           </div>
         `;
+        // 저장 버튼 동작
         item.querySelector(".save-btn").addEventListener("click", async () => {
           if (confirm("수정하시겠습니까?")) {
             const updatedCar = {
@@ -418,6 +419,10 @@
               alert("수정 실패 :(");
             }
           }
+        });
+        // 취소 버튼 동작
+        item.querySelector(".cancel-btn").addEventListener("click", () => {
+          renderViewMode(); // 원래 화면으로 복귀
         });
       }
       renderViewMode();
