@@ -91,15 +91,6 @@ app.put('/update/:id', (req, res) => {
     res.json({ message: '수정 완료 :)' });
   });
 });
-// SPA 지원 - 나머지 경로는 모두 index.html로 처리
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-// ✅ 서버 실행
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🚗 서버가 포트 ${PORT}에서 실행 중!`);
-});
 // ✅ 확인 사항 전체 조회
 app.get('/tasks', (req, res) => {
   const sql = 'SELECT * FROM task ORDER BY id DESC';
@@ -135,4 +126,13 @@ app.delete('/tasks/:id', (req, res) => {
     if (err) return res.status(500).json({ error: '삭제 실패' });
     res.json({ message: '삭제 완료 :)' });
   });
+});
+// SPA 지원 - 나머지 경로는 모두 index.html로 처리
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+// ✅ 서버 실행
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`🚗 서버가 포트 ${PORT}에서 실행 중!`);
 });
