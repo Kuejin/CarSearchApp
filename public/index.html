@@ -537,7 +537,7 @@
       document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
       document.getElementById(tabName).classList.add('active');
       const activeBtn = Array.from(document.querySelectorAll('.tab-button')).find(b =>
-        b.textContent.includes(tabName === 'search' ? '검색' : tabName === 'add' ? '추가' : '할 일')
+        b.textContent.includes(tabName === 'search' ? '검색' : tabName === 'add' ? '추가' : '확인 사항')
       );
       activeBtn.classList.add('active');
       if (tabName === 'tasks') loadTasks();

@@ -100,7 +100,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚗 서버가 포트 ${PORT}에서 실행 중!`);
 });
-// ✅ 할 일 전체 조회
+// ✅ 확인 사항 전체 조회
 app.get('/tasks', (req, res) => {
   const sql = 'SELECT * FROM task ORDER BY id DESC';
   db.query(sql, (err, results) => {
@@ -108,7 +108,7 @@ app.get('/tasks', (req, res) => {
     res.json(results);
   });
 });
-// ✅ 할 일 추가
+// ✅ 확인 사항 추가
 app.post('/tasks', (req, res) => {
   const { title, description } = req.body;
   const sql = 'INSERT INTO task (title, description) VALUES (?, ?)';
@@ -117,7 +117,7 @@ app.post('/tasks', (req, res) => {
     res.json({ message: '등록 완료 :)' });
   });
 });
-// ✅ 할 일 수정
+// ✅ 확인 사항 수정
 app.put('/tasks/:id', (req, res) => {
   const { id } = req.params;
   const { title, description } = req.body;
@@ -127,7 +127,7 @@ app.put('/tasks/:id', (req, res) => {
     res.json({ message: '수정 완료 :)' });
   });
 });
-// ✅ 할 일 삭제
+// ✅ 확인 사항 삭제
 app.delete('/tasks/:id', (req, res) => {
   const { id } = req.params;
   const sql = 'DELETE FROM task WHERE id = ?';
