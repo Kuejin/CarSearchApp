@@ -49,7 +49,7 @@
       margin-bottom: 20px;
       width: 100%;
       max-width: 550px;
-      margin-top: 40px;
+      margin-top: 80px;
     }
     .tab-button {
       flex: 1;
@@ -134,6 +134,28 @@
     }
     .enter:hover {
       border: 2px solid rgb(2, 114, 95);
+    }
+    .task-item {
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgb(2, 114, 95);
+      padding-bottom: 10px;
+      font-size: 1.2em;
+      font-family: 'Jua', sans-serif;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 6px 15px rgba(2, 114, 95, 0.35);
+      padding: 15px;
+    }
+    .task-item button {
+      float: right;
+      width: 2.7em;
+      height: 27px;
+      font-size: 0.7em;
+      font-family: 'Jua', sans-serif;
+      background-color: #E1DDDB;
+      cursor: pointer;
+      color: rgb(255, 57, 57);
+      padding: 0;
     }
     #result {
       max-width: 550px;
@@ -251,6 +273,7 @@
   <div class="tabs">
     <button class="tab-button active" onclick="showTab('search')">차량 검색</button>
     <button class="tab-button" onclick="showTab('add')">차량 추가</button>
+    <button class="tab-button" onclick="showTab('tasks')">확인 사항</button>
   </div>
 
   <!-- 차량 검색 -->
@@ -283,6 +306,15 @@
       </div>
       <button type="submit" class="enter">Add</button>
     </form>
+  </div>
+
+  <div id="tasks" class="section">
+    <form id="task-form" onsubmit="event.preventDefault(); addTask();">
+      <input placeholder="제목" id="task_title">
+      <input placeholder="설명" id="task_desc">
+      <button type="submit" class="enter">추가</button>
+    </form>
+    <div class="task-board"></div>
   </div>
 
   <div id="result"></div>
@@ -440,6 +472,76 @@
     document.querySelector(".header").addEventListener("click", function () {
       window.location.reload();
     })
+    async function loadTasks() {
+      const res = await fetch('/tasks');
+      const tasks = await res.json();
+      const board = document.querySelector('.task-board');
+      board.innerHTML = '';
+      tasks.forEach(task => renderTask(task));
+    }
+    function renderTask(task) {
+      const div = document.createElement('div');
+      div.className = 'task-item';
+      div.innerHTML = `
+        <div>
+          <b>${task.title}</b><br>
+          <small>${task.description || ''}</small>
+          <button class="edit-btn">수정</button>
+          <button class="delete-btn">삭제</button>
+        </div>
+      `;
+      div.querySelector('.delete-btn').addEventListener('click', async () => {
+        if (confirm('삭제하시겠습니까?')) {
+          await fetch(`/tasks/${task.id}`, { method: 'DELETE' });
+          loadTasks();
+        }
+      });
+      div.querySelector('.edit-btn').addEventListener('click', () => renderEditTask(div, task));
+      document.querySelector('.task-board').appendChild(div);
+    }
+    function renderEditTask(div, task) {
+      div.innerHTML = `
+        <input value="${task.title}" id="edit_title_${task.id}">
+        <input value="${task.description || ''}" id="edit_desc_${task.id}">
+        <button class="save-btn">저장</button>
+        <button class="cancel-btn">취소</button>
+      `;
+      div.querySelector('.save-btn').addEventListener('click', async () => {
+        const title = document.getElementById(`edit_title_${task.id}`).value;
+        const description = document.getElementById(`edit_desc_${task.id}`).value;
+        await fetch(`/tasks/${task.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, description })
+        });
+        loadTasks();
+      });
+      div.querySelector('.cancel-btn').addEventListener('click', loadTasks);
+    }
+    async function addTask() {
+      const title = document.getElementById('task_title').value.trim();
+      const description = document.getElementById('task_desc').value.trim();
+      if (!title) return alert('제목을 입력하세요.');
+      await fetch('/tasks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, description })
+      });
+      document.getElementById('task_title').value = '';
+      document.getElementById('task_desc').value = '';
+      loadTasks();
+    }
+    // 탭 전환 시 task 탭이면 자동으로 로드
+    function showTab(tabName) {
+      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+      document.getElementById(tabName).classList.add('active');
+      const activeBtn = Array.from(document.querySelectorAll('.tab-button')).find(b =>
+        b.textContent.includes(tabName === 'search' ? '검색' : tabName === 'add' ? '추가' : '할 일')
+      );
+      activeBtn.classList.add('active');
+      if (tabName === 'tasks') loadTasks();
+    }
   </script>
 </body>
 </html>
