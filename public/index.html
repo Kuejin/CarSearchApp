@@ -96,6 +96,9 @@
     input.invalid {
       border: 2px solid red;
     }
+    #task_desc::placeholder {
+      color: #4D4D4D;
+    }
     #car_number,
     #add_car_number {
       padding: 20px;
@@ -156,6 +159,21 @@
       cursor: pointer;
       color: rgb(255, 57, 57);
       padding: 0;
+    }
+    .task-board {
+      max-width: 550px;
+      width: 100%;
+      background-color: white;
+      color: rgb(77, 77, 77);
+      font-size: 1.2em;
+      font-weight: bold;
+      padding: 15px;
+      border-radius: 10px;
+      max-height: 400px;
+      overflow-y: auto;
+      font-family: 'Jua', sans-serif;
+      box-shadow: 0 6px 15px rgba(2, 114, 95, 0.35);
+      margin-top: 20px;
     }
     #result {
       max-width: 550px;
@@ -263,8 +281,7 @@
         top: 12px;
         left: 12px;
       }
-}
-
+    }
   </style>
 </head>
 <body>
@@ -308,6 +325,7 @@
     </form>
   </div>
 
+  <!-- 확인 사항 -->
   <div id="tasks" class="section">
     <form id="task-form" onsubmit="event.preventDefault(); addTask();">
       <input placeholder="제목" id="task_title">
@@ -540,7 +558,12 @@
         b.textContent.includes(tabName === 'search' ? '검색' : tabName === 'add' ? '추가' : '확인 사항')
       );
       activeBtn.classList.add('active');
-      if (tabName === 'tasks') loadTasks();
+      if (tabName === 'tasks') {
+        // “확인 사항” 탭을 누르면 result 닫기
+        resultDiv.classList.remove('show');
+        resultDiv.innerHTML = '';
+        loadTasks();
+      }
     }
   </script>
 </body>
