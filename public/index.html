@@ -346,14 +346,6 @@
         header.classList.remove("picked");
       }
     });
-    function showTab(tabName) {
-      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-      const activeButton = Array.from(document.querySelectorAll('.tab-button'))
-        .find(btn => btn.textContent.includes(tabName === 'search' ? '검색' : '추가'));
-      activeButton.classList.add('active');
-      document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
-      document.getElementById(tabName).classList.add('active');
-    }
     async function searchCar(silent = false) {
       const inputIds = ['car_number', 'car_type', 'car_color', 'owner_name', 'phone_number'];
       const params = new URLSearchParams();
@@ -549,7 +541,6 @@
       document.getElementById('task_desc').value = '';
       loadTasks();
     }
-    // 탭 전환 시 task 탭이면 자동으로 로드
     function showTab(tabName) {
       document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
@@ -557,12 +548,15 @@
       const activeBtn = Array.from(document.querySelectorAll('.tab-button')).find(b =>
         b.textContent.includes(tabName === 'search' ? '검색' : tabName === 'add' ? '추가' : '확인 사항')
       );
-      activeBtn.classList.add('active');
+      if (activeBtn) activeBtn.classList.add('active');
+      const resultDiv = document.getElementById('result');
       if (tabName === 'tasks') {
-        // “확인 사항” 탭을 누르면 result 닫기
-        resultDiv.classList.remove('show');
-        resultDiv.innerHTML = '';
+        if (resultDiv) {
+          resultDiv.classList.remove('show');
+          resultDiv.innerHTML = '';
+        }
         loadTasks();
+        return;
       }
     }
   </script>
