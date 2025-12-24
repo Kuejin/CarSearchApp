@@ -558,7 +558,24 @@
         loadTasks();
         return;
       }
+      setTimeout(() => {
+        if (tabName === 'search') {
+          document.getElementById('car_number')?.focus();
+        }
+        if (tabName === 'add') {
+          document.getElementById('add_car_number')?.focus();
+        }
+        if (tabName === 'tasks') {
+          document.getElementById('task_title')?.focus();
+        }
+      }, 0);
     }
+    document.addEventListener('DOMContentLoaded', () => {
+      const carNumberInput = document.getElementById('car_number');
+      if (carNumberInput) {
+        carNumberInput.focus();
+      }
+    });
   </script>
 </body>
 </html>
