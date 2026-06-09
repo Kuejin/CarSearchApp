@@ -321,8 +321,12 @@
         <input placeholder="색상" id="add_car_color">
       </div>
       <div class="input-group">
-        <input placeholder="차주" id="add_owner_name">
-        <input placeholder="연락처" id="add_phone_number">
+        <input placeholder="차주1" id="owner_name">
+        <input placeholder="연락처1" id="phone_number">
+      </div>
+      <div class="input-group">
+        <input placeholder="차주2" id="owner_name2">
+        <input placeholder="연락처2" id="phone_number2">
       </div>
       <button type="submit" class="enter">Add</button>
     </form>
@@ -400,7 +404,7 @@
       function renderViewMode() {
         item.innerHTML = `
           <div>
-            <span class="slash">차주 -</span> 
+            <span class="slash">차주</span> 
             ${car.owner_name} (${car.phone_number})
             ${
               car.owner_name2 
@@ -409,7 +413,7 @@
             }
           </div>
           <div>
-            <span class="slash">차량 -</span> 
+            <span class="slash">차량</span> 
             ${car.car_number} 
             <span class="slash">/</span> ${car.car_type} 
             <span class="slash">/</span> ${car.car_color}
@@ -422,7 +426,7 @@
       function renderEditMode() {
         item.innerHTML = `
           <div>
-            <span class="slash">차주 -</span>
+            <span class="slash">차주</span>
             <input class="inline-edit" value="${car.owner_name || ''}" id="edit_owner_${car.id}">
             <span class="slash">/</span>
             <input class="inline-edit" value="${car.phone_number || ''}" id="edit_phone_${car.id}">
@@ -432,7 +436,7 @@
             <input class="inline-edit" value="${car.phone_number2 || ''}" id="edit_phone2_${car.id}">
           </div>
           <div>
-            <span class="slash">차량 -</span>
+            <span class="slash">차량</span>
             <input class="inline-edit" value="${car.car_number || ''}" id="edit_number_${car.id}">
             <span class="slash">/</span>
             <input class="inline-edit" value="${car.car_type || ''}" id="edit_type_${car.id}">
