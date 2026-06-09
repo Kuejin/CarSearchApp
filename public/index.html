@@ -427,26 +427,32 @@
         item.innerHTML = `
           <div>
             <span class="slash">차주</span>
-            <input class="inline-edit" value="${car.owner_name || ''}" id="edit_owner_${car.id}">
-            <span class="slash">/</span>
-            <input class="inline-edit" value="${car.phone_number || ''}" id="edit_phone_${car.id}">
-            <br>
-            <input class="inline-edit" value="${car.owner_name2 || ''}" id="edit_owner2_${car.id}">
-            <span class="slash">/</span>
-            <input class="inline-edit" value="${car.phone_number2 || ''}" id="edit_phone2_${car.id}">
+            <div>
+              <input class="inline-edit" value="${car.owner_name || ''}" id="edit_owner_${car.id}">
+              <span class="slash">/</span>
+              <input class="inline-edit" value="${car.phone_number || ''}" id="edit_phone_${car.id}">
+            </div>
+            <div>
+              <input class="inline-edit" value="${car.owner_name2 || ''}" id="edit_owner2_${car.id}">
+              <span class="slash">/</span>
+              <input class="inline-edit" value="${car.phone_number2 || ''}" id="edit_phone2_${car.id}">
+            </div>
           </div>
-          <div>
+          <div style="margin-top: 10px;">
             <span class="slash">차량</span>
-            <input class="inline-edit" value="${car.car_number || ''}" id="edit_number_${car.id}">
-            <span class="slash">/</span>
-            <input class="inline-edit" value="${car.car_type || ''}" id="edit_type_${car.id}">
-            <span class="slash">/</span>
-            <input class="inline-edit" value="${car.car_color || ''}" id="edit_color_${car.id}">
-            <button class="save-btn">저장</button>
-            <button class="cancel-btn">취소</button>
+            <div>
+              <input class="inline-edit" value="${car.car_number || ''}" id="edit_number_${car.id}">
+              <span class="slash">/</span>
+              <input class="inline-edit" value="${car.car_type || ''}" id="edit_type_${car.id}">
+              <span class="slash">/</span>
+              <input class="inline-edit" value="${car.car_color || ''}" id="edit_color_${car.id}">
+            </div>
+            <div style="margin-top: 10px;">
+              <button class="save-btn">저장</button>
+              <button class="cancel-btn">취소</button>
+            </div>
           </div>
         `;
-
         // 저장 버튼
         item.querySelector(".save-btn").addEventListener("click", async () => {
           if (confirm("수정하시겠습니까?")) {
