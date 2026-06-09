@@ -178,17 +178,21 @@
     #result {
       max-width: 550px;
       width: 100%;
-      margin-top: 20px;
-
-      display: flex;
-      flex-direction: column;
-      gap: 15px; /* 카드 간격 */
-
+      background-color: white;
+      color: rgb(77, 77, 77);
+      font-size: 1.2em;
+      font-weight: bold;
+      padding: 15px;
+      border-radius: 10px;
+      max-height: 400px;
+      overflow-y: auto;
       opacity: 0;
       transform: translateY(10px);
       transition: opacity 0.3s ease, transform 0.3s ease;
+      font-family: 'Jua', sans-serif;
+      box-shadow: 0 6px 15px rgba(2, 114, 95, 0.35);
+      margin-top: 20px;
     }
-
     #result.show {
       opacity: 1;
       transform: translateY(0);
@@ -197,10 +201,9 @@
       color: rgb(2, 114, 95);
     }
     .result-item {
-      background-color: white;
-      border-radius: 10px;
-      padding: 15px;
-      box-shadow: 0 6px 15px rgba(2, 114, 95, 0.35);
+      margin-bottom: 0px;
+      font-size: 1.2em;
+      font-family: 'Jua', sans-serif;
     }
     .result-item button {
       float: right;
@@ -212,7 +215,6 @@
       cursor: pointer;
       color: rgb(255, 57, 57);
       padding: 0;
-      margin-left: 5px;
     }
     .result-item input.inline-edit {
       display: inline-block;
