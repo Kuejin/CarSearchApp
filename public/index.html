@@ -290,7 +290,6 @@
   <div class="tabs">
     <button class="tab-button active" onclick="showTab('search')">차량 검색</button>
     <button class="tab-button" onclick="showTab('add')">차량 추가</button>
-    <button class="tab-button" onclick="showTab('tasks')">확인 사항</button>
   </div>
 
   <!-- 차량 검색 -->
@@ -302,8 +301,12 @@
         <input placeholder="색상" id="car_color">
       </div>
       <div class="input-group">
-        <input placeholder="차주" id="owner_name">
-        <input placeholder="연락처" id="phone_number">
+        <input placeholder="차주1" id="owner_name">
+        <input placeholder="연락처1" id="phone_number">
+      </div>
+      <div class="input-group">
+        <input placeholder="차주2" id="owner_name2">
+        <input placeholder="연락처2" id="phone_number2">
       </div>
       <button type="submit" class="enter">Search</button>
     </form>
@@ -325,16 +328,6 @@
     </form>
   </div>
 
-  <!-- 확인 사항 -->
-  <div id="tasks" class="section">
-    <form id="task-form" onsubmit="event.preventDefault(); addTask();">
-      <input placeholder="제목" id="task_title">
-      <input placeholder="설명" id="task_desc">
-      <button type="submit" class="enter">추가</button>
-    </form>
-    <div class="task-board"></div>
-  </div>
-
   <div id="result"></div>
 
   <script>
@@ -347,7 +340,7 @@
       }
     });
     async function searchCar(silent = false) {
-      const inputIds = ['car_number', 'car_type', 'car_color', 'owner_name', 'phone_number'];
+      const inputIds = ['car_number', 'car_type', 'car_color', 'owner_name', 'owner_name2', 'phone_number', 'phone_number2'];
       const params = new URLSearchParams();
       const hasAnyInput = inputIds.some(id => document.getElementById(id).value.trim() !== '');
       if (!hasAnyInput) {
@@ -377,7 +370,7 @@
       }
     }
     async function addCar() {
-      const inputIds = ['add_car_number', 'add_car_type', 'add_car_color', 'add_owner_name', 'add_phone_number'];
+      const inputIds = ['car_number', 'car_type', 'car_color', 'owner_name', 'owner_name2', 'phone_number', 'phone_number2'];
       const inputs = inputIds.map(id => document.getElementById(id));
       const allFilled = inputs.every(input => input.value.trim() !== '');
       if (!allFilled) {
@@ -407,10 +400,19 @@
       function renderViewMode() {
         item.innerHTML = `
           <div>
-            <span class="slash">차주 -</span> ${car.owner_name}<span class="slash">/</span> ${car.phone_number}
+            <span class="slash">차주 -</span> 
+            ${car.owner_name} (${car.phone_number})
+            ${
+              car.owner_name2 
+              ? `<br>${car.owner_name2} (${car.phone_number2 || ''})`
+              : ''
+            }
           </div>
           <div>
-            <span class="slash">차량 -</span> ${car.car_number} <span class="slash">/</span> ${car.car_type} <span class="slash">/</span> ${car.car_color}
+            <span class="slash">차량 -</span> 
+            ${car.car_number} 
+            <span class="slash">/</span> ${car.car_type} 
+            <span class="slash">/</span> ${car.car_color}
             <button class="edit-btn">수정</button>
             <button onclick="deleteCar(${car.id})">삭제</button>
           </div>
@@ -421,27 +423,34 @@
         item.innerHTML = `
           <div>
             <span class="slash">차주 -</span>
-            <input class="inline-edit" value="${car.owner_name}" id="edit_owner_${car.id}">
+            <input class="inline-edit" value="${car.owner_name || ''}" id="edit_owner_${car.id}">
             <span class="slash">/</span>
-            <input class="inline-edit" value="${car.phone_number}" id="edit_phone_${car.id}">
+            <input class="inline-edit" value="${car.phone_number || ''}" id="edit_phone_${car.id}">
+            <br>
+            <input class="inline-edit" value="${car.owner_name2 || ''}" id="edit_owner2_${car.id}">
+            <span class="slash">/</span>
+            <input class="inline-edit" value="${car.phone_number2 || ''}" id="edit_phone2_${car.id}">
           </div>
           <div>
             <span class="slash">차량 -</span>
-            <input class="inline-edit" value="${car.car_number}" id="edit_number_${car.id}">
+            <input class="inline-edit" value="${car.car_number || ''}" id="edit_number_${car.id}">
             <span class="slash">/</span>
-            <input class="inline-edit" value="${car.car_type}" id="edit_type_${car.id}">
+            <input class="inline-edit" value="${car.car_type || ''}" id="edit_type_${car.id}">
             <span class="slash">/</span>
-            <input class="inline-edit" value="${car.car_color}" id="edit_color_${car.id}">
+            <input class="inline-edit" value="${car.car_color || ''}" id="edit_color_${car.id}">
             <button class="save-btn">저장</button>
             <button class="cancel-btn">취소</button>
           </div>
         `;
-        // 저장 버튼 동작
+
+        // 저장 버튼
         item.querySelector(".save-btn").addEventListener("click", async () => {
           if (confirm("수정하시겠습니까?")) {
             const updatedCar = {
               owner_name: document.getElementById(`edit_owner_${car.id}`).value,
               phone_number: document.getElementById(`edit_phone_${car.id}`).value,
+              owner_name2: document.getElementById(`edit_owner2_${car.id}`).value,
+              phone_number2: document.getElementById(`edit_phone2_${car.id}`).value,
               car_number: document.getElementById(`edit_number_${car.id}`).value,
               car_type: document.getElementById(`edit_type_${car.id}`).value,
               car_color: document.getElementById(`edit_color_${car.id}`).value,
@@ -453,7 +462,9 @@
                 body: JSON.stringify(updatedCar),
               });
               const data = await res.json();
-              alert(data.message);
+              alert(data.message || "수정 완료");
+
+              // 화면 데이터 업데이트
               Object.assign(car, updatedCar);
               renderViewMode();
             } catch (err) {
@@ -462,10 +473,9 @@
             }
           }
         });
-        // 취소 버튼 동작
-        item.querySelector(".cancel-btn").addEventListener("click", () => {
-          renderViewMode(); // 원래 화면으로 복귀
-        });
+
+        // 취소 버튼
+        item.querySelector(".cancel-btn").addEventListener("click", renderViewMode);
       }
       renderViewMode();
       document.getElementById("result").appendChild(item);
@@ -482,65 +492,6 @@
     document.querySelector(".header").addEventListener("click", function () {
       window.location.reload();
     })
-    async function loadTasks() {
-      const res = await fetch('/tasks');
-      const tasks = await res.json();
-      const board = document.querySelector('.task-board');
-      board.innerHTML = '';
-      tasks.forEach(task => renderTask(task));
-    }
-    function renderTask(task) {
-      const div = document.createElement('div');
-      div.className = 'task-item';
-      div.innerHTML = `
-        <div>
-          <b>${task.title}</b><br>
-          <small>${task.description || ''}</small>
-          <button class="edit-btn">수정</button>
-          <button class="delete-btn">삭제</button>
-        </div>
-      `;
-      div.querySelector('.delete-btn').addEventListener('click', async () => {
-        if (confirm('삭제하시겠습니까?')) {
-          await fetch(`/tasks/${task.id}`, { method: 'DELETE' });
-          loadTasks();
-        }
-      });
-      div.querySelector('.edit-btn').addEventListener('click', () => renderEditTask(div, task));
-      document.querySelector('.task-board').appendChild(div);
-    }
-    function renderEditTask(div, task) {
-      div.innerHTML = `
-        <input value="${task.title}" id="edit_title_${task.id}">
-        <input value="${task.description || ''}" id="edit_desc_${task.id}">
-        <button class="save-btn">저장</button>
-        <button class="cancel-btn">취소</button>
-      `;
-      div.querySelector('.save-btn').addEventListener('click', async () => {
-        const title = document.getElementById(`edit_title_${task.id}`).value;
-        const description = document.getElementById(`edit_desc_${task.id}`).value;
-        await fetch(`/tasks/${task.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title, description })
-        });
-        loadTasks();
-      });
-      div.querySelector('.cancel-btn').addEventListener('click', loadTasks);
-    }
-    async function addTask() {
-      const title = document.getElementById('task_title').value.trim();
-      const description = document.getElementById('task_desc').value.trim();
-      if (!title) return alert('제목을 입력하세요.');
-      await fetch('/tasks', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, description })
-      });
-      document.getElementById('task_title').value = '';
-      document.getElementById('task_desc').value = '';
-      loadTasks();
-    }
     function showTab(tabName) {
       document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
@@ -553,13 +504,6 @@
       );
       if (activeBtn) activeBtn.classList.add('active');
       const resultDiv = document.getElementById('result');
-      if (tabName === 'tasks') {
-        if (resultDiv) {
-          resultDiv.classList.remove('show');
-          resultDiv.innerHTML = '';
-        }
-        loadTasks();
-      }
       setTimeout(() => {
         if (tabName === 'search') {
           document.getElementById('car_number')?.focus();

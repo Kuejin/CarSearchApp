@@ -10,7 +10,13 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 // ✅ 차량 검색 라우트
 app.get('/search', (req, res) => {
-  const { car_number, car_type, car_color, owner_name, phone_number } = req.query;
+  const {
+    car_number,
+    car_type,
+    car_color,
+    owner_name,
+    phone_number
+  } = req.query;
   let sql = `SELECT * FROM car_info WHERE 1=1`;
   const params = [];
   if (car_number) {
@@ -25,13 +31,15 @@ app.get('/search', (req, res) => {
     sql += ` AND car_color LIKE ?`;
     params.push(`%${car_color}%`);
   }
+  // 👇 차주 1,2 같이 검색
   if (owner_name) {
-    sql += ` AND owner_name LIKE ?`;
-    params.push(`%${owner_name}%`);
+    sql += ` AND (owner_name LIKE ? OR owner_name2 LIKE ?)`;
+    params.push(`%${owner_name}%`, `%${owner_name}%`);
   }
+  // 👇 연락처 1,2 같이 검색
   if (phone_number) {
-    sql += ` AND phone_number LIKE ?`;
-    params.push(`%${phone_number}%`);
+    sql += ` AND (phone_number LIKE ? OR phone_number2 LIKE ?)`;
+    params.push(`%${phone_number}%`, `%${phone_number}%`);
   }
   db.query(sql, params, (err, results) => {
     if (err) {
@@ -43,12 +51,12 @@ app.get('/search', (req, res) => {
 });
 // ✅ 차량 등록 라우트
 app.post('/add', (req, res) => {
-  const { car_number, car_type, car_color, owner_name, phone_number } = req.body;
+  const { car_number, car_type, car_color, owner_name, owner_name2, phone_number, phone_number2 } = req.body;
   const sql = `
-    INSERT INTO car_info (car_number, car_type, car_color, owner_name, phone_number)
-    VALUES (?, ?, ?, ?, ?)
+    INSERT INTO car_info (car_number, car_type, car_color, owner_name, owner_name2, phone_number, phone_number2)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
   `;
-  db.query(sql, [car_number, car_type, car_color, owner_name, phone_number], (err, result) => {
+  db.query(sql, [car_number, car_type, car_color, owner_name, owner_name2, phone_number, phone_number2], (err, result) => {
     if (err) {
       console.error('❌ 등록 오류:', err.message);
       return res.status(500).json({ error: '서버 오류: 등록 실패' });
@@ -74,13 +82,15 @@ app.delete('/delete/:id', (req, res) => {
 // ✅ 차량 수정 라우트 (id 기준)
 app.put('/update/:id', (req, res) => {
   const { id } = req.params;
-  const { car_number, car_type, car_color, owner_name, phone_number } = req.body;
+  const { car_number, car_type, car_color, owner_name, owner_name2, phone_number, phone_number2 } = req.body;
   const sql = `
     UPDATE car_info
-    SET car_number = ?, car_type = ?, car_color = ?, owner_name = ?, phone_number = ?
-    WHERE id = ?
+    SET car_number=?, car_type=?, car_color=?,
+      owner_name=?, owner_name2=?,
+      phone_number=?, phone_number2=?
+    WHERE id=?
   `;
-  db.query(sql, [car_number, car_type, car_color, owner_name, phone_number, id], (err, result) => {
+  db.query(sql, [car_number, car_type, car_color, owner_name, owner_name2, phone_number, phone_number2, id], (err, result) => {
     if (err) {
       console.error('❌ 수정 오류:', err.message);
       return res.status(500).json({ error: '서버 오류: 수정 실패' });
@@ -89,42 +99,6 @@ app.put('/update/:id', (req, res) => {
       return res.status(404).json({ message: '해당 차량을 찾을 수 없습니다' });
     }
     res.json({ message: '수정 완료 :)' });
-  });
-});
-// ✅ 확인 사항 전체 조회
-app.get('/tasks', (req, res) => {
-  const sql = 'SELECT * FROM task ORDER BY id DESC';
-  db.query(sql, (err, results) => {
-    if (err) return res.status(500).json({ error: 'DB 오류' });
-    res.json(results);
-  });
-});
-// ✅ 확인 사항 추가
-app.post('/tasks', (req, res) => {
-  const { title, description } = req.body;
-  const sql = 'INSERT INTO task (title, description) VALUES (?, ?)';
-  db.query(sql, [title, description], err => {
-    if (err) return res.status(500).json({ error: '등록 실패' });
-    res.json({ message: '등록 완료 :)' });
-  });
-});
-// ✅ 확인 사항 수정
-app.put('/tasks/:id', (req, res) => {
-  const { id } = req.params;
-  const { title, description } = req.body;
-  const sql = 'UPDATE task SET title = ?, description = ? WHERE id = ?';
-  db.query(sql, [title, description, id], err => {
-    if (err) return res.status(500).json({ error: '수정 실패' });
-    res.json({ message: '수정 완료 :)' });
-  });
-});
-// ✅ 확인 사항 삭제
-app.delete('/tasks/:id', (req, res) => {
-  const { id } = req.params;
-  const sql = 'DELETE FROM task WHERE id = ?';
-  db.query(sql, [id], err => {
-    if (err) return res.status(500).json({ error: '삭제 실패' });
-    res.json({ message: '삭제 완료 :)' });
   });
 });
 // SPA 지원 - 나머지 경로는 모두 index.html로 처리
