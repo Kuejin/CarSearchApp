@@ -319,12 +319,12 @@
         <input placeholder="색상" id="add_car_color">
       </div>
       <div class="input-group">
-        <input placeholder="차주1" id="owner_name">
-        <input placeholder="연락처1" id="phone_number">
+        <input placeholder="차주1" id="add_owner_name">
+        <input placeholder="연락처1" id="add_phone_number">
       </div>
       <div class="input-group">
-        <input placeholder="차주2" id="owner_name2">
-        <input placeholder="연락처2" id="phone_number2">
+        <input placeholder="차주2" id="add_owner_name2">
+        <input placeholder="연락처2" id="add_phone_number2">
       </div>
       <button type="submit" class="enter">Add</button>
     </form>
@@ -372,17 +372,30 @@
       }
     }
     async function addCar() {
-      const inputIds = ['car_number', 'car_type', 'car_color', 'owner_name', 'owner_name2', 'phone_number', 'phone_number2'];
+      const inputIds = [
+        'add_car_number',
+        'add_car_type',
+        'add_car_color',
+        'add_owner_name',
+        'add_owner_name2',
+        'add_phone_number',
+        'add_phone_number2'
+      ];
       const inputs = inputIds.map(id => document.getElementById(id));
       const allFilled = inputs.every(input => input.value.trim() !== '');
       if (!allFilled) {
         alert('정보를 모두 입력해주세요.');
         return;
       }
-      const body = {};
-      inputIds.forEach(id => {
-        body[id.replace('add_', '')] = document.getElementById(id).value;
-      });
+      const body = {
+        car_number: document.getElementById('add_car_number').value,
+        car_type: document.getElementById('add_car_type').value,
+        car_color: document.getElementById('add_car_color').value,
+        owner_name: document.getElementById('add_owner_name').value,
+        owner_name2: document.getElementById('add_owner_name2').value,
+        phone_number: document.getElementById('add_phone_number').value,
+        phone_number2: document.getElementById('add_phone_number2').value,
+      };
       const res = await fetch('/add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
