@@ -372,29 +372,30 @@
       }
     }
     async function addCar() {
-      const inputIds = [
+      // ✅ 필수값만 체크
+      const requiredIds = [
         'add_car_number',
         'add_car_type',
         'add_car_color',
         'add_owner_name',
-        'add_owner_name2',
-        'add_phone_number',
-        'add_phone_number2'
+        'add_phone_number'
       ];
-      const inputs = inputIds.map(id => document.getElementById(id));
-      const allFilled = inputs.every(input => input.value.trim() !== '');
+      const allFilled = requiredIds.every(id =>
+        document.getElementById(id).value.trim() !== ''
+      );
       if (!allFilled) {
-        alert('정보를 모두 입력해주세요.');
+        alert('필수 정보를 입력해주세요.');
         return;
       }
+      // ✅ body는 그대로 (2번은 없어도 OK)
       const body = {
         car_number: document.getElementById('add_car_number').value,
         car_type: document.getElementById('add_car_type').value,
         car_color: document.getElementById('add_car_color').value,
         owner_name: document.getElementById('add_owner_name').value,
-        owner_name2: document.getElementById('add_owner_name2').value,
+        owner_name2: document.getElementById('add_owner_name2').value || null,
         phone_number: document.getElementById('add_phone_number').value,
-        phone_number2: document.getElementById('add_phone_number2').value,
+        phone_number2: document.getElementById('add_phone_number2').value || null,
       };
       const res = await fetch('/add', {
         method: 'POST',
@@ -404,7 +405,16 @@
       const data = await res.json();
       if (data.message && data.message.includes('완료')) {
         alert('등록 성공했습니다');
-        inputIds.forEach(id => document.getElementById(id).value = '');
+        // 입력 초기화
+        [
+          'add_car_number',
+          'add_car_type',
+          'add_car_color',
+          'add_owner_name',
+          'add_owner_name2',
+          'add_phone_number',
+          'add_phone_number2'
+        ].forEach(id => document.getElementById(id).value = '');
       } else {
         alert(data.message || '등록 실패');
       }
