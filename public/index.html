@@ -404,21 +404,23 @@
       function renderViewMode() {
         item.innerHTML = `
           <div>
-            <span class="slash">차주</span> 
-            ${car.owner_name} (${car.phone_number})
-            ${
-              car.owner_name2 
-              ? `<br>${car.owner_name2} (${car.phone_number2 || ''})`
-              : ''
-            }
+            <span class="slash">차주</span>
+            <div>
+              ${car.owner_name} (${car.phone_number})
+            </div>
+            ${car.owner_name2? `<div>${car.owner_name2} (${car.phone_number2 || ''})</div>`: ''}
           </div>
-          <div>
-            <span class="slash">차량</span> 
-            ${car.car_number} 
-            <span class="slash">/</span> ${car.car_type} 
-            <span class="slash">/</span> ${car.car_color}
-            <button class="edit-btn">수정</button>
-            <button onclick="deleteCar(${car.id})">삭제</button>
+          <div style="margin-top: 10px;">
+            <span class="slash">차량</span>
+            <div>
+              ${car.car_number} 
+              <span class="slash">/</span> ${car.car_type} 
+              <span class="slash">/</span> ${car.car_color}
+            </div>
+            <div style="margin-top: 10px;">
+              <button class="edit-btn">수정</button>
+              <button onclick="deleteCar(${car.id})">삭제</button>
+            </div>
           </div>
         `;
         item.querySelector(".edit-btn").addEventListener("click", renderEditMode);
