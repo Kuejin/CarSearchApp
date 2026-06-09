@@ -174,24 +174,9 @@
       font-family: 'Jua', sans-serif;
       box-shadow: 0 6px 15px rgba(2, 114, 95, 0.35);
       margin-top: 20px;
-    }
-    #result {
-      max-width: 550px;
+    }#result-wrapper {
       width: 100%;
-      background-color: white;
-      color: rgb(77, 77, 77);
-      font-size: 1.2em;
-      font-weight: bold;
-      padding: 15px;
-      border-radius: 10px;
-      max-height: 400px;
-      overflow-y: auto;
-      opacity: 0;
-      transform: translateY(10px);
-      transition: opacity 0.3s ease, transform 0.3s ease;
-      font-family: 'Jua', sans-serif;
-      box-shadow: 0 6px 15px rgba(2, 114, 95, 0.35);
-      margin-top: 20px;
+      max-width: 550px;
     }
     #result.show {
       opacity: 1;
@@ -330,7 +315,7 @@
     </form>
   </div>
 
-  <div id="result"></div>
+  <div id="result-wrapper"></div>
 
   <script>
     const header = document.querySelector(".header");
@@ -511,7 +496,7 @@
         item.querySelector(".cancel-btn").addEventListener("click", renderViewMode);
       }
       renderViewMode();
-      document.getElementById("result").appendChild(item);
+      document.getElementById("result-wrapper").appendChild(item);
     }
     async function deleteCar(id) {
       if (!confirm(`차량 정보를 삭제하시겠습니까?`)) return;
