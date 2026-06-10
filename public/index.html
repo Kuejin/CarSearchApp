@@ -321,6 +321,7 @@
     .fc .fc-today-button {
       width: 100px;
       height: 40px;
+      text-transform: uppercase;
     }
 
     /* 버튼 줄 정렬 */
@@ -620,8 +621,13 @@
         initialView: 'dayGridMonth',
         height: 500,
         locale: 'ko',
+        titleFormat: function(date) {
+          const year = date.date.year % 100; // 2026 → 26
+          const month = String(date.date.month + 1).padStart(2, '0'); // 6 → 06
+          return `${year}${month}`;
+        },
         dateClick: function(info) {
-          alert(info.dateStr + ' 날짜 클릭!');
+          alert(info.dateStr + 'Date Click');
         }
       });
       calendar.render();
