@@ -85,10 +85,7 @@ app.put('/update/:id', (req, res) => {
   const { car_number, car_type, car_color, owner_name, owner_name2, phone_number, phone_number2 } = req.body;
   const sql = `
     UPDATE car_info
-    SET car_number=?, car_type=?, car_color=?,
-      owner_name=?, owner_name2=?,
-      phone_number=?, phone_number2=?
-    WHERE id=?
+    SET car_number=?, car_type=?, car_color=?, owner_name=?, owner_name2=?, phone_number=?, phone_number2=? WHERE id=?
   `;
   db.query(sql, [car_number, car_type, car_color, owner_name, owner_name2, phone_number, phone_number2, id], (err, result) => {
     if (err) {
