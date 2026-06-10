@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
   <title>Car Search</title>
   <style>
     html, body {
@@ -146,7 +148,7 @@
       font-family: 'Jua', sans-serif;
       background-color: white;
       border-radius: 10px;
-      box-shadow: 0 6px 15px rgba(2, 114, 95, 0.35);
+      box-shadow: 0 6px 15px rgb(21, 145, 220, 0.35);
       padding: 15px;
     }
     .task-item button {
@@ -172,7 +174,7 @@
       max-height: 400px;
       overflow-y: auto;
       font-family: 'Jua', sans-serif;
-      box-shadow: 0 6px 15px rgba(2, 114, 95, 0.35);
+      box-shadow: 0 6px 15px rgb(21, 145, 220, 0.35);
       margin-top: 20px;
     }
     #result {
@@ -190,7 +192,7 @@
       transform: translateY(10px);
       transition: opacity 0.3s ease, transform 0.3s ease;
       font-family: 'Jua', sans-serif;
-      box-shadow: 0 6px 15px rgba(2, 114, 95, 0.35);
+      box-shadow: 0 6px 15px rgb(21, 145, 220, 0.35);
       margin-top: 20px;
     }
     #result.show {
@@ -281,6 +283,15 @@
         left: 12px;
       }
     }
+    #calendar {
+      max-width: 550px;
+      width: 100%;
+      background: white;
+      border-radius: 10px;
+      padding: 10px;
+      margin-top: 20px;
+      box-shadow: 0 6px 15px rgb(21, 145, 220, 0.35);
+    }
   </style>
 </head>
 <body>
@@ -328,6 +339,8 @@
   </div>
 
   <div id="result"></div>
+
+  <div id="calendar"></div>
 
   <script>
     const header = document.querySelector(".header");
@@ -547,6 +560,16 @@
       if (carNumberInput) {
         carNumberInput.focus();
       }
+      const calendarEl = document.getElementById('calendar');
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        height: 500,
+        locale: 'ko',
+        dateClick: function(info) {
+          alert(info.dateStr + ' 날짜 클릭!');
+        }
+      });
+      calendar.render();
     });
   </script>
 </body>
