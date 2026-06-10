@@ -8,7 +8,7 @@ const app = express();
 app.use(express.json());
 // 정적 파일 제공 (public 폴더에 index.html 등 넣기)
 app.use(express.static(path.join(__dirname, 'public')));
-// ✅ 차량 검색 라우트
+// 차량 검색 라우트
 app.get('/search', (req, res) => {
   const {
     car_number,
@@ -31,12 +31,12 @@ app.get('/search', (req, res) => {
     sql += ` AND car_color LIKE ?`;
     params.push(`%${car_color}%`);
   }
-  // 👇 차주 1,2 같이 검색
+  // 🔥 차주 통합 검색
   if (owner_name) {
     sql += ` AND (owner_name LIKE ? OR owner_name2 LIKE ?)`;
     params.push(`%${owner_name}%`, `%${owner_name}%`);
   }
-  // 👇 연락처 1,2 같이 검색
+  // 🔥 연락처 통합 검색
   if (phone_number) {
     sql += ` AND (phone_number LIKE ? OR phone_number2 LIKE ?)`;
     params.push(`%${phone_number}%`, `%${phone_number}%`);
@@ -49,7 +49,7 @@ app.get('/search', (req, res) => {
     res.json(results);
   });
 });
-// ✅ 차량 등록 라우트
+// 차량 등록 라우트
 app.post('/add', (req, res) => {
   const { car_number, car_type, car_color, owner_name, owner_name2, phone_number, phone_number2 } = req.body;
   const sql = `
@@ -64,7 +64,7 @@ app.post('/add', (req, res) => {
     res.json({ message: '등록 완료 :)' });
   });
 });
-// ✅ 차량 삭제 라우트 (id 기준)
+// 차량 삭제 라우트 (id 기준)
 app.delete('/delete/:id', (req, res) => {
   const { id } = req.params;
   const sql = `DELETE FROM car_info WHERE id = ?`;
@@ -79,7 +79,7 @@ app.delete('/delete/:id', (req, res) => {
     res.json({ message: '삭제 완료 :)' });
   });
 });
-// ✅ 차량 수정 라우트 (id 기준)
+// 차량 수정 라우트 (id 기준)
 app.put('/update/:id', (req, res) => {
   const { id } = req.params;
   const { car_number, car_type, car_color, owner_name, owner_name2, phone_number, phone_number2 } = req.body;

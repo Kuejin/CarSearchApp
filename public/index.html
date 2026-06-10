@@ -300,12 +300,8 @@
         <input placeholder="색상" id="car_color">
       </div>
       <div class="input-group">
-        <input placeholder="차주1" id="owner_name">
-        <input placeholder="연락처1" id="phone_number">
-      </div>
-      <div class="input-group">
-        <input placeholder="차주2" id="owner_name2">
-        <input placeholder="연락처2" id="phone_number2">
+        <input placeholder="차주" id="owner_name">
+        <input placeholder="연락처" id="phone_number">
       </div>
       <button type="submit" class="enter">Search</button>
     </form>
@@ -343,7 +339,7 @@
       }
     });
     async function searchCar(silent = false) {
-      const inputIds = ['car_number', 'car_type', 'car_color', 'owner_name', 'owner_name2', 'phone_number', 'phone_number2'];
+      const inputIds = ['car_number', 'car_type', 'car_color', 'owner_name', 'phone_number'];
       const params = new URLSearchParams();
       const hasAnyInput = inputIds.some(id => document.getElementById(id).value.trim() !== '');
       if (!hasAnyInput) {
@@ -373,7 +369,7 @@
       }
     }
     async function addCar() {
-      // ✅ 필수값만 체크
+      // 필수값만 체크
       const requiredIds = [
         'add_car_number',
         'add_car_type',
@@ -388,7 +384,7 @@
         alert('필수 정보를 입력해주세요.');
         return;
       }
-      // ✅ body는 그대로 (2번은 없어도 OK)
+      // body는 그대로 (2번은 없어도 OK)
       const body = {
         car_number: document.getElementById('add_car_number').value,
         car_type: document.getElementById('add_car_type').value,
