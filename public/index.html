@@ -73,6 +73,24 @@
         pointer-events: none;
         z-index: -1;
       }
+      body::after {
+        content: "";
+        position: fixed;
+        width: 520px;
+        height: 520px;
+        border-radius: 50%;
+        right: -160px;
+        top: -120px;
+        background: radial-gradient(
+          circle,
+          rgba(110, 215, 255, 0.28),
+          rgba(181, 163, 255, 0.12),
+          transparent 72%
+        );
+        filter: blur(35px);
+        z-index: -1;
+        animation: floatGlow 10s ease-in-out infinite;
+      }
       .header {
         position: fixed;
         top: 0;
@@ -90,15 +108,19 @@
         box-shadow: 0 8px 30px rgba(160, 170, 255, 0.15);
         z-index: 1000;
         transition:
-          background 0.3s,
-          color 0.3s;
+          background 1.2s ease,
+          color 1.2s ease,
+          box-shadow 1.2s ease,
+          transform 0.5s ease;
       }
       .underline {
         text-decoration: underline;
       }
       .header.picked {
-        background: linear-gradient(135deg, #6acbff, #8ab5ff, #b39dff);
+        background: linear-gradient(135deg, #66d0ff, #7eaeff, #bb9cff);
         color: white;
+        box-shadow: 0 12px 35px rgba(118, 170, 255, 0.35);
+        transform: scale(1.01);
       }
       .tabs {
         display: flex;
@@ -251,9 +273,10 @@
         border-radius: 18px;
         border: 1px solid rgba(255, 255, 255, 0.55);
         box-shadow:
-          0 30px 60px rgba(120, 150, 255, 0.12),
-          -25px 0 45px rgba(120, 170, 255, 0.16),
-          25px 0 45px rgba(180, 140, 255, 0.16);
+          0 35px 70px rgba(120, 150, 255, 0.12),
+          -30px 0 50px rgba(130, 195, 255, 0.2),
+          30px 0 50px rgba(194, 165, 255, 0.2),
+          inset 0 1px rgba(255, 255, 255, 0.55);
         color: rgb(77, 77, 77);
         font-size: 1.2em;
         font-weight: bold;
@@ -304,12 +327,10 @@
         border-radius: 4px;
         box-shadow: none; /* 검색창처럼 강조 안 되게 */
       }
-
       @media (max-width: 600px) {
         body {
           padding: 16px;
         }
-
         .tabs {
           flex-direction: row;
           flex-wrap: wrap;
@@ -317,40 +338,33 @@
           gap: 10px;
           margin-top: 80px;
         }
-
         .tab-button {
           flex: 1 1 45%;
         }
-
         .input-group {
           flex-direction: row;
           flex-wrap: wrap;
           gap: 10px;
           justify-content: center;
         }
-
         .input-group input {
           flex: 1 1 45%;
           max-width: none;
         }
-
         input,
         .input-group input {
           width: 100%;
           font-size: 16px;
           padding: 14px;
         }
-
         .enter {
           font-size: 18px;
           padding: 16px;
         }
-
         #result {
           font-size: 15px;
           padding: 12px;
         }
-
         .header {
           font-size: 22px;
           top: 12px;
@@ -365,9 +379,10 @@
         border-radius: 18px;
         border: 1px solid rgba(255, 255, 255, 0.55);
         box-shadow:
-          0 30px 60px rgba(120, 150, 255, 0.12),
-          -25px 0 45px rgba(120, 170, 255, 0.16),
-          25px 0 45px rgba(180, 140, 255, 0.16);
+          0 35px 70px rgba(120, 150, 255, 0.12),
+          -30px 0 50px rgba(130, 195, 255, 0.2),
+          30px 0 50px rgba(194, 165, 255, 0.2),
+          inset 0 1px rgba(255, 255, 255, 0.55);
         padding: 10px;
         margin-top: 20px;
       }
@@ -376,7 +391,6 @@
       .fc-day-sun .fc-daygrid-day-number {
         color: rgb(255, 57, 57);
       }
-
       /* 토요일 */
       .fc-day-sat .fc-col-header-cell-cushion,
       .fc-day-sat .fc-daygrid-day-number {
@@ -387,22 +401,27 @@
         border-radius: 9999px;
         border: none;
         font-family: "Jua", sans-serif;
+        background: linear-gradient(135deg, #67cbff, #80b6ff, #b49aff);
+        color: white;
+        box-shadow: 0 8px 20px rgba(120, 170, 255, 0.22);
+        transition: 0.3s;
       }
-
+      .fc .fc-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px rgba(120, 170, 255, 0.35);
+      }
       /* prev / next 버튼 */
       .fc .fc-prev-button,
       .fc .fc-next-button {
         width: 50px;
         height: 40px;
       }
-
       /* today 버튼 */
       .fc .fc-today-button {
         width: 100px;
         height: 40px;
         text-transform: uppercase;
       }
-
       /* 버튼 줄 정렬 */
       .fc .fc-toolbar-chunk {
         display: flex;
@@ -418,31 +437,45 @@
       /* 헤더 타이틀 스타일 */
       .fc .fc-toolbar-title {
         font-family: "Jua", sans-serif;
-        color: #1591dc;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #4f7cff;
+        letter-spacing: 2px;
+        text-shadow: 0 3px 12px rgba(120, 170, 255, 0.25);
       }
-
       /* today 강조 */
       .fc .fc-day-today {
-        background-color: rgba(21, 145, 220, 0.1);
+        background: rgba(118, 180, 255, 0.18) !important;
+        border-radius: 12px;
       }
-
       /* 날짜 hover */
       .fc-daygrid-day:hover {
-        background-color: rgba(21, 145, 220, 0.05);
+        background: rgba(180, 205, 255, 0.18);
+        transition: 0.25s;
+        transform: scale(1.02);
         cursor: pointer;
+      }
+      @keyframes floatGlow {
+        0% {
+          transform: translateY(0px) translateX(0px);
+        }
+        50% {
+          transform: translateY(25px) translateX(-20px);
+        }
+        100% {
+          transform: translateY(0px) translateX(0px);
+        }
       }
     </style>
   </head>
   <body>
     <div class="header">Car <span class="underline">Info</span></div>
-
     <div class="tabs">
       <button class="tab-button active" onclick="showTab('search')">
         차량 검색
       </button>
       <button class="tab-button" onclick="showTab('add')">차량 추가</button>
     </div>
-
     <!-- 차량 검색 -->
     <div id="search" class="section active">
       <form
