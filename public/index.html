@@ -11,11 +11,6 @@
       href="https://fonts.googleapis.com/css2?family=Jua&display=swap"
       rel="stylesheet"
     />
-    <link
-      href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css"
-      rel="stylesheet"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
     <title>Car Search</title>
     <style>
       html,
@@ -371,106 +366,6 @@
           left: 12px;
         }
       }
-      #calendar {
-        max-width: 550px;
-        width: 100%;
-        background: rgba(255, 255, 255, 0.82);
-        backdrop-filter: blur(16px);
-        border-radius: 18px;
-        border: 1px solid rgba(255, 255, 255, 0.55);
-        box-shadow:
-          0 35px 70px rgba(120, 150, 255, 0.12),
-          -30px 0 50px rgba(130, 195, 255, 0.2),
-          30px 0 50px rgba(194, 165, 255, 0.2),
-          inset 0 1px rgba(255, 255, 255, 0.55);
-        padding: 10px;
-        margin-top: 20px;
-        overflow: hidden;
-      }
-      /* 일요일 */
-      .fc-day-sun .fc-col-header-cell-cushion,
-      .fc-day-sun .fc-daygrid-day-number {
-        color: rgb(255, 57, 57);
-      }
-      /* 토요일 */
-      .fc-day-sat .fc-col-header-cell-cushion,
-      .fc-day-sat .fc-daygrid-day-number {
-        color: #2c3e50;
-      }
-      /* 전체 버튼 공통 */
-      .fc .fc-button {
-        border-radius: 9999px;
-        border: none;
-        font-family: "Jua", sans-serif;
-        background: linear-gradient(135deg, #67cbff, #80b6ff, #b49aff);
-        color: white;
-        box-shadow: 0 8px 20px rgba(120, 170, 255, 0.22);
-        transition: 0.3s;
-      }
-      .fc .fc-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 28px rgba(120, 170, 255, 0.35);
-      }
-      /* prev / next 버튼 */
-      .fc .fc-prev-button,
-      .fc .fc-next-button {
-        width: 50px;
-        height: 40px;
-      }
-      /* today 버튼 */
-      .fc .fc-today-button {
-        width: 100px;
-        height: 40px;
-        text-transform: uppercase;
-      }
-      /* 버튼 줄 정렬 */
-      .fc .fc-toolbar-chunk {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-      }
-      .fc-col-header-cell-cushion::after {
-        display: none !important;
-      }
-      .fc-scroller {
-        overflow: visible !important;
-      }
-      /* 헤더 타이틀 스타일 */
-      .fc .fc-toolbar-title {
-        font-family: "Jua", sans-serif;
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: #4f7cff;
-        letter-spacing: 2px;
-        text-shadow: 0 3px 12px rgba(120, 170, 255, 0.25);
-      }
-      /* today 강조 */
-      .fc .fc-day-today {
-        background: rgba(118, 180, 255, 0.18) !important;
-        border-radius: 12px;
-      }
-      /* 날짜 hover */
-      .fc-daygrid-day:hover {
-        background: rgba(180, 205, 255, 0.18);
-        transition: 0.25s;
-        transform: scale(1.01);
-        z-index: 5;
-        position: relative;
-      }
-      /* 달력 테두리 보정 */
-      .fc-theme-standard .fc-scrollgrid {
-        border: 1px solid rgba(0, 0, 0, 0.08);
-        border-collapse: collapse;
-      }
-      .fc-theme-standard td,
-      .fc-theme-standard th {
-        border: 1px solid rgba(0, 0, 0, 0.08);
-      }
-      /* 마지막(토요일) 세로선 강제 표시 */
-      .fc-theme-standard td:last-child,
-      .fc-theme-standard th:last-child {
-        border-right: 1px solid rgba(0, 0, 0, 0.08);
-      }
       @keyframes floatGlow {
         0% {
           transform: translateY(0px) translateX(0px);
@@ -539,7 +434,6 @@
       </form>
     </div>
     <div id="result"></div>
-    <div id="calendar"></div>
     <script>
       const header = document.querySelector(".header");
       document.addEventListener("click", (e) => {
@@ -789,21 +683,6 @@
         if (carNumberInput) {
           carNumberInput.focus();
         }
-        const calendarEl = document.getElementById("calendar");
-        const calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: "dayGridMonth",
-          height: 500,
-          locale: "ko",
-          titleFormat: function (date) {
-            const year = String(date.date.year % 100).padStart(2, "0");
-            const month = String(date.date.month + 1).padStart(2, "0");
-            return `${year}.${month}`;
-          },
-          dateClick: function (info) {
-            alert(info.dateStr + "Date Click");
-          },
-        });
-        calendar.render();
       });
     </script>
   </body>
