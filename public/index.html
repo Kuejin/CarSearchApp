@@ -432,7 +432,7 @@
         display: none !important;
       }
       .fc-scroller {
-        overflow: hidden !important;
+        overflow: visible !important;
       }
       /* 헤더 타이틀 스타일 */
       .fc .fc-toolbar-title {
@@ -454,6 +454,20 @@
         transition: 0.25s;
         transform: scale(1.02);
         cursor: pointer;
+      }
+      /* 달력 테두리 보정 */
+      .fc-theme-standard .fc-scrollgrid {
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        border-collapse: collapse;
+      }
+      .fc-theme-standard td,
+      .fc-theme-standard th {
+        border: 1px solid rgba(0, 0, 0, 0.08);
+      }
+      /* 마지막(토요일) 세로선 강제 표시 */
+      .fc-theme-standard td:last-child,
+      .fc-theme-standard th:last-child {
+        border-right: 1px solid rgba(0, 0, 0, 0.08);
       }
       @keyframes floatGlow {
         0% {
@@ -497,7 +511,6 @@
         <button type="submit" class="enter">Search</button>
       </form>
     </div>
-
     <!-- 차량 추가 -->
     <div id="add" class="section">
       <form
@@ -523,11 +536,8 @@
         <button type="submit" class="enter">Add</button>
       </form>
     </div>
-
     <div id="result"></div>
-
     <div id="calendar"></div>
-
     <script>
       const header = document.querySelector(".header");
       document.addEventListener("click", (e) => {
@@ -639,8 +649,8 @@
           <div style="margin-top: 10px;">
             <span class="slash">차량</span>
             <div>
-              ${car.car_number} 
-              <span class="slash">/</span> ${car.car_type} 
+              ${car.car_number}
+              <span class="slash">/</span> ${car.car_type}
               <span class="slash">/</span> ${car.car_color}
               <button onclick="deleteCar(${car.id})">삭제</button>
               <button class="edit-btn">수정</button>
@@ -709,7 +719,6 @@
                   });
                   const data = await res.json();
                   alert(data.message || "수정 완료!");
-
                   // 화면 데이터 업데이트
                   Object.assign(car, updatedCar);
                   renderViewMode();
@@ -719,7 +728,6 @@
                 }
               }
             });
-
           // 취소 버튼
           item
             .querySelector(".cancel-btn")
@@ -747,10 +755,8 @@
         document
           .querySelectorAll(".section")
           .forEach((section) => section.classList.remove("active"));
-
         const section = document.getElementById(tabName);
         section.classList.add("active");
-
         const activeBtn = Array.from(
           document.querySelectorAll(".tab-button"),
         ).find((b) =>
