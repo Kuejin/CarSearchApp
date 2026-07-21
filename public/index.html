@@ -1,501 +1,562 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
-  <title>Car Search</title>
-  <style>
-    html, body {
-      overflow-x: hidden;
-    }
-    body {
-      margin: 0;
-      font-family: sans-serif;
-      background-color: #c4e2f5;
-      color: #1591DC;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-      position: relative;
-    }
-    .header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background-color: #c4e2f5;
-      color: #1591DC;
-      font-family: 'Great Vibes', cursive;
-      font-size: 31px;
-      font-weight: bold;
-      padding: 12px 20px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      z-index: 1000;
-      transition: background-color 0.3s, color 0.3s;
-    }
-    .underline {
-      text-decoration: underline;
-    }
-    .header.picked {
-      background-color: #1591DC;
-      color: #c4e2f5;
-    }
-    .tabs {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 20px;
-      width: 100%;
-      max-width: 550px;
-      margin-top: 80px;
-    }
-    .tab-button {
-      flex: 1;
-      padding: 12px 0;
-      font-size: 17px;
-      border: none;
-      background-color: #c4e2f5;
-      color: rgb(130, 148, 148);
-      border-radius: 0;
-      cursor: pointer;
-      border-bottom: 1.5px solid transparent;
-      transition: border-color 0.5s, color 0.5s;
-    }
-    .tab-button.active {
-      border-bottom: 2px solid #1591DC;
-      background-color: #c4e2f5;
-      font-weight: bold;
-      color: #1591DC;
-    }
-    .section {
-      display: none;
-      width: 100%;
-      max-width: 550px;
-      background-color: #c4e2f5;
-      padding: 0 20px 10px 20px;
-      border-radius: 10px;
-    }
-    .section.active {
-      display: block;
-    }
-    input {
-      display: block;
-      width: 100%;
-      max-width: 500px;
-      margin: 5px auto;
-      padding: 12px;
-      font-size: 17px;
-      border: none;
-      border-radius: 9999px;
-      box-sizing: border-box;
-      outline: none;
-      box-shadow: 0 0 8px 2px rgb(21, 145, 220, 0.7);
-    }
-    input.invalid {
-      border: 2px solid red;
-    }
-    #task_desc::placeholder {
-      color: #4D4D4D;
-    }
-    #car_number,
-    #add_car_number {
-      padding: 20px;
-      font-weight: bold;
-    }
-    .input-group {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-    }
-    .input-group input {
-      width: 100%;
-      max-width: 245px;
-    }
-    button {
-      width: 100%;
-      max-width: 500px;
-      padding: 14px;
-      font-size: 18px;
-      background-color: #c4e2f5;
-      border: none;
-      border-radius: 9999px;
-      cursor: pointer;
-      margin: 0px auto 0;
-    }
-    .enter {
-      background-color: #1591DC;
-      color: #c4e2f5;
-      margin: 20px auto 0;
-      display: block;
-      border: 2px solid transparent;
-    }
-    button:hover {
-      background-color: #c4e2f5;
-      color: #1591DC;
-    }
-    .enter:hover {
-      border: 2px solid #1591DC;
-    }
-    .task-item {
-      margin-bottom: 20px;
-      border-bottom: 1px solid #1591DC;
-      padding-bottom: 10px;
-      font-size: 1.2em;
-      font-family: 'Jua', sans-serif;
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 6px 15px rgb(21, 145, 220, 0.35);
-      padding: 15px;
-    }
-    .task-item button {
-      float: right;
-      width: 2.7em;
-      height: 27px;
-      font-size: 0.7em;
-      font-family: 'Jua', sans-serif;
-      background-color: #c4e2f5;
-      cursor: pointer;
-      color: rgb(255, 57, 57);
-      padding: 0;
-    }
-    .task-board {
-      max-width: 550px;
-      width: 100%;
-      background-color: white;
-      color: rgb(77, 77, 77);
-      font-size: 1.2em;
-      font-weight: bold;
-      padding: 15px;
-      border-radius: 10px;
-      max-height: 400px;
-      overflow-y: auto;
-      font-family: 'Jua', sans-serif;
-      box-shadow: 0 6px 15px rgb(21, 145, 220, 0.35);
-      margin-top: 20px;
-    }
-    #result {
-      max-width: 550px;
-      width: 100%;
-      background-color: white;
-      color: rgb(77, 77, 77);
-      font-size: 1.2em;
-      font-weight: bold;
-      padding: 0px 15px;
-      border-radius: 10px;
-      max-height: 400px;
-      overflow-y: auto;
-      opacity: 0;
-      transform: translateY(10px);
-      transition: opacity 0.3s ease, transform 0.3s ease;
-      font-family: 'Jua', sans-serif;
-      box-shadow: 0 6px 15px rgb(21, 145, 220, 0.35);
-      margin-top: 20px;
-    }
-    #result.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    span.slash {
-      color: #1591DC;
-    }
-    .result-item {
-      padding: 15px 0px;
-      font-size: 1.2em;
-      border-top: 2px solid #1591DC;
-      font-family: 'Jua', sans-serif;
-    }
-    .result-item button {
-      float: right;
-      width: 2.7em;
-      height: 27px;
-      font-size: 0.7em;
-      font-family: 'Jua', sans-serif;
-      background-color: #c4e2f5;
-      cursor: pointer;
-      color: rgb(255, 57, 57);
-      padding: 0;
-    }
-    .result-item input.inline-edit {
-      display: inline-block;
-      width: auto;          /* 내용에 맞게 */
-      min-width: 80px;      /* 너무 작아지지 않도록 */
-      font-size: inherit;
-      font-family: inherit;
-      padding: 2px 4px;
-      margin: 0 3px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-shadow: none;     /* 검색창처럼 강조 안 되게 */
-    }
-
-    @media (max-width: 600px) {
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jua&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+    <title>Car Search</title>
+    <style>
+      html,
       body {
-        padding: 16px;
+        overflow-x: hidden;
       }
-
+      body {
+        margin: 0;
+        font-family: sans-serif;
+        background: linear-gradient(
+          135deg,
+          #ffffff 0%,
+          #e9f7ff 45%,
+          #efe9ff 100%
+        );
+        background-attachment: fixed;
+        color: #1591dc;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        position: relative;
+      }
+      .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.65);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        color: #1591dc;
+        font-family: "Great Vibes", cursive;
+        font-size: 31px;
+        font-weight: bold;
+        padding: 12px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 8px 30px rgba(160, 170, 255, 0.15);
+        z-index: 1000;
+        transition:
+          background 0.3s,
+          color 0.3s;
+      }
+      .underline {
+        text-decoration: underline;
+      }
+      .header.picked {
+        background: linear-gradient(135deg, #6acbff, #8ab5ff, #b39dff);
+        color: white;
+      }
       .tabs {
-        flex-direction: row;
-        flex-wrap: wrap;
+        display: flex;
         justify-content: center;
-        gap: 10px;
+        margin-bottom: 20px;
+        width: 100%;
+        max-width: 550px;
         margin-top: 80px;
       }
-
       .tab-button {
-        flex: 1 1 45%;
+        flex: 1;
+        padding: 12px 0;
+        font-size: 17px;
+        border: none;
+        background-color: #c4e2f5;
+        color: rgb(130, 148, 148);
+        border-radius: 0;
+        cursor: pointer;
+        border-bottom: 1.5px solid transparent;
+        transition:
+          border-color 0.5s,
+          color 0.5s;
       }
-
+      .tab-button.active {
+        border-bottom: 2px solid #1591dc;
+        background-color: #c4e2f5;
+        font-weight: bold;
+        color: #1591dc;
+      }
+      .section {
+        display: none;
+        width: 100%;
+        max-width: 550px;
+        background: transparent;
+        padding: 0 20px 10px 20px;
+        border-radius: 10px;
+      }
+      .section.active {
+        display: block;
+      }
+      input {
+        display: block;
+        width: 100%;
+        max-width: 500px;
+        margin: 5px auto;
+        padding: 12px;
+        font-size: 17px;
+        background: rgba(255, 255, 255, 0.82);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        border-radius: 9999px;
+        box-sizing: border-box;
+        outline: none;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 8px 20px rgba(140, 170, 255, 0.18);
+      }
+      input.invalid {
+        border: 2px solid red;
+      }
+      #task_desc::placeholder {
+        color: #4d4d4d;
+      }
+      #car_number,
+      #add_car_number {
+        padding: 20px;
+        font-weight: bold;
+      }
       .input-group {
-        flex-direction: row;
-        flex-wrap: wrap;
+        display: flex;
         gap: 10px;
         justify-content: center;
       }
-
       .input-group input {
-        flex: 1 1 45%;
-        max-width: none;
-      }
-
-      input, .input-group input {
         width: 100%;
-        font-size: 16px;
+        max-width: 245px;
+      }
+      button {
+        width: 100%;
+        max-width: 500px;
         padding: 14px;
-      }
-
-      .enter {
         font-size: 18px;
-        padding: 16px;
+        background-color: #c4e2f5;
+        border: none;
+        border-radius: 9999px;
+        cursor: pointer;
+        margin: 0px auto 0;
       }
-
+      .enter {
+        background: linear-gradient(135deg, #63cbff, #7eb7ff, #b293ff);
+        color: white;
+        margin: 20px auto 0;
+        display: block;
+        border: none;
+        transition: 0.25s;
+      }
+      button:hover {
+        background-color: #c4e2f5;
+        color: #1591dc;
+      }
+      .enter:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 25px rgba(120, 150, 255, 0.35);
+      }
+      .task-item {
+        margin-bottom: 20px;
+        border-bottom: 1px solid #1591dc;
+        padding-bottom: 10px;
+        font-size: 1.2em;
+        font-family: "Jua", sans-serif;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 6px 15px rgb(21, 145, 220, 0.35);
+        padding: 15px;
+      }
+      .task-item button {
+        float: right;
+        width: 2.7em;
+        height: 27px;
+        font-size: 0.7em;
+        font-family: "Jua", sans-serif;
+        background-color: #c4e2f5;
+        cursor: pointer;
+        color: rgb(255, 57, 57);
+        padding: 0;
+      }
+      .task-board {
+        max-width: 550px;
+        width: 100%;
+        background-color: white;
+        color: rgb(77, 77, 77);
+        font-size: 1.2em;
+        font-weight: bold;
+        padding: 15px;
+        border-radius: 10px;
+        max-height: 400px;
+        overflow-y: auto;
+        font-family: "Jua", sans-serif;
+        box-shadow: 0 6px 15px rgb(21, 145, 220, 0.35);
+        margin-top: 20px;
+      }
       #result {
-        font-size: 15px;
-        padding: 12px;
+        max-width: 550px;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.82);
+        backdrop-filter: blur(16px);
+        color: rgb(77, 77, 77);
+        font-size: 1.2em;
+        font-weight: bold;
+        padding: 0 15px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        max-height: 400px;
+        overflow-y: auto;
+        opacity: 0;
+        transform: translateY(10px);
+        transition:
+          opacity 0.3s ease,
+          transform 0.3s ease;
+        font-family: "Jua", sans-serif;
+        box-shadow: 0 15px 35px rgba(150, 165, 255, 0.18);
+        margin-top: 20px;
+      }
+      #result.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      span.slash {
+        color: #1591dc;
+      }
+      .result-item {
+        padding: 15px 0px;
+        font-size: 1.2em;
+        border-top: 2px solid #1591dc;
+        font-family: "Jua", sans-serif;
+      }
+      .result-item button {
+        float: right;
+        width: 2.7em;
+        height: 27px;
+        font-size: 0.7em;
+        font-family: "Jua", sans-serif;
+        background-color: #c4e2f5;
+        cursor: pointer;
+        color: rgb(255, 57, 57);
+        padding: 0;
+      }
+      .result-item input.inline-edit {
+        display: inline-block;
+        width: auto; /* 내용에 맞게 */
+        min-width: 80px; /* 너무 작아지지 않도록 */
+        font-size: inherit;
+        font-family: inherit;
+        padding: 2px 4px;
+        margin: 0 3px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: none; /* 검색창처럼 강조 안 되게 */
       }
 
-      .header {
-        font-size: 22px;
-        top: 12px;
-        left: 12px;
-      }
-    }
-    #calendar {
-      max-width: 550px;
-      width: 100%;
-      background: white;
-      border-radius: 10px;
-      padding: 10px;
-      margin-top: 20px;
-      box-shadow: 0 6px 15px rgb(21, 145, 220, 0.35);
-    }
-    /* 일요일 */
-    .fc-day-sun .fc-col-header-cell-cushion,
-    .fc-day-sun .fc-daygrid-day-number {
-      color: rgb(255, 57, 57);
-    }
+      @media (max-width: 600px) {
+        body {
+          padding: 16px;
+        }
 
-    /* 토요일 */
-    .fc-day-sat .fc-col-header-cell-cushion,
-    .fc-day-sat .fc-daygrid-day-number {
-      color: #2C3E50;
-    }
-    /* 전체 버튼 공통 */
-    .fc .fc-button {
-      border-radius: 9999px;
-      border: none;
-      font-family: 'Jua', sans-serif;
-    }
+        .tabs {
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 10px;
+          margin-top: 80px;
+        }
 
-    /* prev / next 버튼 */
-    .fc .fc-prev-button,
-    .fc .fc-next-button {
-      width: 50px;
-      height: 40px;
-    }
+        .tab-button {
+          flex: 1 1 45%;
+        }
 
-    /* today 버튼 */
-    .fc .fc-today-button {
-      width: 100px;
-      height: 40px;
-      text-transform: uppercase;
-    }
+        .input-group {
+          flex-direction: row;
+          flex-wrap: wrap;
+          gap: 10px;
+          justify-content: center;
+        }
 
-    /* 버튼 줄 정렬 */
-    .fc .fc-toolbar-chunk {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .fc-col-header-cell-cushion::after {display: none !important;}
-    .fc-scroller {overflow: hidden !important;}
-    /* 헤더 타이틀 스타일 */
-    .fc .fc-toolbar-title {
-      font-family: 'Jua', sans-serif;
-      color: #1591DC;
-    }
+        .input-group input {
+          flex: 1 1 45%;
+          max-width: none;
+        }
 
-    /* today 강조 */
-    .fc .fc-day-today {
-      background-color: rgba(21, 145, 220, 0.1);
-    }
+        input,
+        .input-group input {
+          width: 100%;
+          font-size: 16px;
+          padding: 14px;
+        }
 
-    /* 날짜 hover */
-    .fc-daygrid-day:hover {
-      background-color: rgba(21, 145, 220, 0.05);
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-  <div class="header">Car <span class="underline">Info</span></div>
+        .enter {
+          font-size: 18px;
+          padding: 16px;
+        }
 
-  <div class="tabs">
-    <button class="tab-button active" onclick="showTab('search')">차량 검색</button>
-    <button class="tab-button" onclick="showTab('add')">차량 추가</button>
-  </div>
+        #result {
+          font-size: 15px;
+          padding: 12px;
+        }
 
-  <!-- 차량 검색 -->
-  <div id="search" class="section active">
-    <form id="search-form" onsubmit="event.preventDefault(); searchCar();">
-      <input placeholder="차량번호" id="car_number">
-      <div class="input-group">
-        <input placeholder="차종" id="car_type">
-        <input placeholder="색상" id="car_color">
-      </div>
-      <div class="input-group">
-        <input placeholder="차주" id="owner_name">
-        <input placeholder="연락처" id="phone_number">
-      </div>
-      <button type="submit" class="enter">Search</button>
-    </form>
-  </div>
-
-  <!-- 차량 추가 -->
-  <div id="add" class="section">
-    <form id="add-form" onsubmit="event.preventDefault(); addCar();">
-      <input placeholder="차량번호" id="add_car_number">
-      <div class="input-group">
-        <input placeholder="차종" id="add_car_type">
-        <input placeholder="색상" id="add_car_color">
-      </div>
-      <div class="input-group">
-        <input placeholder="차주1" id="add_owner_name">
-        <input placeholder="연락처1" id="add_phone_number">
-      </div>
-      <div class="input-group">
-        <input placeholder="차주2" id="add_owner_name2">
-        <input placeholder="연락처2" id="add_phone_number2">
-      </div>
-      <button type="submit" class="enter">Add</button>
-    </form>
-  </div>
-
-  <div id="result"></div>
-
-  <div id="calendar"></div>
-
-  <script>
-    const header = document.querySelector(".header");
-    document.addEventListener("click", (e) => {
-      if (e.target.tagName.toLowerCase() === "input") {
-        header.classList.add("picked");
-      } else {
-        header.classList.remove("picked");
-      }
-    });
-    async function searchCar(silent = false) {
-      const inputIds = ['car_number', 'car_type', 'car_color', 'owner_name', 'phone_number'];
-      const params = new URLSearchParams();
-      const hasAnyInput = inputIds.some(id => document.getElementById(id).value.trim() !== '');
-      if (!hasAnyInput) {
-        if (!silent) alert('값을 입력하세요');
-        return;
-      }
-      inputIds.forEach(id => {
-        params.append(id, document.getElementById(id).value);
-      });
-      const res = await fetch(`/search?${params}`);
-      const data = await res.json();
-      const resultDiv = document.getElementById('result');
-      resultDiv.classList.remove('show');
-      resultDiv.innerHTML = '';
-      if (Array.isArray(data) && data.length > 0) {
-        data.forEach(car => {
-          renderCarItem(car);
-        });
-        setTimeout(() => resultDiv.classList.add('show'), 10);
-      } else {
-        if (!silent) {
-          alert('결과가 없습니다.');
-        } else {
-          resultDiv.classList.remove('show');
-          resultDiv.innerHTML = '';
+        .header {
+          font-size: 22px;
+          top: 12px;
+          left: 12px;
         }
       }
-    }
-    async function addCar() {
-      // 필수값만 체크
-      const requiredIds = [
-        'add_car_number',
-        'add_car_type',
-        'add_car_color',
-        'add_owner_name',
-        'add_phone_number'
-      ];
-      const allFilled = requiredIds.every(id =>
-        document.getElementById(id).value.trim() !== ''
-      );
-      if (!allFilled) {
-        alert('필수 정보를 입력해주세요.');
-        return;
+      #calendar {
+        max-width: 550px;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.82);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        border-radius: 16px;
+        padding: 10px;
+        margin-top: 20px;
+        box-shadow: 0 15px 35px rgba(150, 165, 255, 0.18);
       }
-      // body는 그대로 (2번은 없어도 OK)
-      const body = {
-        car_number: document.getElementById('add_car_number').value,
-        car_type: document.getElementById('add_car_type').value,
-        car_color: document.getElementById('add_car_color').value,
-        owner_name: document.getElementById('add_owner_name').value,
-        owner_name2: document.getElementById('add_owner_name2').value || null,
-        phone_number: document.getElementById('add_phone_number').value,
-        phone_number2: document.getElementById('add_phone_number2').value || null,
-      };
-      const res = await fetch('/add', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
+      /* 일요일 */
+      .fc-day-sun .fc-col-header-cell-cushion,
+      .fc-day-sun .fc-daygrid-day-number {
+        color: rgb(255, 57, 57);
+      }
+
+      /* 토요일 */
+      .fc-day-sat .fc-col-header-cell-cushion,
+      .fc-day-sat .fc-daygrid-day-number {
+        color: #2c3e50;
+      }
+      /* 전체 버튼 공통 */
+      .fc .fc-button {
+        border-radius: 9999px;
+        border: none;
+        font-family: "Jua", sans-serif;
+      }
+
+      /* prev / next 버튼 */
+      .fc .fc-prev-button,
+      .fc .fc-next-button {
+        width: 50px;
+        height: 40px;
+      }
+
+      /* today 버튼 */
+      .fc .fc-today-button {
+        width: 100px;
+        height: 40px;
+        text-transform: uppercase;
+      }
+
+      /* 버튼 줄 정렬 */
+      .fc .fc-toolbar-chunk {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .fc-col-header-cell-cushion::after {
+        display: none !important;
+      }
+      .fc-scroller {
+        overflow: hidden !important;
+      }
+      /* 헤더 타이틀 스타일 */
+      .fc .fc-toolbar-title {
+        font-family: "Jua", sans-serif;
+        color: #1591dc;
+      }
+
+      /* today 강조 */
+      .fc .fc-day-today {
+        background-color: rgba(21, 145, 220, 0.1);
+      }
+
+      /* 날짜 hover */
+      .fc-daygrid-day:hover {
+        background-color: rgba(21, 145, 220, 0.05);
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">Car <span class="underline">Info</span></div>
+
+    <div class="tabs">
+      <button class="tab-button active" onclick="showTab('search')">
+        차량 검색
+      </button>
+      <button class="tab-button" onclick="showTab('add')">차량 추가</button>
+    </div>
+
+    <!-- 차량 검색 -->
+    <div id="search" class="section active">
+      <form
+        id="search-form"
+        onsubmit="
+          event.preventDefault();
+          searchCar();
+        "
+      >
+        <input placeholder="차량번호" id="car_number" />
+        <div class="input-group">
+          <input placeholder="차종" id="car_type" />
+          <input placeholder="색상" id="car_color" />
+        </div>
+        <div class="input-group">
+          <input placeholder="차주" id="owner_name" />
+          <input placeholder="연락처" id="phone_number" />
+        </div>
+        <button type="submit" class="enter">Search</button>
+      </form>
+    </div>
+
+    <!-- 차량 추가 -->
+    <div id="add" class="section">
+      <form
+        id="add-form"
+        onsubmit="
+          event.preventDefault();
+          addCar();
+        "
+      >
+        <input placeholder="차량번호" id="add_car_number" />
+        <div class="input-group">
+          <input placeholder="차종" id="add_car_type" />
+          <input placeholder="색상" id="add_car_color" />
+        </div>
+        <div class="input-group">
+          <input placeholder="차주1" id="add_owner_name" />
+          <input placeholder="연락처1" id="add_phone_number" />
+        </div>
+        <div class="input-group">
+          <input placeholder="차주2" id="add_owner_name2" />
+          <input placeholder="연락처2" id="add_phone_number2" />
+        </div>
+        <button type="submit" class="enter">Add</button>
+      </form>
+    </div>
+
+    <div id="result"></div>
+
+    <div id="calendar"></div>
+
+    <script>
+      const header = document.querySelector(".header");
+      document.addEventListener("click", (e) => {
+        if (e.target.tagName.toLowerCase() === "input") {
+          header.classList.add("picked");
+        } else {
+          header.classList.remove("picked");
+        }
       });
-      const data = await res.json();
-      if (data.message && data.message.includes('완료')) {
-        alert('등록 성공했습니다');
-        // 입력 초기화
-        [
-          'add_car_number',
-          'add_car_type',
-          'add_car_color',
-          'add_owner_name',
-          'add_owner_name2',
-          'add_phone_number',
-          'add_phone_number2'
-        ].forEach(id => document.getElementById(id).value = '');
-      } else {
-        alert(data.message || '등록 실패');
+      async function searchCar(silent = false) {
+        const inputIds = [
+          "car_number",
+          "car_type",
+          "car_color",
+          "owner_name",
+          "phone_number",
+        ];
+        const params = new URLSearchParams();
+        const hasAnyInput = inputIds.some(
+          (id) => document.getElementById(id).value.trim() !== "",
+        );
+        if (!hasAnyInput) {
+          if (!silent) alert("값이 어디갔죠?");
+          return;
+        }
+        inputIds.forEach((id) => {
+          params.append(id, document.getElementById(id).value);
+        });
+        const res = await fetch(`/search?${params}`);
+        const data = await res.json();
+        const resultDiv = document.getElementById("result");
+        resultDiv.classList.remove("show");
+        resultDiv.innerHTML = "";
+        if (Array.isArray(data) && data.length > 0) {
+          data.forEach((car) => {
+            renderCarItem(car);
+          });
+          setTimeout(() => resultDiv.classList.add("show"), 10);
+        } else {
+          if (!silent) {
+            alert("찾아도 안보여요");
+          } else {
+            resultDiv.classList.remove("show");
+            resultDiv.innerHTML = "";
+          }
+        }
       }
-    }
-    function renderCarItem(car) {
-      const item = document.createElement("div");
-      item.className = "result-item";
-      function renderViewMode() {
-        item.innerHTML = `
+      async function addCar() {
+        // 필수값만 체크
+        const requiredIds = [
+          "add_car_number",
+          "add_car_type",
+          "add_car_color",
+          "add_owner_name",
+          "add_phone_number",
+        ];
+        const allFilled = requiredIds.every(
+          (id) => document.getElementById(id).value.trim() !== "",
+        );
+        if (!allFilled) {
+          alert("필수 정보를 채워주세요");
+          return;
+        }
+        // body는 그대로 (2번은 없어도 OK)
+        const body = {
+          car_number: document.getElementById("add_car_number").value,
+          car_type: document.getElementById("add_car_type").value,
+          car_color: document.getElementById("add_car_color").value,
+          owner_name: document.getElementById("add_owner_name").value,
+          owner_name2: document.getElementById("add_owner_name2").value || null,
+          phone_number: document.getElementById("add_phone_number").value,
+          phone_number2:
+            document.getElementById("add_phone_number2").value || null,
+        };
+        const res = await fetch("/add", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+        const data = await res.json();
+        if (data.message && data.message.includes("완료!")) {
+          alert("등록 성공!");
+          // 입력 초기화
+          [
+            "add_car_number",
+            "add_car_type",
+            "add_car_color",
+            "add_owner_name",
+            "add_owner_name2",
+            "add_phone_number",
+            "add_phone_number2",
+          ].forEach((id) => (document.getElementById(id).value = ""));
+        } else {
+          alert(data.message || "등록 실패!");
+        }
+      }
+      function renderCarItem(car) {
+        const item = document.createElement("div");
+        item.className = "result-item";
+        function renderViewMode() {
+          item.innerHTML = `
           <div>
             <span class="slash">차주</span>
             <div>
               ${car.owner_name} (${car.phone_number})
             </div>
-            ${car.owner_name2? `<div>${car.owner_name2} (${car.phone_number2 || ''})</div>`: ''}
+            ${car.owner_name2 ? `<div>${car.owner_name2} (${car.phone_number2 || ""})</div>` : ""}
           </div>
           <div style="margin-top: 10px;">
             <span class="slash">차량</span>
@@ -508,130 +569,156 @@
             </div>
           </div>
         `;
-        item.querySelector(".edit-btn").addEventListener("click", renderEditMode);
-      }
-      function renderEditMode() {
-        item.innerHTML = `
+          item
+            .querySelector(".edit-btn")
+            .addEventListener("click", renderEditMode);
+        }
+        function renderEditMode() {
+          item.innerHTML = `
           <div>
             <span class="slash">차주</span>
             <div>
-              <input class="inline-edit" value="${car.owner_name || ''}" id="edit_owner_${car.id}">
+              <input class="inline-edit" value="${car.owner_name || ""}" id="edit_owner_${car.id}">
               <span class="slash">/</span>
-              <input class="inline-edit" value="${car.phone_number || ''}" id="edit_phone_${car.id}">
+              <input class="inline-edit" value="${car.phone_number || ""}" id="edit_phone_${car.id}">
             </div>
             <div>
-              <input class="inline-edit" value="${car.owner_name2 || ''}" id="edit_owner2_${car.id}">
+              <input class="inline-edit" value="${car.owner_name2 || ""}" id="edit_owner2_${car.id}">
               <span class="slash">/</span>
-              <input class="inline-edit" value="${car.phone_number2 || ''}" id="edit_phone2_${car.id}">
+              <input class="inline-edit" value="${car.phone_number2 || ""}" id="edit_phone2_${car.id}">
             </div>
           </div>
           <div style="margin-top: 10px;">
             <span class="slash">차량</span>
             <div>
-              <input class="inline-edit" value="${car.car_number || ''}" id="edit_number_${car.id}">
+              <input class="inline-edit" value="${car.car_number || ""}" id="edit_number_${car.id}">
               <span class="slash">/</span>
-              <input class="inline-edit" value="${car.car_type || ''}" id="edit_type_${car.id}">
+              <input class="inline-edit" value="${car.car_type || ""}" id="edit_type_${car.id}">
               <span class="slash">/</span>
-              <input class="inline-edit" value="${car.car_color || ''}" id="edit_color_${car.id}">
+              <input class="inline-edit" value="${car.car_color || ""}" id="edit_color_${car.id}">
               <button class="save-btn">저장</button>
               <button class="cancel-btn">취소</button>
             </div>
           </div>
         `;
-        // 저장 버튼
-        item.querySelector(".save-btn").addEventListener("click", async () => {
-          if (confirm("수정하시겠습니까?")) {
-            const updatedCar = {
-              owner_name: document.getElementById(`edit_owner_${car.id}`).value,
-              phone_number: document.getElementById(`edit_phone_${car.id}`).value,
-              owner_name2: document.getElementById(`edit_owner2_${car.id}`).value,
-              phone_number2: document.getElementById(`edit_phone2_${car.id}`).value,
-              car_number: document.getElementById(`edit_number_${car.id}`).value,
-              car_type: document.getElementById(`edit_type_${car.id}`).value,
-              car_color: document.getElementById(`edit_color_${car.id}`).value,
-            };
-            try {
-              const res = await fetch(`/update/${car.id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(updatedCar),
-              });
-              const data = await res.json();
-              alert(data.message || "수정 완료");
+          // 저장 버튼
+          item
+            .querySelector(".save-btn")
+            .addEventListener("click", async () => {
+              if (confirm("수정할거에요?")) {
+                const updatedCar = {
+                  owner_name: document.getElementById(`edit_owner_${car.id}`)
+                    .value,
+                  phone_number: document.getElementById(`edit_phone_${car.id}`)
+                    .value,
+                  owner_name2: document.getElementById(`edit_owner2_${car.id}`)
+                    .value,
+                  phone_number2: document.getElementById(
+                    `edit_phone2_${car.id}`,
+                  ).value,
+                  car_number: document.getElementById(`edit_number_${car.id}`)
+                    .value,
+                  car_type: document.getElementById(`edit_type_${car.id}`)
+                    .value,
+                  car_color: document.getElementById(`edit_color_${car.id}`)
+                    .value,
+                };
+                try {
+                  const res = await fetch(`/update/${car.id}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(updatedCar),
+                  });
+                  const data = await res.json();
+                  alert(data.message || "수정 완료!");
 
-              // 화면 데이터 업데이트
-              Object.assign(car, updatedCar);
-              renderViewMode();
-            } catch (err) {
-              console.error("❌ 수정 오류:", err);
-              alert("수정 실패 :(");
-            }
-          }
+                  // 화면 데이터 업데이트
+                  Object.assign(car, updatedCar);
+                  renderViewMode();
+                } catch (err) {
+                  console.error("❌ 수정 오류:", err);
+                  alert("수정 실패 :(");
+                }
+              }
+            });
+
+          // 취소 버튼
+          item
+            .querySelector(".cancel-btn")
+            .addEventListener("click", renderViewMode);
+        }
+        renderViewMode();
+        document.getElementById("result").appendChild(item);
+      }
+      async function deleteCar(id) {
+        if (!confirm(`차량 정보를 삭제할거죠?`)) return;
+        const res = await fetch(`/delete/${id}`, {
+          method: "DELETE",
         });
-
-        // 취소 버튼
-        item.querySelector(".cancel-btn").addEventListener("click", renderViewMode);
+        const data = await res.json();
+        alert("삭제 완료 :)");
+        searchCar(true);
       }
-      renderViewMode();
-      document.getElementById("result").appendChild(item);
-    }
-    async function deleteCar(id) {
-      if (!confirm(`차량 정보를 삭제하시겠습니까?`)) return;
-      const res = await fetch(`/delete/${id}`, {
-        method: 'DELETE',
+      document.querySelector(".header").addEventListener("click", function () {
+        window.location.reload();
       });
-      const data = await res.json();
-      alert("삭제 완료 :)");
-      searchCar(true);
-    }
-    document.querySelector(".header").addEventListener("click", function () {
-      window.location.reload();
-    })
-    function showTab(tabName) {
-      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-      document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+      function showTab(tabName) {
+        document
+          .querySelectorAll(".tab-button")
+          .forEach((btn) => btn.classList.remove("active"));
+        document
+          .querySelectorAll(".section")
+          .forEach((section) => section.classList.remove("active"));
 
-      const section = document.getElementById(tabName);
-      section.classList.add('active');
+        const section = document.getElementById(tabName);
+        section.classList.add("active");
 
-      const activeBtn = Array.from(document.querySelectorAll('.tab-button')).find(b =>
-        b.textContent.includes(tabName === 'search' ? '검색' : tabName === 'add' ? '추가' : '확인 사항')
-      );
-      if (activeBtn) activeBtn.classList.add('active');
-      const resultDiv = document.getElementById('result');
-      setTimeout(() => {
-        if (tabName === 'search') {
-          document.getElementById('car_number')?.focus();
-        }
-        if (tabName === 'add') {
-          document.getElementById('add_car_number')?.focus();
-        }
-        if (tabName === 'tasks') {
-          document.getElementById('task_title')?.focus();
-        }
-      }, 0);
-    }
-    document.addEventListener('DOMContentLoaded', () => {
-      const carNumberInput = document.getElementById('car_number');
-      if (carNumberInput) {
-        carNumberInput.focus();
+        const activeBtn = Array.from(
+          document.querySelectorAll(".tab-button"),
+        ).find((b) =>
+          b.textContent.includes(
+            tabName === "search"
+              ? "검색"
+              : tabName === "add"
+                ? "추가"
+                : "확인 사항",
+          ),
+        );
+        if (activeBtn) activeBtn.classList.add("active");
+        const resultDiv = document.getElementById("result");
+        setTimeout(() => {
+          if (tabName === "search") {
+            document.getElementById("car_number")?.focus();
+          }
+          if (tabName === "add") {
+            document.getElementById("add_car_number")?.focus();
+          }
+          if (tabName === "tasks") {
+            document.getElementById("task_title")?.focus();
+          }
+        }, 0);
       }
-      const calendarEl = document.getElementById('calendar');
-      const calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        height: 500,
-        locale: 'ko',
-        titleFormat: function(date) {
-          const year = date.date.year % 100; // 2026 → 26
-          const month = String(date.date.month + 1).padStart(2, '0'); // 6 → 06
-          return `${year}${month}`;
-        },
-        dateClick: function(info) {
-          alert(info.dateStr + 'Date Click');
+      document.addEventListener("DOMContentLoaded", () => {
+        const carNumberInput = document.getElementById("car_number");
+        if (carNumberInput) {
+          carNumberInput.focus();
         }
+        const calendarEl = document.getElementById("calendar");
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: "dayGridMonth",
+          height: 500,
+          locale: "ko",
+          titleFormat: function (date) {
+            const year = String(date.date.year % 100).padStart(2, "0");
+            const month = String(date.date.month + 1).padStart(2, "0");
+            return `${year}.${month}`;
+          },
+          dateClick: function (info) {
+            alert(info.dateStr + "Date Click");
+          },
+        });
+        calendar.render();
       });
-      calendar.render();
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>
