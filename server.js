@@ -11,30 +11,20 @@ app.use(express.static(path.join(__dirname, "public")));
 // 차량 검색 라우트
 app.get("/search", (req, res) => {
   const { keyword } = req.query;
-  let sql = `SELECT * FROM car_info WHERE 1=1`;
-  const params = [];
-  if (car_number) {
-    sql += ` AND car_number LIKE ?`;
-    params.push(`%${car_number}%`);
-  }
-  if (car_type) {
-    sql += ` AND car_type LIKE ?`;
-    params.push(`%${car_type}%`);
-  }
-  if (car_color) {
-    sql += ` AND car_color LIKE ?`;
-    params.push(`%${car_color}%`);
-  }
-  // 🔥 차주 통합 검색
-  if (owner_name) {
-    sql += ` AND (owner_name LIKE ? OR owner_name2 LIKE ?)`;
-    params.push(`%${owner_name}%`, `%${owner_name}%`);
-  }
-  // 🔥 연락처 통합 검색
-  if (phone_number) {
-    sql += ` AND (phone_number LIKE ? OR phone_number2 LIKE ?)`;
-    params.push(`%${phone_number}%`, `%${phone_number}%`);
-  }
+  const sql = `
+    SELECT *
+    FROM car_info
+    WHERE
+      car_number LIKE ?
+      OR car_type LIKE ?
+      OR car_color LIKE ?
+      OR owner_name LIKE ?
+      OR owner_name2 LIKE ?
+      OR phone_number LIKE ?
+      OR phone_number2 LIKE ?
+  `;
+  const search = `%${keyword}%`;
+  const params = [search, search, search, search, search, search, search];
   db.query(sql, params, (err, results) => {
     if (err) {
       console.error("❌ 검색 오류:", err.message);
