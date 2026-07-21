@@ -175,15 +175,6 @@
         outline: none;
         backdrop-filter: blur(12px);
         box-shadow: 0 8px 20px rgba(140, 170, 255, 0.18);
-        transition: all 0.25s ease;
-      }
-      input:focus {
-        border-color: #7bb6ff;
-        background: rgba(255, 255, 255, 0.92);
-        box-shadow:
-          0 0 0 5px rgba(110, 180, 255, 0.16),
-          0 12px 30px rgba(120, 170, 255, 0.22);
-        transform: translateY(-2px);
       }
       input.invalid {
         border: 2px solid red;
@@ -219,20 +210,10 @@
       .enter {
         background: linear-gradient(135deg, #63cbff, #7eb7ff, #b293ff);
         color: white;
-        font-weight: bold;
-        letter-spacing: 1px;
-        transition: 0.3s;
-        position: relative;
-        overflow: hidden;
-      }
-      .enter:disabled {
-        opacity: 0.8;
-        cursor: wait;
-        transform: none;
-      }
-      .enter:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 18px 35px rgba(120, 160, 255, 0.35);
+        margin: 20px auto 0;
+        display: block;
+        border: none;
+        transition: 0.25s;
       }
       button:hover {
         background-color: #c4e2f5;
@@ -469,9 +450,6 @@
           "phone_number",
         ];
         const params = new URLSearchParams();
-        const searchBtn = document.querySelector("#search .enter");
-        const resultDiv = document.getElementById("result");
-        // 입력값 확인
         const hasAnyInput = inputIds.some(
           (id) => document.getElementById(id).value.trim() !== "",
         );
@@ -479,58 +457,26 @@
           if (!silent) alert("값이 어디갔죠?");
           return;
         }
-        // 검색 파라미터 생성
         inputIds.forEach((id) => {
-          params.append(id, document.getElementById(id).value.trim());
+          params.append(id, document.getElementById(id).value);
         });
-        // 검색 버튼 상태 변경
-        searchBtn.disabled = true;
-        searchBtn.innerHTML = "🔍 Searching...";
-        // 이전 결과 숨기기
+        const res = await fetch(`/search?${params}`);
+        const data = await res.json();
+        const resultDiv = document.getElementById("result");
         resultDiv.classList.remove("show");
         resultDiv.innerHTML = "";
-        try {
-          const res = await fetch(`/search?${params}`);
-          if (!res.ok) {
-            throw new Error("검색 실패");
-          }
-          const data = await res.json();
-          if (Array.isArray(data) && data.length > 0) {
-            // 검색 결과 헤더
-            resultDiv.innerHTML = `
-        <div style="
-          display:flex;
-          justify-content:space-between;
-          align-items:center;
-          padding:16px 0 12px;
-          margin-bottom:10px;
-          border-bottom:1px solid rgba(120,170,255,.15);
-          color:#6d84a6;
-          font-size:15px;
-        ">
-          <span>🔍 검색 결과</span>
-          <span><b>${data.length}</b>대</span>
-        </div>
-      `;
-            data.forEach((car) => {
-              renderCarItem(car);
-            });
-            requestAnimationFrame(() => {
-              resultDiv.classList.add("show");
-            });
+        if (Array.isArray(data) && data.length > 0) {
+          data.forEach((car) => {
+            renderCarItem(car);
+          });
+          setTimeout(() => resultDiv.classList.add("show"), 10);
+        } else {
+          if (!silent) {
+            alert("찾아도 안보여요");
           } else {
-            if (!silent) {
-              alert("찾아도 안보여요 😥");
-            }
-            resultDiv.innerHTML = "";
             resultDiv.classList.remove("show");
+            resultDiv.innerHTML = "";
           }
-        } catch (err) {
-          console.error(err);
-          alert("검색 중 오류가 발생했습니다.");
-        } finally {
-          searchBtn.disabled = false;
-          searchBtn.innerHTML = "Search";
         }
       }
       async function addCar() {
