@@ -478,15 +478,10 @@
           searchCar();
         "
       >
-        <input placeholder="차량번호" id="car_number" />
-        <div class="input-group">
-          <input placeholder="차종" id="car_type" />
-          <input placeholder="색상" id="car_color" />
-        </div>
-        <div class="input-group">
-          <input placeholder="차주" id="owner_name" />
-          <input placeholder="연락처" id="phone_number" />
-        </div>
+        <input
+          id="search_keyword"
+          placeholder="🔍 차량번호 · 차주 · 연락처 · 차종 · 색상"
+        />
         <button type="submit" class="enter">Search</button>
       </form>
     </div>
@@ -526,41 +521,37 @@
         }
       });
       async function searchCar(silent = false) {
-        const inputIds = [
-          "car_number",
-          "car_type",
-          "car_color",
-          "owner_name",
-          "phone_number",
-        ];
-        const params = new URLSearchParams();
-        const hasAnyInput = inputIds.some(
-          (id) => document.getElementById(id).value.trim() !== "",
-        );
-        if (!hasAnyInput) {
-          if (!silent) alert("값이 어디갔죠?");
+        const keyword = document.getElementById("search_keyword").value.trim();
+        if (!keyword) {
+          const resultDiv = document.getElementById("result");
+          resultDiv.classList.remove("show");
+          resultDiv.innerHTML = "";
+          if (!silent) {
+            alert("검색어를 입력해주세요.");
+          }
           return;
         }
-        inputIds.forEach((id) => {
-          params.append(id, document.getElementById(id).value);
-        });
-        const res = await fetch(`/search?${params}`);
-        const data = await res.json();
-        const resultDiv = document.getElementById("result");
-        resultDiv.classList.remove("show");
-        resultDiv.innerHTML = "";
-        if (Array.isArray(data) && data.length > 0) {
-          data.forEach((car) => {
-            renderCarItem(car);
-          });
-          setTimeout(() => resultDiv.classList.add("show"), 10);
-        } else {
-          if (!silent) {
-            alert("찾아도 안보여요");
+        const params = new URLSearchParams();
+        params.append("keyword", keyword);
+        try {
+          const res = await fetch(`/search?${params}`);
+          const data = await res.json();
+          const resultDiv = document.getElementById("result");
+          resultDiv.classList.remove("show");
+          resultDiv.innerHTML = "";
+          if (Array.isArray(data) && data.length > 0) {
+            data.forEach((car) => {
+              renderCarItem(car);
+            });
+            setTimeout(() => resultDiv.classList.add("show"), 10);
           } else {
-            resultDiv.classList.remove("show");
-            resultDiv.innerHTML = "";
+            if (!silent) {
+              alert("찾아도 안보여요");
+            }
           }
+        } catch (err) {
+          console.error("검색 오류:", err);
+          alert("검색 중 오류가 발생했습니다.");
         }
       }
       async function addCar() {

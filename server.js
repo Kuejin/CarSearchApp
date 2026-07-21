@@ -10,8 +10,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 // 차량 검색 라우트
 app.get("/search", (req, res) => {
-  const { car_number, car_type, car_color, owner_name, phone_number } =
-    req.query;
+  const { keyword } = req.query;
   let sql = `SELECT * FROM car_info WHERE 1=1`;
   const params = [];
   if (car_number) {
