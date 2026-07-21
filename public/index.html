@@ -25,12 +25,23 @@
       body {
         margin: 0;
         font-family: sans-serif;
-        background: linear-gradient(
-          135deg,
-          #ffffff 0%,
-          #e9f7ff 45%,
-          #efe9ff 100%
-        );
+        background:
+          radial-gradient(
+            circle at top left,
+            #ffffff 0%,
+            rgba(255, 255, 255, 0) 45%
+          ),
+          radial-gradient(
+            circle at top right,
+            #bfe7ff 0%,
+            rgba(191, 231, 255, 0) 45%
+          ),
+          radial-gradient(
+            circle at bottom,
+            #d8c7ff 0%,
+            rgba(216, 199, 255, 0) 45%
+          ),
+          linear-gradient(135deg, #ffffff 0%, #dff3ff 55%, #ddd2ff 100%);
         background-attachment: fixed;
         color: #1591dc;
         display: flex;
@@ -38,6 +49,29 @@
         align-items: center;
         padding: 20px;
         position: relative;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background:
+          radial-gradient(
+            circle at 20% 15%,
+            rgba(255, 255, 255, 0.85),
+            transparent 28%
+          ),
+          radial-gradient(
+            circle at 85% 20%,
+            rgba(122, 215, 255, 0.4),
+            transparent 30%
+          ),
+          radial-gradient(
+            circle at 50% 90%,
+            rgba(188, 163, 255, 0.35),
+            transparent 32%
+          );
+        pointer-events: none;
+        z-index: -1;
       }
       .header {
         position: fixed;
@@ -69,6 +103,7 @@
       .tabs {
         display: flex;
         justify-content: center;
+        gap: 10px;
         margin-bottom: 20px;
         width: 100%;
         max-width: 550px;
@@ -76,22 +111,26 @@
       }
       .tab-button {
         flex: 1;
-        padding: 12px 0;
+        padding: 13px 0;
         font-size: 17px;
+        font-weight: 600;
         border: none;
-        background-color: #c4e2f5;
-        color: rgb(130, 148, 148);
-        border-radius: 0;
+        background: transparent;
+        color: #7d8ea8;
+        border-radius: 9999px;
         cursor: pointer;
-        border-bottom: 1.5px solid transparent;
-        transition:
-          border-color 0.5s,
-          color 0.5s;
+        transition: all 0.35s ease;
       }
       .tab-button.active {
-        border-bottom: 2px solid #1591dc;
-        background-color: #c4e2f5;
+        background: linear-gradient(135deg, #67cbff, #7db8ff, #b395ff);
+        color: white;
         font-weight: bold;
+        box-shadow: 0 8px 22px rgba(108, 170, 255, 0.3);
+        transform: translateY(-2px);
+      }
+      .tab-button:hover:not(.active) {
+        background: rgba(255, 255, 255, 0.35);
+        backdrop-filter: blur(10px);
         color: #1591dc;
       }
       .section {
@@ -209,21 +248,24 @@
         width: 100%;
         background: rgba(255, 255, 255, 0.82);
         backdrop-filter: blur(16px);
+        border-radius: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.55);
+        box-shadow:
+          0 30px 60px rgba(120, 150, 255, 0.12),
+          -25px 0 45px rgba(120, 170, 255, 0.16),
+          25px 0 45px rgba(180, 140, 255, 0.16);
         color: rgb(77, 77, 77);
         font-size: 1.2em;
         font-weight: bold;
         padding: 0 15px;
-        border-radius: 16px;
-        border: 1px solid rgba(255, 255, 255, 0.6);
         max-height: 400px;
         overflow-y: auto;
         opacity: 0;
         transform: translateY(10px);
         transition:
-          opacity 0.3s ease,
-          transform 0.3s ease;
+          opacity 0.3s,
+          transform 0.3s;
         font-family: "Jua", sans-serif;
-        box-shadow: 0 15px 35px rgba(150, 165, 255, 0.18);
         margin-top: 20px;
       }
       #result.show {
@@ -320,11 +362,14 @@
         width: 100%;
         background: rgba(255, 255, 255, 0.82);
         backdrop-filter: blur(16px);
-        border: 1px solid rgba(255, 255, 255, 0.6);
-        border-radius: 16px;
+        border-radius: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.55);
+        box-shadow:
+          0 30px 60px rgba(120, 150, 255, 0.12),
+          -25px 0 45px rgba(120, 170, 255, 0.16),
+          25px 0 45px rgba(180, 140, 255, 0.16);
         padding: 10px;
         margin-top: 20px;
-        box-shadow: 0 15px 35px rgba(150, 165, 255, 0.18);
       }
       /* 일요일 */
       .fc-day-sun .fc-col-header-cell-cushion,
