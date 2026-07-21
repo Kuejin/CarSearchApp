@@ -107,6 +107,8 @@
           color 1.2s ease,
           box-shadow 1.2s ease,
           transform 0.5s ease;
+        text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6);
+        letter-spacing: 1px;
       }
       .underline {
         text-decoration: underline;
@@ -251,20 +253,35 @@
         margin: 0px auto 0;
       }
       .enter {
-        background: linear-gradient(135deg, #63cbff, #7eb7ff, #b293ff);
+        background: linear-gradient(135deg, #69d2ff, #7bbdff, #b59cff);
         color: white;
         margin: 20px auto 0;
         display: block;
         border: none;
-        transition: 0.25s;
+        box-shadow:
+          inset 0 1px 1px rgba(255, 255, 255, 0.55),
+          0 10px 25px rgba(100, 150, 255, 0.25);
+        transition:
+          transform 0.25s ease,
+          box-shadow 0.25s ease,
+          filter 0.25s ease;
       }
       button:hover {
         background-color: #c4e2f5;
         color: #1591dc;
       }
       .enter:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 25px rgba(120, 150, 255, 0.35);
+        transform: translateY(-2px) scale(1.015);
+        filter: brightness(1.05);
+        box-shadow:
+          inset 0 1px 1px rgba(255, 255, 255, 0.6),
+          0 18px 35px rgba(110, 160, 255, 0.35);
+      }
+      .enter:active {
+        transform: translateY(1px) scale(0.985);
+        box-shadow:
+          inset 0 2px 3px rgba(0, 0, 0, 0.08),
+          0 6px 12px rgba(110, 160, 255, 0.18);
       }
       .task-item {
         margin-bottom: 20px;
@@ -344,6 +361,18 @@
         border-top: 2px solid #1591dc;
         font-family: "Jua", sans-serif;
         color: #173a63;
+        transition:
+          transform 0.25s ease,
+          background 0.25s ease,
+          box-shadow 0.25s ease;
+        opacity: 0;
+        transform: translateY(12px);
+        animation: fadeCard 0.35s ease forwards;
+      }
+      .result-item:hover {
+        transform: translateY(-3px);
+        background: rgba(255, 255, 255, 0.18);
+        box-shadow: 0 10px 30px rgba(80, 120, 180, 0.08);
       }
       .result-item button {
         float: right;
@@ -423,6 +452,16 @@
         }
         100% {
           transform: translateY(0px) translateX(0px);
+        }
+      }
+      @keyframes fadeCard {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
       }
     </style>
