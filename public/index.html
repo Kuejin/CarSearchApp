@@ -363,15 +363,20 @@
         font-family: "Jua", sans-serif;
         opacity: 0;
         transform: translateY(15px) scale(0.98);
-        transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+        transition:
+          opacity 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+          transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+          margin-top 0.3s ease;
         margin-top: 25px;
       }
       #result.show {
         opacity: 1;
         transform: translateY(0) scale(1);
       }
+      #result {
+        margin-top: 25px;
+      }
       #result.tab-switch {
-        transition: margin-top 0.3s ease;
         margin-top: 185px;
       }
       span.slash {
@@ -786,7 +791,7 @@
         const resultDiv = document.getElementById("result");
         setTimeout(() => {
           if (tabName === "search") {
-            document.getElementById("car_number")?.focus();
+            document.getElementById("search_keyword")?.focus();
           }
           if (tabName === "add") {
             document.getElementById("add_car_number")?.focus();
@@ -798,53 +803,33 @@
       }
       function goToAddTab() {
         const resultDiv = document.getElementById("result");
-        // 검색 결과가 없는 경우
+
         if (!resultDiv || resultDiv.innerHTML.trim() === "") {
           showTab("add");
           return;
         }
-        // ① 0.3초 동안 아래로 이동
+
         resultDiv.classList.add("tab-switch");
-        // ② 0.3초 후 탭 변경
+
         setTimeout(() => {
-          // 차량 추가 탭 표시
           showTab("add");
-          // margin-top을 즉시 25px로 복귀
-          resultDiv.style.transition = "none";
-          resultDiv.style.marginTop = "25px";
-          // 클래스 제거
+
           resultDiv.classList.remove("tab-switch");
-          // transition 복원
-          requestAnimationFrame(() => {
-            resultDiv.style.transition = "";
-          });
         }, 300);
       }
       function goToSearchTab() {
         const resultDiv = document.getElementById("result");
-        // 결과가 없으면 그냥 이동
-        if (!resultDiv || resultDiv.innerHTML.trim() === "") {
-          showTab("search");
-          return;
-        }
-        // 시작 위치를 185px로 즉시 변경
-        resultDiv.style.transition = "none";
-        resultDiv.style.marginTop = "185px";
-        // 리플로우 강제
-        resultDiv.offsetHeight;
-        // transition 다시 적용
-        resultDiv.style.transition = "margin-top .3s ease";
-        // 다음 프레임에서 25px로 애니메이션
-        requestAnimationFrame(() => {
-          showTab("search");
-          resultDiv.style.marginTop = "25px";
-        });
+
+        showTab("search");
+
+        if (!resultDiv || resultDiv.innerHTML.trim() === "") return;
+
+        resultDiv.classList.remove("tab-switch");
       }
       document.addEventListener("DOMContentLoaded", () => {
-        const carNumberInput = document.getElementById("car_number");
-        if (carNumberInput) {
-          carNumberInput.focus();
-        }
+        showTab("search");
+
+        document.getElementById("search_keyword")?.focus();
       });
     </script>
   </body>
