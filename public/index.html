@@ -809,9 +809,9 @@
         setTimeout(() => {
           // 차량 추가 탭 표시
           showTab("add");
-          // margin-top을 즉시 25px로 복귀
+          // 수정: 인라인 스타일을 제거("25px" -> "")하여 CSS 클래스 규칙이 다시 적용되도록 함
           resultDiv.style.transition = "none";
-          resultDiv.style.marginTop = "25px";
+          resultDiv.style.marginTop = "";
           // 클래스 제거
           resultDiv.classList.remove("tab-switch");
           // transition 복원
