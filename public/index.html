@@ -426,7 +426,7 @@
           margin-top: 0;
         }
         100% {
-          margin-top: 25vh;
+          margin-top: 20vh;
         }
       }
       @keyframes floatGlow {
@@ -452,7 +452,7 @@
       }
       @keyframes slideToTop {
         0% {
-          margin-top: 25vh;
+          margin-top: 20vh;
         }
         100% {
           margin-top: 0;
@@ -722,16 +722,18 @@
       function showTab(tabName) {
         const resultDiv = document.getElementById("result");
         const isResultSet = resultDiv.classList.contains("show");
-
         // 1. 결과창이 떠 있는 상태라면, 탭이 바뀌기 전 0.3초 동안 먼저 위/아래로 움직이는 애니메이션 선행 실행
         if (isResultSet) {
           if (tabName === "add") {
             resultDiv.style.marginTop = "170px"; // 아래로 스르륵 밀림
+            setTimeout(() => {
+              resultDiv.style.marginTop = "25px";
+              switchTabContent(tabName);
+            }, 300);
           } else if (tabName === "search") {
             resultDiv.style.marginTop = "25px"; // 위로 스르륵 올라옴
           }
         }
-
         // 2. 0.3초 애니메이션이 진행되는 동안 기다렸다가 탭 내용 전환
         setTimeout(
           () => {
@@ -741,10 +743,8 @@
             document
               .querySelectorAll(".section")
               .forEach((section) => section.classList.remove("active"));
-
             const section = document.getElementById(tabName);
             if (section) section.classList.add("active");
-
             const activeBtn = Array.from(
               document.querySelectorAll(".tab-button"),
             ).find((b) =>
