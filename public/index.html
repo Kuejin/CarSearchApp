@@ -503,9 +503,7 @@
     <div class="header">Car <span class="underline">Info</span></div>
     <div class="search-group">
       <div class="tabs">
-        <button class="tab-button active" onclick="showTab('search')">
-          차량 검색
-        </button>
+        <button class="tab-button" onclick="goToSearchTab()">차량 검색</button>
         <button class="tab-button" onclick="goToAddTab()">차량 추가</button>
       </div>
       <!-- 차량 검색 -->
@@ -821,6 +819,26 @@
             resultDiv.style.transition = "";
           });
         }, 300);
+      }
+      function goToSearchTab() {
+        const resultDiv = document.getElementById("result");
+        // 결과가 없으면 그냥 이동
+        if (!resultDiv || resultDiv.innerHTML.trim() === "") {
+          showTab("search");
+          return;
+        }
+        // 시작 위치를 185px로 즉시 변경
+        resultDiv.style.transition = "none";
+        resultDiv.style.marginTop = "185px";
+        // 리플로우 강제
+        resultDiv.offsetHeight;
+        // transition 다시 적용
+        resultDiv.style.transition = "margin-top .3s ease";
+        // 다음 프레임에서 25px로 애니메이션
+        requestAnimationFrame(() => {
+          showTab("search");
+          resultDiv.style.marginTop = "25px";
+        });
       }
       document.addEventListener("DOMContentLoaded", () => {
         const carNumberInput = document.getElementById("car_number");
