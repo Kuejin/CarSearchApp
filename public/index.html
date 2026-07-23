@@ -86,11 +86,24 @@
         z-index: -1;
         animation: floatGlow 10s ease-in-out infinite;
       }
+      .search-group {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        /* 0.5초 대기 후 중앙으로 내려옴 */
+        animation: slideToCenter 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s
+          forwards;
+      }
+      .search-group.searched {
+        animation: slideToTop 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      }
       .header {
-        position: fixed;
+        position: fixed; /* 다시 상단 고정 */
         top: 0;
         left: 0;
         width: 100%;
+        box-sizing: border-box; /* 패딩을 포함해서 100%를 맞춤 (가로 잘림 해결) */
         background: rgba(255, 255, 255, 0.65);
         backdrop-filter: blur(18px);
         -webkit-backdrop-filter: blur(18px);
@@ -126,7 +139,7 @@
         margin-bottom: 20px;
         width: 100%;
         max-width: 550px;
-        margin-top: 80px;
+        margin-top: 80px; /* 다시 80px로 원복 */
       }
       .tab-button {
         flex: 1;
@@ -443,6 +456,14 @@
           left: 12px;
         }
       }
+      @keyframes slideToCenter {
+        0% {
+          margin-top: 0;
+        }
+        100% {
+          margin-top: 25vh; /* 화면의 1/4 지점만큼 밀어내림 (숫자 조절 가능) */
+        }
+      }
       @keyframes floatGlow {
         0% {
           transform: translateY(0px) translateX(0px);
@@ -464,56 +485,66 @@
           transform: translateY(0);
         }
       }
+      @keyframes slideToTop {
+        0% {
+          margin-top: 25vh; /* 내려와 있던 위치 */
+        }
+        100% {
+          margin-top: 0; /* 원래 위치(상단)로 복귀 */
+        }
+      }
     </style>
   </head>
   <body>
     <div class="header">Car <span class="underline">Info</span></div>
-    <div class="tabs">
-      <button class="tab-button active" onclick="showTab('search')">
-        차량 검색
-      </button>
-      <button class="tab-button" onclick="showTab('add')">차량 추가</button>
-    </div>
-    <!-- 차량 검색 -->
-    <div id="search" class="section active">
-      <form
-        id="search-form"
-        onsubmit="
-          event.preventDefault();
-          searchCar();
-        "
-      >
-        <input
-          id="search_keyword"
-          placeholder="🔍 차량번호 · 차주 · 연락처 · 차종 · 색상"
-        />
-        <button type="submit" class="enter">Search</button>
-      </form>
-    </div>
-    <!-- 차량 추가 -->
-    <div id="add" class="section">
-      <form
-        id="add-form"
-        onsubmit="
-          event.preventDefault();
-          addCar();
-        "
-      >
-        <input placeholder="차량번호" id="add_car_number" />
-        <div class="input-group">
-          <input placeholder="차종" id="add_car_type" />
-          <input placeholder="색상" id="add_car_color" />
-        </div>
-        <div class="input-group">
-          <input placeholder="차주1" id="add_owner_name" />
-          <input placeholder="연락처1" id="add_phone_number" />
-        </div>
-        <div class="input-group">
-          <input placeholder="차주2" id="add_owner_name2" />
-          <input placeholder="연락처2" id="add_phone_number2" />
-        </div>
-        <button type="submit" class="enter">Add</button>
-      </form>
+    <div class="search-group">
+      <div class="tabs">
+        <button class="tab-button active" onclick="showTab('search')">
+          차량 검색
+        </button>
+        <button class="tab-button" onclick="showTab('add')">차량 추가</button>
+      </div>
+      <!-- 차량 검색 -->
+      <div id="search" class="section active">
+        <form
+          id="search-form"
+          onsubmit="
+            event.preventDefault();
+            searchCar();
+          "
+        >
+          <input
+            id="search_keyword"
+            placeholder="🔍 차량번호 · 차주 · 연락처 · 차종 · 색상"
+          />
+          <button type="submit" class="enter">Search</button>
+        </form>
+      </div>
+      <!-- 차량 추가 -->
+      <div id="add" class="section">
+        <form
+          id="add-form"
+          onsubmit="
+            event.preventDefault();
+            addCar();
+          "
+        >
+          <input placeholder="차량번호" id="add_car_number" />
+          <div class="input-group">
+            <input placeholder="차종" id="add_car_type" />
+            <input placeholder="색상" id="add_car_color" />
+          </div>
+          <div class="input-group">
+            <input placeholder="차주1" id="add_owner_name" />
+            <input placeholder="연락처1" id="add_phone_number" />
+          </div>
+          <div class="input-group">
+            <input placeholder="차주2" id="add_owner_name2" />
+            <input placeholder="연락처2" id="add_phone_number2" />
+          </div>
+          <button type="submit" class="enter">Add</button>
+        </form>
+      </div>
     </div>
     <div id="result"></div>
     <script>
@@ -527,10 +558,13 @@
       });
       async function searchCar(silent = false) {
         const keyword = document.getElementById("search_keyword").value.trim();
+        const searchGroup = document.querySelector(".search-group"); // 검색 그룹 선택
         if (!keyword) {
           const resultDiv = document.getElementById("result");
           resultDiv.classList.remove("show");
           resultDiv.innerHTML = "";
+          // 검색어가 없으면 다시 중앙으로 내려오게 원상복구
+          searchGroup.classList.remove("searched");
           if (!silent) {
             alert("검색어를 입력해주세요.");
           }
@@ -548,8 +582,11 @@
             data.forEach((car) => {
               renderCarItem(car);
             });
-
-            setTimeout(() => resultDiv.classList.add("show"), 10);
+            setTimeout(() => {
+              resultDiv.classList.add("show");
+              // 결과가 화면에 뜰 때 검색창들을 위로 올림
+              searchGroup.classList.add("searched");
+            }, 10);
           } else {
             if (!silent) {
               alert("찾아도 안보여요");
