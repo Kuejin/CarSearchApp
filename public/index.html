@@ -171,26 +171,15 @@
         height: 70px;
       }
       .section {
-        /* display: none;  <-- 이 줄이 있다면 반드시 지워주세요! */
+        display: none;
         width: 100%;
         max-width: 550px;
         background: transparent;
+        padding: 0 20px 10px 20px;
         border-radius: 10px;
-        /* 스무스하게 밀어내기 위한 설정 */
-        max-height: 0;
-        opacity: 0;
-        overflow: hidden;
-        padding: 0 20px;
-        transition:
-          max-height 0.6s cubic-bezier(0.2, 0.8, 0.2, 1),
-          opacity 0.4s ease,
-          padding 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
       }
       .section.active {
-        /* display: block;  <-- 이 줄이 있다면 반드시 지워주세요! */
-        max-height: 450px; /* 차량 추가 폼이 충분히 들어갈 만큼 넉넉한 높이 */
-        opacity: 1;
-        padding: 10px 20px 20px 20px;
+        display: block; /* #add는 애니메이션 없이 즉시 뜸 */
       }
       input {
         display: block;
@@ -374,7 +363,11 @@
         font-family: "Jua", sans-serif;
         opacity: 0;
         transform: translateY(15px) scale(0.98);
-        transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+        /* ⭐ 핵심 포인트: 위치나 크기가 바뀔 때 0.5초 동안 부드럽게 이동하도록 추가 ⭐ */
+        transition:
+          transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
+          opacity 0.35s ease,
+          margin 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
         margin-top: 25px;
       }
       #result.show {
