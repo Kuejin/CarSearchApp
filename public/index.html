@@ -834,18 +834,13 @@
         resultDiv.offsetHeight;
         // transition 다시 적용
         resultDiv.style.transition = "margin-top .3s ease";
-        // 다음 프레임에서 25px로 애니메이션
+        // 다음 프레임에서 원래 위치로 애니메이션
         requestAnimationFrame(() => {
           showTab("search");
-          resultDiv.style.marginTop = "25px";
+          // 수정: 인라인 스타일을 제거("")하여 CSS 기본값(25px)으로 부드럽게 돌아가도록 함
+          resultDiv.style.marginTop = "";
         });
       }
-      document.addEventListener("DOMContentLoaded", () => {
-        const carNumberInput = document.getElementById("car_number");
-        if (carNumberInput) {
-          carNumberInput.focus();
-        }
-      });
     </script>
   </body>
 </html>
