@@ -401,6 +401,7 @@
         cursor: pointer;
         color: rgb(255, 57, 57);
         padding: 0;
+        margin-left: 5px;
       }
       .result-item input.inline-edit {
         display: inline-block;
@@ -416,6 +417,16 @@
         color: #173a63;
         box-shadow: none;
       }
+
+      /* --- 새롭게 추가된 형광펜 CSS --- */
+      .highlight {
+        background-color: #ffeb3b; /* 노란색 형광펜 */
+        color: #173a63; /* 글씨 색상 유지 */
+        border-radius: 3px; /* 살짝 둥글게 */
+        padding: 0 2px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* 약간의 입체감 */
+      }
+
       @media (max-width: 600px) {
         body {
           padding: 16px;
@@ -561,6 +572,22 @@
           header.classList.remove("picked");
         }
       });
+
+      // --- 텍스트 하이라이트를 위한 유틸리티 함수 추가 ---
+      function escapeRegExp(string) {
+        // 정규식에서 의미를 가지는 특수문자들을 안전하게 변환
+        return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      }
+
+      function highlightText(text, keyword) {
+        if (!text || !keyword) return text || "";
+        const safeKeyword = escapeRegExp(keyword);
+        const regex = new RegExp(`(${safeKeyword})`, "gi");
+        // 일치하는 단어를 <span class="highlight">로 감싸기
+        return String(text).replace(regex, '<span class="highlight">$1</span>');
+      }
+      // ---------------------------------------------
+
       async function searchCar(silent = false) {
         const keyword = document.getElementById("search_keyword").value.trim();
         const searchGroup = document.querySelector(".search-group"); // 검색 그룹 선택
@@ -585,7 +612,8 @@
           resultDiv.innerHTML = "";
           if (Array.isArray(data) && data.length > 0) {
             data.forEach((car) => {
-              renderCarItem(car);
+              // 수정: 렌더링 함수에 keyword도 함께 전달
+              renderCarItem(car, keyword);
             });
             setTimeout(() => {
               resultDiv.classList.add("show");
@@ -602,6 +630,7 @@
           alert("검색 중 오류가 발생했습니다.");
         }
       }
+
       async function addCar() {
         // 필수값만 체크
         const requiredIds = [
@@ -651,24 +680,28 @@
           alert(data.message || "등록 실패!");
         }
       }
-      function renderCarItem(car) {
+
+      // 수정: 파라미터에 keyword 추가
+      function renderCarItem(car, keyword = "") {
         const item = document.createElement("div");
         item.className = "result-item";
+
         function renderViewMode() {
+          // 수정: 텍스트가 표시되는 부분에 highlightText 함수 적용
           item.innerHTML = `
           <div>
             <span class="slash">차주</span>
             <div>
-              ${car.owner_name} (${car.phone_number})
+              ${highlightText(car.owner_name, keyword)} (${highlightText(car.phone_number, keyword)})
             </div>
-            ${car.owner_name2 ? `<div>${car.owner_name2} (${car.phone_number2 || ""})</div>` : ""}
+            ${car.owner_name2 ? `<div>${highlightText(car.owner_name2, keyword)} (${highlightText(car.phone_number2 || "", keyword)})</div>` : ""}
           </div>
           <div style="margin-top: 10px;">
             <span class="slash">차량</span>
             <div>
-              ${car.car_number}
-              <span class="slash">/</span> ${car.car_type}
-              <span class="slash">/</span> ${car.car_color}
+              ${highlightText(car.car_number, keyword)}
+              <span class="slash">/</span> ${highlightText(car.car_type, keyword)}
+              <span class="slash">/</span> ${highlightText(car.car_color, keyword)}
               <button onclick="deleteCar(${car.id})">삭제</button>
               <button class="edit-btn">수정</button>
             </div>
@@ -679,6 +712,7 @@
             .addEventListener("click", renderEditMode);
         }
         function renderEditMode() {
+          // 수정 모드에서는 원본 데이터를 보여줘야 하므로 highlight 미적용
           item.innerHTML = `
           <div>
             <span class="slash">차주</span>
@@ -738,7 +772,7 @@
                   alert(data.message || "수정 완료!");
                   // 화면 데이터 업데이트
                   Object.assign(car, updatedCar);
-                  renderViewMode();
+                  renderViewMode(); // 수정한 후에도 기존에 검색했던 키워드가 있으면 다시 색칠됩니다
                 } catch (err) {
                   console.error("❌ 수정 오류:", err);
                   alert("수정 실패 :(");
@@ -753,6 +787,7 @@
         renderViewMode();
         document.getElementById("result").appendChild(item);
       }
+
       async function deleteCar(id) {
         if (!confirm(`차량 정보를 삭제할거죠?`)) return;
         const res = await fetch(`/delete/${id}`, {
