@@ -851,25 +851,20 @@
           });
           const data = await res.json();
 
-          if (data.message && data.message.includes("완료!")) {
+          if (res.ok) {
             showToast("등록 성공!");
-            if (data.message && data.message.includes("완료!")) {
-              showToast("등록 성공!");
-              [
-                "add_car_number",
-                "add_car_type",
-                "add_car_color",
-                "add_owner_name",
-                "add_owner_name2",
-                "add_phone_number",
-                "add_phone_number2",
-              ].forEach((id) => {
-                const input = document.getElementById(id);
-                if (input) input.value = "";
-              });
-            } else {
-              showToast(data.message || "등록 실패!");
-            }
+            [
+              "add_car_number",
+              "add_car_type",
+              "add_car_color",
+              "add_owner_name",
+              "add_owner_name2",
+              "add_phone_number",
+              "add_phone_number2",
+            ].forEach((id) => {
+              const input = document.getElementById(id);
+              if (input) input.value = "";
+            });
           } else {
             showToast(data.message || "등록 실패!");
           }
