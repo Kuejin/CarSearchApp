@@ -815,7 +815,7 @@
           (id) => document.getElementById(id).value.trim() !== "",
         );
         if (!allFilled) {
-          showToast("필수 정보를 채워주세요"); // alert -> showToast
+          showToast("필수 정보를 채워주세요");
           return;
         }
 
@@ -830,26 +830,38 @@
             document.getElementById("add_phone_number2").value || null,
         };
 
-        const res = await fetch("/add", {
-          // 원래 통신 주소 복구!
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        });
-        const data = await res.json();
-        if (data.message && data.message.includes("완료!")) {
-          showToast("등록 성공!"); // alert -> showToast
-          [
-            "add_car_number",
-            "add_car_type",
-            "add_car_color",
-            "add_owner_name",
-            "add_owner_name2",
-            "add_phone_number",
-            "add_phone_number2",
-          ].forEach((id) => (document.getElementById(id).value = ""));
-        } else {
-          showToast(data.message || "등록 실패!"); // alert -> showToast
+        // 1. 등록 전 작성한 정보를 보여주고 컨펌받기
+        const confirmMsg = `
+          <div style="font-size: 0.9em; margin-bottom: 10px; line-height: 1.5;">
+            <span style="color: #4e8fd8;">[차량]</span> ${body.car_number} / ${body.car_type} / ${body.car_color}<br>
+            <span style="color: #4e8fd8;">[차주1]</span> ${body.owner_name} (${body.phone_number})<br>
+            ${body.owner_name2 ? `<span style="color: #4e8fd8;">[차주2]</span> ${body.owner_name2} (${body.phone_number2})<br>` : ""}
+          </div>
+          이대로 등록하시는 거 맞죠?
+        `;
+
+        const isConfirm = await showConfirm(confirmMsg);
+        if (!isConfirm) return; // '아니오'를 선택하면 함수 종료
+
+        try {
+          const res = await fetch("/add", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+          });
+          const data = await res.json();
+
+          if (data.message && data.message.includes("완료!")) {
+            showToast("등록 성공!");
+
+            // 2. 등록 완료 후 모든 입력창 한 번에 초기화
+            document.getElementById("add-form").reset();
+          } else {
+            showToast(data.message || "등록 실패!");
+          }
+        } catch (err) {
+          console.error(err);
+          showToast("등록 중 오류가 발생했습니다.");
         }
       }
 
