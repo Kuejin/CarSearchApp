@@ -372,7 +372,7 @@
       }
       #result.tab-switch {
         transition: margin-top 0.3s ease;
-        margin-top: 190px;
+        margin-top: 190px; /* 185px에서 190px로 수정됨 */
       }
       span.slash {
         color: #4e8fd8;
@@ -418,13 +418,112 @@
         box-shadow: none;
       }
 
-      /* --- 새롭게 추가된 형광펜 CSS --- */
+      /* --- 형광펜 CSS --- */
       .highlight {
-        background-color: #ffeb3b; /* 노란색 형광펜 */
-        color: #173a63; /* 글씨 색상 유지 */
-        border-radius: 3px; /* 살짝 둥글게 */
+        background-color: #ffeb3b;
+        color: #173a63;
+        border-radius: 3px;
         padding: 0 2px;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* 약간의 입체감 */
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      /* --- 커스텀 토스트 알림 CSS --- */
+      .custom-toast {
+        position: fixed;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%) translateY(20px);
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        color: #1591dc;
+        padding: 12px 28px;
+        border-radius: 9999px;
+        font-family: "Jua", sans-serif;
+        font-size: 1.15em;
+        box-shadow: 0 10px 25px rgba(100, 150, 255, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        opacity: 0;
+        transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+        z-index: 9999;
+        pointer-events: none; /* 클릭 방해 안 함 */
+      }
+      .custom-toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      /* --- 커스텀 컨펌(Confirm) 모달 CSS --- */
+      .custom-confirm-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .custom-confirm-overlay.show {
+        opacity: 1;
+      }
+      .custom-confirm-box {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.95),
+          rgba(255, 255, 255, 0.8)
+        );
+        padding: 30px 40px;
+        border-radius: 20px;
+        box-shadow: 0 15px 40px rgba(90, 120, 180, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        text-align: center;
+        font-family: "Jua", sans-serif;
+        color: #173a63;
+        transform: scale(0.9);
+        transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .custom-confirm-overlay.show .custom-confirm-box {
+        transform: scale(1);
+      }
+      .custom-confirm-box p {
+        font-size: 1.3em;
+        margin-top: 0;
+        margin-bottom: 25px;
+      }
+      .custom-confirm-btn-group {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+      }
+      .custom-confirm-btn {
+        width: 100px;
+        padding: 10px;
+        font-size: 1.1em;
+        border-radius: 9999px;
+        border: none;
+        cursor: pointer;
+        font-family: "Jua", sans-serif;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        margin: 0; /* 기존 button 마진 덮어쓰기 */
+      }
+      .custom-confirm-btn.yes {
+        background: linear-gradient(135deg, #69d2ff, #7bbdff, #b59cff);
+        color: white;
+        box-shadow: 0 8px 20px rgba(100, 150, 255, 0.3);
+      }
+      .custom-confirm-btn.no {
+        background: rgba(255, 255, 255, 0.6);
+        color: #7d8ea8;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+      }
+      .custom-confirm-btn:hover {
+        transform: translateY(-2px);
       }
 
       @media (max-width: 600px) {
@@ -564,320 +663,303 @@
     </div>
     <div id="result"></div>
     <script>
-      const header = document.querySelector(".header");
-      document.addEventListener("click", (e) => {
-        if (e.target.tagName.toLowerCase() === "input") {
-          header.classList.add("picked");
-        } else {
-          header.classList.remove("picked");
-        }
-      });
+      // --- 커스텀 토스트 알림 함수 ---
+      function showToast(message) {
+        const toast = document.createElement("div");
+        toast.className = "custom-toast";
+        toast.innerText = message;
+        document.body.appendChild(toast);
 
-      // --- 텍스트 하이라이트를 위한 유틸리티 함수 추가 ---
-      function escapeRegExp(string) {
-        // 정규식에서 의미를 가지는 특수문자들을 안전하게 변환
-        return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        // 렌더링 강제 업데이트 후 애니메이션 클래스 추가
+        requestAnimationFrame(() => {
+          toast.classList.add("show");
+        });
+
+        // 2.5초 후 사라짐
+        setTimeout(() => {
+          toast.classList.remove("show");
+          setTimeout(() => {
+            if (document.body.contains(toast)) {
+              document.body.removeChild(toast);
+            }
+          }, 350); // CSS transition 시간 대기
+        }, 2500);
       }
 
+      // --- 커스텀 컨펌(Confirm) 모달 함수 (Promise 반환) ---
+      function showConfirm(message) {
+        return new Promise((resolve) => {
+          const overlay = document.createElement("div");
+          overlay.className = "custom-confirm-overlay";
+
+          const box = document.createElement("div");
+          box.className = "custom-confirm-box";
+
+          const text = document.createElement("p");
+          text.innerHTML = message;
+
+          const btnGroup = document.createElement("div");
+          btnGroup.className = "custom-confirm-btn-group";
+
+          const yesBtn = document.createElement("button");
+          yesBtn.className = "custom-confirm-btn yes";
+          yesBtn.innerText = "네";
+
+          const noBtn = document.createElement("button");
+          noBtn.className = "custom-confirm-btn no";
+          noBtn.innerText = "아니오";
+
+          // 애니메이션 후 닫기 처리 함수
+          const closeOverlay = (result) => {
+            overlay.classList.remove("show");
+            setTimeout(() => {
+              if (document.body.contains(overlay)) {
+                document.body.removeChild(overlay);
+              }
+              resolve(result);
+            }, 300);
+          };
+
+          yesBtn.onclick = () => closeOverlay(true);
+          noBtn.onclick = () => closeOverlay(false);
+
+          btnGroup.appendChild(yesBtn);
+          btnGroup.appendChild(noBtn);
+
+          box.appendChild(text);
+          box.appendChild(btnGroup);
+          overlay.appendChild(box);
+
+          document.body.appendChild(overlay);
+
+          // 렌더링 강제 업데이트 후 표시
+          requestAnimationFrame(() => {
+            overlay.classList.add("show");
+          });
+        });
+      }
+
+      function goToAddTab() {
+        document.getElementById("search").classList.remove("active");
+        document.getElementById("add").classList.add("active");
+        document.querySelectorAll(".tab-button")[0].classList.remove("active");
+        document.querySelectorAll(".tab-button")[1].classList.add("active");
+        const resultDiv = document.getElementById("result");
+        resultDiv.innerHTML = "";
+        resultDiv.classList.remove("show");
+        resultDiv.classList.remove("tab-switch");
+        resultDiv.style.marginTop = "25px";
+      }
+
+      function goToSearchTab() {
+        document.getElementById("add").classList.remove("active");
+        document.getElementById("search").classList.add("active");
+        document.querySelectorAll(".tab-button")[1].classList.remove("active");
+        document.querySelectorAll(".tab-button")[0].classList.add("active");
+        const resultDiv = document.getElementById("result");
+        resultDiv.classList.add("tab-switch");
+        resultDiv.style.marginTop = "190px"; /* 185px에서 190px로 변경 */
+      }
+
+      // 형광펜 하이라이트 효과 추가 함수
       function highlightText(text, keyword) {
-        if (!text || !keyword) return text || "";
-        const safeKeyword = escapeRegExp(keyword);
-        const regex = new RegExp(`(${safeKeyword})`, "gi");
-        // 일치하는 단어를 <span class="highlight">로 감싸기
-        return String(text).replace(regex, '<span class="highlight">$1</span>');
+        if (!keyword) return text;
+        const regex = new RegExp(`(${keyword})`, "gi");
+        return text
+          .toString()
+          .replace(regex, `<span class="highlight">$1</span>`);
       }
-      // ---------------------------------------------
 
-      async function searchCar(silent = false) {
-        const keyword = document.getElementById("search_keyword").value.trim();
-        const searchGroup = document.querySelector(".search-group"); // 검색 그룹 선택
+      async function searchCar() {
+        const keyword = document.getElementById("search_keyword").value;
         if (!keyword) {
-          const resultDiv = document.getElementById("result");
-          resultDiv.classList.remove("show");
-          resultDiv.innerHTML = "";
-          // 검색어가 없으면 다시 중앙으로 내려오게 원상복구
-          searchGroup.classList.remove("searched");
-          if (!silent) {
-            alert("검색어를 입력해주세요.");
-          }
+          showToast("검색어를 입력해주세요.");
           return;
         }
-        const params = new URLSearchParams();
-        params.append("keyword", keyword);
+
+        const searchGroup = document.querySelector(".search-group");
+        const resultDiv = document.getElementById("result");
+
+        // 검색 그룹을 위로 올림
+        searchGroup.classList.add("searched");
+
+        const header = document.querySelector(".header");
+        header.classList.add("picked");
+
+        // 검색 결과 창 띄우기
+        resultDiv.innerHTML = "";
+        resultDiv.classList.add("show");
+
         try {
-          const res = await fetch(`/search?${params}`);
-          const data = await res.json();
-          const resultDiv = document.getElementById("result");
-          resultDiv.classList.remove("show");
-          resultDiv.innerHTML = "";
-          if (Array.isArray(data) && data.length > 0) {
-            data.forEach((car) => {
-              // 수정: 렌더링 함수에 keyword도 함께 전달
-              renderCarItem(car, keyword);
+          const response = await fetch(
+            `/api/search?keyword=${encodeURIComponent(keyword)}`,
+          );
+          const data = await response.json();
+          if (data.results && data.results.length > 0) {
+            let html = "";
+            data.results.forEach((car, index) => {
+              const delay = index * 0.1;
+              html += `
+                <div class="result-item" style="animation-delay: ${delay}s" id="car-${car.id}">
+                  차량 번호 : <span class="slash">/</span> 
+                    <span class="view-mode">${highlightText(car.car_number, keyword)}</span>
+                    <input type="text" class="edit-mode inline-edit" value="${car.car_number}" style="display:none;" data-field="car_number" /> <br>
+                  차종 : <span class="slash">/</span> 
+                    <span class="view-mode">${highlightText(car.car_type || "", keyword)}</span>
+                    <input type="text" class="edit-mode inline-edit" value="${car.car_type || ""}" style="display:none;" data-field="car_type" /> <br>
+                  색상 : <span class="slash">/</span> 
+                    <span class="view-mode">${highlightText(car.car_color || "", keyword)}</span>
+                    <input type="text" class="edit-mode inline-edit" value="${car.car_color || ""}" style="display:none;" data-field="car_color" /> <br>
+                  차주1 : <span class="slash">/</span> 
+                    <span class="view-mode">${highlightText(car.owner_name || "", keyword)}</span>
+                    <input type="text" class="edit-mode inline-edit" value="${car.owner_name || ""}" style="display:none;" data-field="owner_name" /> <br>
+                  연락처1 : <span class="slash">/</span> 
+                    <span class="view-mode">${highlightText(car.phone_number || "", keyword)}</span>
+                    <input type="text" class="edit-mode inline-edit" value="${car.phone_number || ""}" style="display:none;" data-field="phone_number" /> <br>
+                  차주2 : <span class="slash">/</span> 
+                    <span class="view-mode">${highlightText(car.owner_name2 || "", keyword)}</span>
+                    <input type="text" class="edit-mode inline-edit" value="${car.owner_name2 || ""}" style="display:none;" data-field="owner_name2" /> <br>
+                  연락처2 : <span class="slash">/</span> 
+                    <span class="view-mode">${highlightText(car.phone_number2 || "", keyword)}</span>
+                    <input type="text" class="edit-mode inline-edit" value="${car.phone_number2 || ""}" style="display:none;" data-field="phone_number2" /> <br>
+                  <button class="delete-btn view-mode" onclick="deleteCar(${car.id})">삭제</button>
+                  <button class="edit-btn view-mode" onclick="toggleEdit(${car.id})">수정</button>
+                  
+                  <button class="cancel-btn edit-mode" onclick="toggleEdit(${car.id})" style="display:none; color: gray;">취소</button>
+                  <button class="save-btn edit-mode" onclick="saveCar(${car.id})" style="display:none; color: blue;">저장</button>
+                </div>
+              `;
             });
-            setTimeout(() => {
-              resultDiv.classList.add("show");
-              // 결과가 화면에 뜰 때 검색창들을 위로 올림
-              searchGroup.classList.add("searched");
-            }, 10);
+            resultDiv.innerHTML = html;
           } else {
-            if (!silent) {
-              alert("찾아도 안보여요");
-            }
+            showToast("찾아도 안보여요");
           }
-        } catch (err) {
-          console.error("검색 오류:", err);
-          alert("검색 중 오류가 발생했습니다.");
+        } catch (error) {
+          console.error(error);
+          showToast("검색 중 오류가 발생했습니다.");
+        }
+      }
+
+      function toggleEdit(id) {
+        const itemDiv = document.getElementById(`car-${id}`);
+        const viewModes = itemDiv.querySelectorAll(".view-mode");
+        const editModes = itemDiv.querySelectorAll(".edit-mode");
+
+        // 현재 보이는 모드에 따라 반전
+        const isEditing = editModes[0].style.display === "inline-block";
+
+        viewModes.forEach(
+          (el) => (el.style.display = isEditing ? "inline-block" : "none"),
+        );
+        editModes.forEach(
+          (el) => (el.style.display = isEditing ? "none" : "inline-block"),
+        );
+      }
+
+      async function saveCar(id) {
+        // 커스텀 Confirm (await 필요)
+        const isConfirm = await showConfirm("수정할거에요?");
+        if (!isConfirm) return;
+
+        const itemDiv = document.getElementById(`car-${id}`);
+        const inputs = itemDiv.querySelectorAll(".edit-mode.inline-edit");
+        const updatedData = {};
+
+        inputs.forEach((input) => {
+          const field = input.getAttribute("data-field");
+          updatedData[field] = input.value.trim();
+        });
+
+        try {
+          const response = await fetch(`/api/cars/${id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(updatedData),
+          });
+
+          const data = await response.json();
+          if (response.ok) {
+            showToast(data.message || "수정 완료!");
+            searchCar(); // 수정 후 검색 결과 다시 불러오기
+          } else {
+            showToast(data.message || "수정 실패 :(");
+          }
+        } catch (error) {
+          console.error(error);
+          showToast("수정 중 오류가 발생했습니다.");
         }
       }
 
       async function addCar() {
-        // 필수값만 체크
-        const requiredIds = [
-          "add_car_number",
-          "add_car_type",
-          "add_car_color",
-          "add_owner_name",
-          "add_phone_number",
-        ];
-        const allFilled = requiredIds.every(
-          (id) => document.getElementById(id).value.trim() !== "",
-        );
-        if (!allFilled) {
-          alert("필수 정보를 채워주세요");
+        const car_number = document.getElementById("add_car_number").value;
+        const car_type = document.getElementById("add_car_type").value;
+        const car_color = document.getElementById("add_car_color").value;
+        const owner_name = document.getElementById("add_owner_name").value;
+        const phone_number = document.getElementById("add_phone_number").value;
+        const owner_name2 = document.getElementById("add_owner_name2").value;
+        const phone_number2 =
+          document.getElementById("add_phone_number2").value;
+
+        if (!car_number) {
+          showToast("차량번호는 필수입니다.");
+          document.getElementById("add_car_number").classList.add("invalid");
           return;
         }
-        // body는 그대로 (2번은 없어도 OK)
-        const body = {
-          car_number: document.getElementById("add_car_number").value,
-          car_type: document.getElementById("add_car_type").value,
-          car_color: document.getElementById("add_car_color").value,
-          owner_name: document.getElementById("add_owner_name").value,
-          owner_name2: document.getElementById("add_owner_name2").value || null,
-          phone_number: document.getElementById("add_phone_number").value,
-          phone_number2:
-            document.getElementById("add_phone_number2").value || null,
-        };
-        const res = await fetch("/add", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        });
-        const data = await res.json();
-        if (data.message && data.message.includes("완료!")) {
-          alert("등록 성공!");
-          // 입력 초기화
-          [
-            "add_car_number",
-            "add_car_type",
-            "add_car_color",
-            "add_owner_name",
-            "add_owner_name2",
-            "add_phone_number",
-            "add_phone_number2",
-          ].forEach((id) => (document.getElementById(id).value = ""));
-        } else {
-          alert(data.message || "등록 실패!");
-        }
-      }
 
-      // 수정: 파라미터에 keyword 추가
-      function renderCarItem(car, keyword = "") {
-        const item = document.createElement("div");
-        item.className = "result-item";
-
-        function renderViewMode() {
-          // 수정: 텍스트가 표시되는 부분에 highlightText 함수 적용
-          item.innerHTML = `
-          <div>
-            <span class="slash">차주</span>
-            <div>
-              ${highlightText(car.owner_name, keyword)} (${highlightText(car.phone_number, keyword)})
-            </div>
-            ${car.owner_name2 ? `<div>${highlightText(car.owner_name2, keyword)} (${highlightText(car.phone_number2 || "", keyword)})</div>` : ""}
-          </div>
-          <div style="margin-top: 10px;">
-            <span class="slash">차량</span>
-            <div>
-              ${highlightText(car.car_number, keyword)}
-              <span class="slash">/</span> ${highlightText(car.car_type, keyword)}
-              <span class="slash">/</span> ${highlightText(car.car_color, keyword)}
-              <button onclick="deleteCar(${car.id})">삭제</button>
-              <button class="edit-btn">수정</button>
-            </div>
-          </div>
-        `;
-          item
-            .querySelector(".edit-btn")
-            .addEventListener("click", renderEditMode);
+        try {
+          const response = await fetch("/api/cars", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              car_number,
+              car_type,
+              car_color,
+              owner_name,
+              phone_number,
+              owner_name2,
+              phone_number2,
+            }),
+          });
+          const data = await response.json();
+          if (response.ok) {
+            showToast("등록 성공!");
+            document.getElementById("add-form").reset();
+            // 에러 표시 해제
+            document
+              .getElementById("add_car_number")
+              .classList.remove("invalid");
+          } else {
+            showToast(data.message || "등록 실패!");
+          }
+        } catch (error) {
+          console.error(error);
+          showToast("등록 중 오류가 발생했습니다.");
         }
-        function renderEditMode() {
-          // 수정 모드에서는 원본 데이터를 보여줘야 하므로 highlight 미적용
-          item.innerHTML = `
-          <div>
-            <span class="slash">차주</span>
-            <div>
-              <input class="inline-edit" value="${car.owner_name || ""}" id="edit_owner_${car.id}">
-              <span class="slash">/</span>
-              <input class="inline-edit" value="${car.phone_number || ""}" id="edit_phone_${car.id}">
-            </div>
-            <div>
-              <input class="inline-edit" value="${car.owner_name2 || ""}" id="edit_owner2_${car.id}">
-              <span class="slash">/</span>
-              <input class="inline-edit" value="${car.phone_number2 || ""}" id="edit_phone2_${car.id}">
-            </div>
-          </div>
-          <div style="margin-top: 10px;">
-            <span class="slash">차량</span>
-            <div>
-              <input class="inline-edit" value="${car.car_number || ""}" id="edit_number_${car.id}">
-              <span class="slash">/</span>
-              <input class="inline-edit" value="${car.car_type || ""}" id="edit_type_${car.id}">
-              <span class="slash">/</span>
-              <input class="inline-edit" value="${car.car_color || ""}" id="edit_color_${car.id}">
-              <button class="save-btn">저장</button>
-              <button class="cancel-btn">취소</button>
-            </div>
-          </div>
-        `;
-          // 저장 버튼
-          item
-            .querySelector(".save-btn")
-            .addEventListener("click", async () => {
-              if (confirm("수정할거에요?")) {
-                const updatedCar = {
-                  owner_name: document.getElementById(`edit_owner_${car.id}`)
-                    .value,
-                  phone_number: document.getElementById(`edit_phone_${car.id}`)
-                    .value,
-                  owner_name2: document.getElementById(`edit_owner2_${car.id}`)
-                    .value,
-                  phone_number2: document.getElementById(
-                    `edit_phone2_${car.id}`,
-                  ).value,
-                  car_number: document.getElementById(`edit_number_${car.id}`)
-                    .value,
-                  car_type: document.getElementById(`edit_type_${car.id}`)
-                    .value,
-                  car_color: document.getElementById(`edit_color_${car.id}`)
-                    .value,
-                };
-                try {
-                  const res = await fetch(`/update/${car.id}`, {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(updatedCar),
-                  });
-                  const data = await res.json();
-                  alert(data.message || "수정 완료!");
-                  // 화면 데이터 업데이트
-                  Object.assign(car, updatedCar);
-                  renderViewMode(); // 수정한 후에도 기존에 검색했던 키워드가 있으면 다시 색칠됩니다
-                } catch (err) {
-                  console.error("❌ 수정 오류:", err);
-                  alert("수정 실패 :(");
-                }
-              }
-            });
-          // 취소 버튼
-          item
-            .querySelector(".cancel-btn")
-            .addEventListener("click", renderViewMode);
-        }
-        renderViewMode();
-        document.getElementById("result").appendChild(item);
       }
 
       async function deleteCar(id) {
-        if (!confirm(`차량 정보를 삭제할거죠?`)) return;
-        const res = await fetch(`/delete/${id}`, {
-          method: "DELETE",
-        });
-        const data = await res.json();
-        alert("삭제 완료 :)");
-        searchCar(true);
-      }
-      document.querySelector(".header").addEventListener("click", function () {
-        window.location.reload();
-      });
-      function showTab(tabName) {
-        document
-          .querySelectorAll(".tab-button")
-          .forEach((btn) => btn.classList.remove("active"));
-        document
-          .querySelectorAll(".section")
-          .forEach((section) => section.classList.remove("active"));
-        const section = document.getElementById(tabName);
-        section.classList.add("active");
-        const activeBtn = Array.from(
-          document.querySelectorAll(".tab-button"),
-        ).find((b) =>
-          b.textContent.includes(
-            tabName === "search"
-              ? "검색"
-              : tabName === "add"
-                ? "추가"
-                : "확인 사항",
-          ),
-        );
-        if (activeBtn) activeBtn.classList.add("active");
-        const resultDiv = document.getElementById("result");
-        setTimeout(() => {
-          if (tabName === "search") {
-            document.getElementById("car_number")?.focus();
-          }
-          if (tabName === "add") {
-            document.getElementById("add_car_number")?.focus();
-          }
-          if (tabName === "tasks") {
-            document.getElementById("task_title")?.focus();
-          }
-        }, 0);
-      }
-      function goToAddTab() {
-        const resultDiv = document.getElementById("result");
-        // 검색 결과가 없는 경우
-        if (!resultDiv || resultDiv.innerHTML.trim() === "") {
-          showTab("add");
-          return;
-        }
-        // ① 0.3초 동안 아래로 이동
-        resultDiv.classList.add("tab-switch");
-        // ② 0.3초 후 탭 변경
-        setTimeout(() => {
-          // 차량 추가 탭 표시
-          showTab("add");
-          // 수정: 인라인 스타일을 제거("25px" -> "")하여 CSS 클래스 규칙이 다시 적용되도록 함
-          resultDiv.style.transition = "none";
-          resultDiv.style.marginTop = "";
-          // 클래스 제거
-          resultDiv.classList.remove("tab-switch");
-          // transition 복원
-          requestAnimationFrame(() => {
-            resultDiv.style.transition = "";
+        // 커스텀 Confirm (await 필요)
+        const isConfirm = await showConfirm("차량 정보를 삭제할거죠?");
+        if (!isConfirm) return;
+
+        try {
+          const response = await fetch(`/api/cars/${id}`, {
+            method: "DELETE",
           });
-        }, 300);
-      }
-      function goToSearchTab() {
-        const resultDiv = document.getElementById("result");
-        // 결과가 없으면 그냥 이동
-        if (!resultDiv || resultDiv.innerHTML.trim() === "") {
-          showTab("search");
-          return;
+          if (response.ok) {
+            showToast("삭제 완료 :)");
+            searchCar(); // 삭제 후 검색 결과 다시 불러오기
+          } else {
+            showToast("삭제 실패 :(");
+          }
+        } catch (error) {
+          console.error(error);
+          showToast("삭제 중 오류가 발생했습니다.");
         }
-        // 시작 위치를 185px로 즉시 변경
-        resultDiv.style.transition = "none";
-        resultDiv.style.marginTop = "190px";
-        // 리플로우 강제
-        resultDiv.offsetHeight;
-        // transition 다시 적용
-        resultDiv.style.transition = "margin-top .3s ease";
-        // 다음 프레임에서 원래 위치로 애니메이션
-        requestAnimationFrame(() => {
-          showTab("search");
-          // 수정: 인라인 스타일을 제거("")하여 CSS 기본값(25px)으로 부드럽게 돌아가도록 함
-          resultDiv.style.marginTop = "";
-        });
       }
     </script>
   </body>
