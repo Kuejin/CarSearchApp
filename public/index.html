@@ -170,6 +170,7 @@
         backdrop-filter: blur(10px);
         color: #1591dc;
       }
+
       .search-bar-container {
         display: flex;
         gap: 8px;
@@ -185,59 +186,105 @@
         padding: 12px 20px;
         color: #193c67;
       }
-      .search-bar-container select {
+
+      /* =============== 커스텀 드롭다운 CSS 시작 =============== */
+      .custom-select-wrapper {
+        position: relative;
+        flex-shrink: 0;
+        width: 110px; /* 드롭다운 넓이 조절 */
+      }
+      .custom-select-trigger {
         height: 52px;
         font-size: 16px;
         font-family: "Jua", sans-serif;
         font-weight: bold;
         color: #193c67;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.88) 0%,
+          rgba(255, 255, 255, 0.58) 18%,
+          rgba(255, 255, 255, 0.4) 100%
+        );
         border: 1px solid rgba(255, 255, 255, 0.55);
         border-top: 1px solid rgba(255, 255, 255, 0.9);
         border-radius: 9999px;
-        outline: none;
         box-shadow:
           inset 0 2px 2px rgba(255, 255, 255, 0.95),
           inset 0 -1px 1px rgba(255, 255, 255, 0.25),
           0 10px 28px rgba(17, 34, 64, 0.1);
         cursor: pointer;
+        display: flex;
+        align-items: center;
+        padding: 0 35px 0 18px; /* 오른쪽 화살표 여백 */
+        box-sizing: border-box;
         transition: all 0.25s ease;
-        appearance: none;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        background-image:
-          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23193c67' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"),
-          linear-gradient(
-            180deg,
-            rgba(255, 255, 255, 0.88) 0%,
-            rgba(255, 255, 255, 0.58) 18%,
-            rgba(255, 255, 255, 0.4) 100%
-          );
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23193c67' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
         background-repeat: no-repeat;
-        background-position:
-          right 15px center,
-          0 0;
-        padding: 0 40px 0 18px;
+        background-position: right 14px center; /* 화살표 위치 */
       }
-      .search-bar-container select option {
-        background-color: #f4f9ff; /* 페이지 배경과 어울리는 부드러운 파스텔 블루 */
-        color: #193c67; /* 통일감 있는 진한 남색 텍스트 */
+      .custom-select-trigger:hover,
+      .custom-select-trigger.open {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.95),
+          rgba(255, 255, 255, 0.65)
+        );
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23193c67' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 14px center;
+      }
+
+      .custom-options {
+        position: absolute;
+        top: calc(100% + 8px); /* 트리거 바로 아래 살짝 띄워서 */
+        left: 0;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        border: 1px solid rgba(255, 255, 255, 0.55);
+        border-radius: 16px; /* 둥근 모서리 적용! */
+        box-shadow: 0 15px 35px rgba(17, 34, 64, 0.15);
+        padding: 6px;
+        box-sizing: border-box;
+
+        /* 숨김 처리 및 애니메이션 */
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px) scale(0.95);
+        transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        z-index: 100;
         font-family: "Jua", sans-serif;
-        font-size: 16px;
-        font-weight: normal; /* 옵션 글씨는 살짝 얇게 */
       }
-      .search-bar-container select:hover {
-        background-image:
-          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23193c67' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"),
-          linear-gradient(
-            180deg,
-            rgba(255, 255, 255, 0.95),
-            rgba(255, 255, 255, 0.65)
-          );
-        background-repeat: no-repeat;
-        background-position:
-          right 15px center,
-          0 0;
+      .custom-options.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0) scale(1);
       }
+
+      .custom-option {
+        padding: 10px 12px;
+        font-size: 15px;
+        color: #193c67;
+        cursor: pointer;
+        border-radius: 10px; /* 각 옵션들도 동글동글하게 */
+        transition: background 0.2s;
+        text-align: center;
+        margin-bottom: 2px;
+      }
+      .custom-option:last-child {
+        margin-bottom: 0;
+      }
+      .custom-option:hover {
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 2px 5px rgba(17, 34, 64, 0.05);
+      }
+      .custom-option.selected {
+        background: #c4e2f5;
+        font-weight: bold;
+      }
+      /* =============== 커스텀 드롭다운 CSS 끝 =============== */
+
       .section {
         display: none;
         width: 100%;
@@ -693,14 +740,23 @@
               autofocus
               placeholder="🔍 차량번호 · 차주 · 연락처 · 차종 · 색상"
             />
-            <select id="filter_select" onchange="applyFilterAndRender()">
-              <option value="all">전체</option>
-              <option value="number">차량 번호</option>
-              <option value="owner">차주</option>
-              <option value="phone">연락처</option>
-              <option value="type">차종</option>
-              <option value="color">색상</option>
-            </select>
+
+            <!-- 커스텀 드롭다운 영역 시작 -->
+            <div class="custom-select-wrapper">
+              <div class="custom-select-trigger" id="custom_select_trigger">
+                <span id="custom_select_text">전체</span>
+              </div>
+              <div class="custom-options" id="custom_options">
+                <div class="custom-option selected" data-value="all">전체</div>
+                <div class="custom-option" data-value="number">차량 번호</div>
+                <div class="custom-option" data-value="owner">차주</div>
+                <div class="custom-option" data-value="phone">연락처</div>
+                <div class="custom-option" data-value="type">차종</div>
+                <div class="custom-option" data-value="color">색상</div>
+              </div>
+            </div>
+            <input type="hidden" id="filter_select" value="all" />
+            <!-- 커스텀 드롭다운 영역 끝 -->
           </div>
           <button type="submit" class="enter">Search</button>
         </form>
@@ -732,6 +788,53 @@
     </div>
     <div id="result"></div>
     <script>
+      // ================= 커스텀 드롭다운 기능 =================
+      document.addEventListener("DOMContentLoaded", () => {
+        const trigger = document.getElementById("custom_select_trigger");
+        const optionsContainer = document.getElementById("custom_options");
+        const options = document.querySelectorAll(".custom-option");
+        const hiddenInput = document.getElementById("filter_select");
+        const textSpan = document.getElementById("custom_select_text");
+
+        // 드롭다운 열고 닫기
+        trigger.addEventListener("click", (e) => {
+          e.stopPropagation();
+          optionsContainer.classList.toggle("show");
+          trigger.classList.toggle("open");
+        });
+
+        // 옵션 클릭 시 값 변경 및 검색 반영
+        options.forEach((option) => {
+          option.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const value = option.getAttribute("data-value");
+            const text = option.textContent;
+
+            // 선택 효과 업데이트
+            options.forEach((opt) => opt.classList.remove("selected"));
+            option.classList.add("selected");
+
+            // 값 업데이트
+            textSpan.textContent = text;
+            hiddenInput.value = value;
+
+            // 창 닫기
+            optionsContainer.classList.remove("show");
+            trigger.classList.remove("open");
+
+            // 필터 바로 적용
+            applyFilterAndRender();
+          });
+        });
+
+        // 빈 곳 클릭 시 닫기
+        document.addEventListener("click", () => {
+          optionsContainer.classList.remove("show");
+          trigger.classList.remove("open");
+        });
+      });
+      // =======================================================
+
       let currentSearchResults = [];
       const header = document.querySelector(".header");
       document.addEventListener("click", (e) => {
