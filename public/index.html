@@ -91,7 +91,6 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        /* 0.5초 대기 후 중앙으로 내려옴 */
         animation: slideToCenter 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s
           forwards;
       }
@@ -99,11 +98,11 @@
         animation: slideToTop 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
       }
       .header {
-        position: fixed; /* 다시 상단 고정 */
+        position: fixed;
         top: 0;
         left: 0;
         width: 100%;
-        box-sizing: border-box; /* 패딩을 포함해서 100%를 맞춤 (가로 잘림 해결) */
+        box-sizing: border-box;
         background: rgba(255, 255, 255, 0.65);
         backdrop-filter: blur(18px);
         -webkit-backdrop-filter: blur(18px);
@@ -139,7 +138,7 @@
         margin-bottom: 20px;
         width: 100%;
         max-width: 550px;
-        margin-top: 80px; /* 다시 80px로 원복 */
+        margin-top: 80px;
       }
       .tab-button {
         flex: 1;
@@ -165,10 +164,52 @@
         backdrop-filter: blur(10px);
         color: #1591dc;
       }
-      #search_keyword {
-        padding: 12px 30px;
-        color: #193c67;
+      .search-bar-container {
+        display: flex;
+        gap: 8px;
+        width: 100%;
+        max-width: 500px;
+        margin: 5px auto;
+        align-items: center;
+      }
+      .search-bar-container input {
+        margin: 0;
+        flex: 1;
         height: 70px;
+        padding: 12px 20px;
+        color: #193c67;
+      }
+      .search-bar-container select {
+        height: 70px;
+        padding: 0 15px;
+        font-size: 16px;
+        font-weight: bold;
+        color: #193c67;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.88) 0%,
+          rgba(255, 255, 255, 0.58) 18%,
+          rgba(255, 255, 255, 0.4) 100%
+        );
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        border: 1px solid rgba(255, 255, 255, 0.55);
+        border-top: 1px solid rgba(255, 255, 255, 0.9);
+        border-radius: 9999px;
+        outline: none;
+        box-shadow:
+          inset 0 2px 2px rgba(255, 255, 255, 0.95),
+          inset 0 -1px 1px rgba(255, 255, 255, 0.25),
+          0 10px 28px rgba(17, 34, 64, 0.1);
+        cursor: pointer;
+        transition: all 0.25s ease;
+      }
+      .search-bar-container select:hover {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.95),
+          rgba(255, 255, 255, 0.65)
+        );
       }
       .section {
         display: none;
@@ -372,7 +413,7 @@
       }
       #result.tab-switch {
         transition: margin-top 0.3s ease;
-        margin-top: 190px; /* 190px로 수정된 부분 유지 */
+        margin-top: 190px;
       }
       span.slash {
         color: #4e8fd8;
@@ -417,8 +458,6 @@
         color: #173a63;
         box-shadow: none;
       }
-
-      /* --- 새롭게 추가된 형광펜 CSS --- */
       .highlight {
         background-color: #ffeb3b;
         color: #173a63;
@@ -426,8 +465,6 @@
         padding: 0 2px;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
       }
-
-      /* --- 커스텀 토스트 알림 CSS --- */
       .custom-toast {
         position: fixed;
         bottom: 40px;
@@ -452,8 +489,6 @@
         opacity: 1;
         transform: translateX(-50%) translateY(0);
       }
-
-      /* --- 커스텀 컨펌(Confirm) 모달 CSS --- */
       .custom-confirm-overlay {
         position: fixed;
         inset: 0;
@@ -525,7 +560,6 @@
       .custom-confirm-btn:hover {
         transform: translateY(-2px);
       }
-
       @media (max-width: 600px) {
         body {
           padding: 16px;
@@ -575,7 +609,7 @@
           margin-top: 0;
         }
         100% {
-          margin-top: 25vh; /* 화면의 1/4 지점만큼 밀어내림 (숫자 조절 가능) */
+          margin-top: 25vh;
         }
       }
       @keyframes floatGlow {
@@ -601,10 +635,10 @@
       }
       @keyframes slideToTop {
         0% {
-          margin-top: 25vh; /* 내려와 있던 위치 */
+          margin-top: 25vh;
         }
         100% {
-          margin-top: 0; /* 원래 위치(상단)로 복귀 */
+          margin-top: 0;
         }
       }
     </style>
@@ -618,7 +652,6 @@
         </button>
         <button class="tab-button" onclick="goToAddTab()">차량 추가</button>
       </div>
-      <!-- 차량 검색 -->
       <div id="search" class="section active">
         <form
           id="search-form"
@@ -627,15 +660,24 @@
             searchCar();
           "
         >
-          <input
-            id="search_keyword"
-            autofocus
-            placeholder="🔍 차량번호 · 차주 · 연락처 · 차종 · 색상"
-          />
+          <div class="search-bar-container">
+            <input
+              id="search_keyword"
+              autofocus
+              placeholder="🔍 차량번호 · 차주 · 연락처 · 차종 · 색상"
+            />
+            <select id="filter_select" onchange="applyFilterAndRender()">
+              <option value="all">전체</option>
+              <option value="number">차량 번호</option>
+              <option value="owner">차주</option>
+              <option value="phone">연락처</option>
+              <option value="type">차종</option>
+              <option value="color">색상</option>
+            </select>
+          </div>
           <button type="submit" class="enter">Search</button>
         </form>
       </div>
-      <!-- 차량 추가 -->
       <div id="add" class="section">
         <form
           id="add-form"
@@ -663,6 +705,7 @@
     </div>
     <div id="result"></div>
     <script>
+      let currentSearchResults = [];
       const header = document.querySelector(".header");
       document.addEventListener("click", (e) => {
         if (e.target.tagName.toLowerCase() === "input") {
@@ -671,18 +714,24 @@
           header.classList.remove("picked");
         }
       });
-
-      // --- 커스텀 토스트 알림 함수 ---
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          const activeSec = document.querySelector(".section.active");
+          if (activeSec) {
+            activeSec.querySelectorAll("input").forEach((i) => (i.value = ""));
+          } else {
+            document.querySelectorAll("input").forEach((i) => (i.value = ""));
+          }
+        }
+      });
       function showToast(message) {
         const toast = document.createElement("div");
         toast.className = "custom-toast";
         toast.innerText = message;
         document.body.appendChild(toast);
-
         requestAnimationFrame(() => {
           toast.classList.add("show");
         });
-
         setTimeout(() => {
           toast.classList.remove("show");
           setTimeout(() => {
@@ -692,30 +741,22 @@
           }, 350);
         }, 2500);
       }
-
-      // --- 커스텀 컨펌(Confirm) 모달 함수 ---
       function showConfirm(message) {
         return new Promise((resolve) => {
           const overlay = document.createElement("div");
           overlay.className = "custom-confirm-overlay";
-
           const box = document.createElement("div");
           box.className = "custom-confirm-box";
-
           const text = document.createElement("p");
           text.innerHTML = message;
-
           const btnGroup = document.createElement("div");
           btnGroup.className = "custom-confirm-btn-group";
-
           const yesBtn = document.createElement("button");
           yesBtn.className = "custom-confirm-btn yes";
           yesBtn.innerText = "네";
-
           const noBtn = document.createElement("button");
           noBtn.className = "custom-confirm-btn no";
           noBtn.innerText = "아니오";
-
           const closeOverlay = (result) => {
             overlay.classList.remove("show");
             setTimeout(() => {
@@ -725,76 +766,58 @@
               resolve(result);
             }, 300);
           };
-
           yesBtn.onclick = () => closeOverlay(true);
           noBtn.onclick = () => closeOverlay(false);
-
           btnGroup.appendChild(yesBtn);
           btnGroup.appendChild(noBtn);
-
           box.appendChild(text);
           box.appendChild(btnGroup);
           overlay.appendChild(box);
-
           document.body.appendChild(overlay);
-
           requestAnimationFrame(() => {
             overlay.classList.add("show");
           });
         });
       }
-
-      // --- 텍스트 하이라이트를 위한 유틸리티 함수 ---
       function escapeRegExp(string) {
         return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       }
-
       function highlightText(text, keyword) {
         if (!text || !keyword) return text || "";
         const safeKeyword = escapeRegExp(keyword);
         const regex = new RegExp(`(${safeKeyword})`, "gi");
         return String(text).replace(regex, '<span class="highlight">$1</span>');
       }
-
-      // ----------------------------------------------------
-      // 원래 API 통신 주소 및 데이터 처리 방식으로 완벽 복구
-      // ----------------------------------------------------
       async function searchCar(silent = false) {
         const keyword = document.getElementById("search_keyword").value.trim();
-        const searchGroup = document.querySelector(".search-group"); // 검색 그룹 선택
+        const searchGroup = document.querySelector(".search-group");
         if (!keyword) {
           const resultDiv = document.getElementById("result");
           resultDiv.classList.remove("show");
           resultDiv.innerHTML = "";
           searchGroup.classList.remove("searched");
+          currentSearchResults = [];
           if (!silent) {
-            showToast("검색어를 입력해주세요."); // alert -> showToast
+            showToast("검색어를 입력해주세요.");
           }
           return;
         }
-
         const params = new URLSearchParams();
         params.append("keyword", keyword);
-
         try {
-          const res = await fetch(`/search?${params}`); // 원래 통신 주소 복구!
+          const res = await fetch(`/search?${params}`);
           const data = await res.json();
-          const resultDiv = document.getElementById("result");
-          resultDiv.classList.remove("show");
-          resultDiv.innerHTML = "";
-
           if (Array.isArray(data) && data.length > 0) {
-            // 원래 데이터 배열 처리 방식 복구!
-            data.forEach((car) => {
-              renderCarItem(car, keyword);
-            });
-            setTimeout(() => {
-              resultDiv.classList.add("show");
-              searchGroup.classList.add("searched");
-            }, 10);
+            currentSearchResults = data;
+            applyFilterAndRender(silent);
           } else {
+            currentSearchResults = [];
+            const resultDiv = document.getElementById("result");
+            resultDiv.classList.remove("show");
+            resultDiv.innerHTML = "";
+            searchGroup.classList.remove("searched");
             if (!silent) {
-              showToast("찾아도 안보여요"); // alert -> showToast
+              showToast("찾아도 안보여요");
             }
           }
         } catch (err) {
@@ -802,7 +825,47 @@
           showToast("검색 중 오류가 발생했습니다.");
         }
       }
-
+      function applyFilterAndRender(silent = false) {
+        const keyword = document.getElementById("search_keyword").value.trim();
+        const filterType = document.getElementById("filter_select").value;
+        const resultDiv = document.getElementById("result");
+        const searchGroup = document.querySelector(".search-group");
+        resultDiv.classList.remove("show");
+        resultDiv.innerHTML = "";
+        if (!currentSearchResults.length) return;
+        const filtered = currentSearchResults.filter((car) => {
+          if (filterType === "all") return true;
+          if (filterType === "number")
+            return car.car_number && car.car_number.includes(keyword);
+          if (filterType === "owner")
+            return (
+              (car.owner_name && car.owner_name.includes(keyword)) ||
+              (car.owner_name2 && car.owner_name2.includes(keyword))
+            );
+          if (filterType === "phone")
+            return (
+              (car.phone_number && car.phone_number.includes(keyword)) ||
+              (car.phone_number2 && car.phone_number2.includes(keyword))
+            );
+          if (filterType === "type")
+            return car.car_type && car.car_type.includes(keyword);
+          if (filterType === "color")
+            return car.car_color && car.car_color.includes(keyword);
+          return true;
+        });
+        if (filtered.length > 0) {
+          filtered.forEach((car) => renderCarItem(car, keyword));
+          setTimeout(() => {
+            resultDiv.classList.add("show");
+            searchGroup.classList.add("searched");
+          }, 10);
+        } else {
+          searchGroup.classList.remove("searched");
+          if (!silent) {
+            showToast("선택한 정보에 일치하는 결과가 없습니다.");
+          }
+        }
+      }
       async function addCar() {
         const requiredIds = [
           "add_car_number",
@@ -818,7 +881,6 @@
           showToast("필수 정보를 채워주세요");
           return;
         }
-
         const body = {
           car_number: document.getElementById("add_car_number").value,
           car_type: document.getElementById("add_car_type").value,
@@ -829,8 +891,6 @@
           phone_number2:
             document.getElementById("add_phone_number2").value || null,
         };
-
-        // 1. 등록 전 작성한 정보를 보여주고 컨펌받기
         const confirmMsg = `
           <div style="font-size: 0.9em; margin-bottom: 10px; line-height: 1.5;">
             <span style="color: #4e8fd8;">[차량]</span> ${body.car_number} / ${body.car_type} / ${body.car_color}<br>
@@ -839,10 +899,8 @@
           </div>
           이대로 등록하시는 거 맞죠?
         `;
-
         const isConfirm = await showConfirm(confirmMsg);
-        if (!isConfirm) return; // '아니오'를 선택하면 함수 종료
-
+        if (!isConfirm) return;
         try {
           const res = await fetch("/add", {
             method: "POST",
@@ -850,7 +908,6 @@
             body: JSON.stringify(body),
           });
           const data = await res.json();
-
           if (res.ok) {
             showToast("등록 성공!");
             [
@@ -873,11 +930,9 @@
           showToast("등록 중 오류가 발생했습니다.");
         }
       }
-
       function renderCarItem(car, keyword = "") {
         const item = document.createElement("div");
         item.className = "result-item";
-
         function renderViewMode() {
           item.innerHTML = `
           <div>
@@ -902,7 +957,6 @@
             .querySelector(".edit-btn")
             .addEventListener("click", renderEditMode);
         }
-
         function renderEditMode() {
           item.innerHTML = `
           <div>
@@ -931,11 +985,9 @@
             </div>
           </div>
         `;
-
           item
             .querySelector(".save-btn")
             .addEventListener("click", async () => {
-              // confirm 대신 showConfirm 사용
               const isConfirm = await showConfirm("수정할거에요?");
               if (isConfirm) {
                 const updatedCar = {
@@ -957,22 +1009,20 @@
                 };
                 try {
                   const res = await fetch(`/update/${car.id}`, {
-                    // 원래 통신 주소 복구!
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(updatedCar),
                   });
                   const data = await res.json();
-                  showToast(data.message || "수정 완료!"); // alert -> showToast
+                  showToast(data.message || "수정 완료!");
                   Object.assign(car, updatedCar);
                   renderViewMode();
                 } catch (err) {
                   console.error("❌ 수정 오류:", err);
-                  showToast("수정 실패 :("); // alert -> showToast
+                  showToast("수정 실패 :(");
                 }
               }
             });
-
           item
             .querySelector(".cancel-btn")
             .addEventListener("click", renderViewMode);
@@ -980,26 +1030,19 @@
         renderViewMode();
         document.getElementById("result").appendChild(item);
       }
-
       async function deleteCar(id) {
-        // confirm 대신 showConfirm 사용
         const isConfirm = await showConfirm("차량 정보를 삭제할거죠?");
         if (!isConfirm) return;
-
         try {
-          const res = await fetch(`/delete/${id}`, {
-            // 원래 통신 주소 복구!
-            method: "DELETE",
-          });
+          const res = await fetch(`/delete/${id}`, { method: "DELETE" });
           const data = await res.json();
-          showToast("삭제 완료 :)"); // alert -> showToast
+          showToast("삭제 완료 :)");
           searchCar(true);
         } catch (err) {
           console.error(err);
           showToast("삭제 중 오류가 발생했습니다.");
         }
       }
-
       document.querySelector(".header").addEventListener("click", function () {
         window.location.reload();
       });
@@ -1024,16 +1067,12 @@
           ),
         );
         if (activeBtn) activeBtn.classList.add("active");
-        const resultDiv = document.getElementById("result");
         setTimeout(() => {
           if (tabName === "search") {
-            document.getElementById("car_number")?.focus();
+            document.getElementById("search_keyword")?.focus();
           }
           if (tabName === "add") {
             document.getElementById("add_car_number")?.focus();
-          }
-          if (tabName === "tasks") {
-            document.getElementById("task_title")?.focus();
           }
         }, 0);
       }
@@ -1061,7 +1100,7 @@
           return;
         }
         resultDiv.style.transition = "none";
-        resultDiv.style.marginTop = "190px"; /* 190px 수정 반영 */
+        resultDiv.style.marginTop = "190px";
         resultDiv.offsetHeight;
         resultDiv.style.transition = "margin-top .3s ease";
         requestAnimationFrame(() => {
