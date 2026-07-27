@@ -11,12 +11,6 @@
       href="https://fonts.googleapis.com/css2?family=Jua&display=swap"
       rel="stylesheet"
     />
-    <link
-      rel="stylesheet"
-      as="style"
-      crossorigin
-      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
-    />
     <title>Car Search</title>
     <style>
       html,
@@ -171,77 +165,10 @@
         backdrop-filter: blur(10px);
         color: #1591dc;
       }
-      #search-form {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        width: 100%;
-      }
-      .search-type-wrap {
-        position: relative;
-        width: 150px;
-        flex-shrink: 0;
-      }
       #search_keyword {
-        width: auto;
-        flex: 1;
-        max-width: none;
-        min-width: 0;
-        height: 70px;
         padding: 12px 30px;
         color: #193c67;
-        margin: 5px 0;
-      }
-      #search_type {
-        width: 100%;
         height: 70px;
-        padding: 0 42px 0 20px;
-        border: none;
-        border-radius: 9999px;
-        appearance: none;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        font-family: "Jua", sans-serif;
-        font-size: 17px;
-        color: #193c67;
-        background: linear-gradient(
-          180deg,
-          rgba(255, 255, 255, 0.92),
-          rgba(255, 255, 255, 0.65)
-        );
-        backdrop-filter: blur(18px);
-        -webkit-backdrop-filter: blur(18px);
-        box-shadow:
-          inset 0 2px 2px rgba(255, 255, 255, 0.95),
-          0 10px 28px rgba(17, 34, 64, 0.1);
-        cursor: pointer;
-        outline: none;
-        transition: all 0.25s ease;
-      }
-      .search-type-arrow {
-        position: absolute;
-        right: 18px;
-        top: 50%;
-        transform: translateY(-50%);
-        pointer-events: none;
-        color: #6f93bc;
-        font-size: 13px;
-        transition: transform 0.25s ease;
-      }
-      .search-type-wrap:hover .search-type-arrow {
-        transform: translateY(-50%) rotate(180deg);
-      }
-      #search_type:hover {
-        transform: translateY(-2px);
-      }
-      #search_type:focus {
-        transform: translateY(-2px);
-      }
-      #search_type:hover {
-        transform: translateY(-2px);
-      }
-      #search_type:focus {
-        transform: translateY(-2px);
       }
       .section {
         display: none;
@@ -554,7 +481,7 @@
         box-shadow: 0 15px 40px rgba(90, 120, 180, 0.25);
         border: 1px solid rgba(255, 255, 255, 0.6);
         text-align: center;
-        font-family: "Pretendard", sans-serif;
+        font-family: "Jua", sans-serif;
         color: #173a63;
         transform: scale(0.9);
         transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -579,8 +506,7 @@
         border-radius: 9999px;
         border: none;
         cursor: pointer;
-        font-family: "Pretendard", sans-serif;
-        font-weight: 600;
+        font-family: "Jua", sans-serif;
         transition:
           transform 0.2s,
           box-shadow 0.2s;
@@ -704,19 +630,8 @@
           <input
             id="search_keyword"
             autofocus
-            placeholder="🔍 검색어를 입력하세요"
+            placeholder="🔍 차량번호 · 차주 · 연락처 · 차종 · 색상"
           />
-          <div class="search-type-wrap">
-            <select id="search_type">
-              <option value="all">전체</option>
-              <option value="car_number">차량번호</option>
-              <option value="owner_name">차주</option>
-              <option value="phone_number">연락처</option>
-              <option value="car_type">차종</option>
-              <option value="car_color">색상</option>
-            </select>
-            <span class="search-type-arrow">⌄</span>
-          </div>
           <button type="submit" class="enter">Search</button>
         </form>
       </div>
@@ -846,7 +761,6 @@
       // ----------------------------------------------------
       async function searchCar(silent = false) {
         const keyword = document.getElementById("search_keyword").value.trim();
-        const type = document.getElementById("search_type").value;
         const searchGroup = document.querySelector(".search-group"); // 검색 그룹 선택
         if (!keyword) {
           const resultDiv = document.getElementById("result");
@@ -861,7 +775,6 @@
 
         const params = new URLSearchParams();
         params.append("keyword", keyword);
-        params.append("type", type);
 
         try {
           const res = await fetch(`/search?${params}`); // 원래 통신 주소 복구!
