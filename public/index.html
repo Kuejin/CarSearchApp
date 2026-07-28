@@ -184,7 +184,6 @@
         margin: 0;
         max-width: none;
       }
-
       #filter-btn {
         flex: 1; /* 가로 길이 약 20% (1/5) 차지 */
         height: 35px; /* 세로 길이는 70px의 절반 */
@@ -213,9 +212,11 @@
         box-shadow: 0 6px 15px rgba(17, 34, 64, 0.12);
         border-color: #7baeff;
       }
-
       /* --- 필터 옵션 애니메이션 영역 --- */
       .filter-options-wrapper {
+        position: absolute; /* 추가: 공중에 띄워서 #result를 밀지 않음 */
+        left: 0; /* 추가 */
+        top: 100%; /* 추가: Search 버튼 바로 밑으로 위치 */
         display: flex;
         justify-content: center;
         width: 100%;
@@ -227,10 +228,9 @@
           margin-top 0.5s ease;
       }
       .filter-options-wrapper.open {
-        height: 45px;
-        margin-top: 15px;
+        height: 35px;
+        margin-top: 3px;
       }
-
       .filter-options-container {
         display: flex;
         gap: 8px;
@@ -244,14 +244,19 @@
         transition:
           max-width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
           opacity 0.4s ease;
+        overflow-x: auto;
+        -ms-overflow-style: none; /* IE/Edge */
+        scrollbar-width: none; /* Firefox */
       }
       .filter-options-container.open {
         max-width: 600px;
         opacity: 1;
       }
-
+      .filter-options-container::-webkit-scrollbar {
+        display: none;
+      }
       .filter-opt {
-        padding: 6px 14px;
+        padding: 5px 12px;
         background: rgba(255, 255, 255, 0.6);
         border: 1px solid rgba(255, 255, 255, 0.9);
         border-radius: 20px;
@@ -394,6 +399,9 @@
           inset 0 2px 3px rgba(0, 0, 0, 0.08),
           0 6px 12px rgba(110, 160, 255, 0.18);
       }
+      #search-form {
+        position: relative;
+      }
       #result {
         max-width: 550px;
         width: 100%;
@@ -531,7 +539,8 @@
         box-shadow: 0 15px 40px rgba(90, 120, 180, 0.25);
         border: 1px solid rgba(255, 255, 255, 0.6);
         text-align: center;
-        font-family: "Jua", sans-serif;
+        font-family: "Pretendard", "Noto Sans KR", "Malgun Gothic", sans-serif;
+        font-weight: 500;
         color: #173a63;
         transform: scale(0.9);
         transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -556,7 +565,7 @@
         border-radius: 9999px;
         border: none;
         cursor: pointer;
-        font-family: "Jua", sans-serif;
+        font-family: "Pretendard", "Noto Sans KR", "Malgun Gothic", sans-serif;
         transition:
           transform 0.2s,
           box-shadow 0.2s;
@@ -621,13 +630,6 @@
         /* 모바일 환경 대응 */
         #filter-btn {
           font-size: 13px;
-        }
-        .filter-options-container {
-          flex-wrap: wrap;
-        }
-        .filter-options-wrapper.open {
-          height: auto;
-          min-height: 45px;
         }
       }
       @keyframes slideToCenter {
@@ -694,7 +696,7 @@
               autofocus
               placeholder="🔍 차량번호 · 차주 · 연락처 · 차종 · 색상"
             />
-            <div id="filter-btn">필터: 전체 ▾</div>
+            <div id="filter-btn">전체 ▾</div>
           </div>
 
           <button type="submit" class="enter">Search</button>
@@ -703,7 +705,7 @@
           <div class="filter-options-wrapper">
             <div class="filter-options-container" id="filter-options">
               <span class="filter-opt active" data-filter="all">전체</span>
-              <span class="filter-opt" data-filter="car_number">차량번호</span>
+              <span class="filter-opt" data-filter="car_number">차 번호</span>
               <span class="filter-opt" data-filter="owner_name">차주</span>
               <span class="filter-opt" data-filter="phone_number">연락처</span>
               <span class="filter-opt" data-filter="car_type">차종</span>
@@ -772,7 +774,7 @@
           // 상태 및 텍스트 업데이트
           currentFilter = e.target.getAttribute("data-filter");
           document.getElementById("filter-btn").innerText =
-            `필터: ${e.target.innerText} ▾`;
+            `${e.target.innerText} ▾`;
 
           // 이미 검색해둔 데이터가 있다면 즉시 필터 적용해서 다시 그림
           if (currentSearchData.length > 0) {
