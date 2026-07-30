@@ -13,6 +13,27 @@
     />
     <title>Car Search</title>
     <style>
+      /* --- 커스텀 커서 적용 (기본: 블루, 포인트: 퍼플) --- */
+      * {
+        cursor:
+          url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%23ffb6c1" stroke="white" stroke-width="2" d="M4,4 L11,24 L14.5,14.5 L24,11 L4,4 Z"/></svg>')
+            4 4,
+          auto;
+      }
+      button,
+      .tab-button,
+      .filter-opt,
+      .header,
+      .custom-confirm-btn {
+        /* 진한 핑크색(핫핑크) 포인트 커서 */
+        cursor:
+          url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%23ff69b4" stroke="white" stroke-width="2" d="M4,4 L11,24 L14.5,14.5 L24,11 L4,4 Z"/></svg>')
+            4 4,
+          pointer !important;
+      }
+      input {
+        cursor: text !important; /* 텍스트 입력창은 I빔 유지 */
+      }
       html,
       body {
         overflow-x: hidden;
@@ -149,7 +170,6 @@
         background: transparent;
         color: #7d8ea8;
         border-radius: 9999px;
-        cursor: pointer;
         transition: all 0.35s ease;
       }
       .tab-button.active {
@@ -164,8 +184,6 @@
         backdrop-filter: blur(10px);
         color: #1591dc;
       }
-
-      /* --- 새롭게 추가/수정된 검색창 + 필터 버튼 래퍼 --- */
       .search-input-wrapper {
         display: flex;
         align-items: center;
@@ -175,9 +193,8 @@
         max-width: 500px;
         margin: 5px auto;
       }
-
       #search_keyword {
-        flex: 4; /* 가로 길이 약 80% 차지 */
+        flex: 4;
         padding: 12px 25px;
         color: #193c67;
         height: 70px;
@@ -185,8 +202,8 @@
         max-width: none;
       }
       #filter-btn {
-        flex: 1; /* 가로 길이 약 20% (1/5) 차지 */
-        height: 35px; /* 세로 길이는 70px의 절반 */
+        flex: 1;
+        height: 35px;
         background: linear-gradient(
           135deg,
           rgba(255, 255, 255, 0.9),
@@ -198,7 +215,6 @@
         color: #193c67;
         font-family: "Jua", sans-serif;
         font-size: 15px;
-        cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -212,11 +228,10 @@
         box-shadow: 0 6px 15px rgba(17, 34, 64, 0.12);
         border-color: #7baeff;
       }
-      /* --- 필터 옵션 애니메이션 영역 --- */
       .filter-options-wrapper {
-        position: absolute; /* 추가: 공중에 띄워서 #result를 밀지 않음 */
-        left: 0; /* 추가 */
-        top: 100%; /* 추가: Search 버튼 바로 밑으로 위치 */
+        position: absolute;
+        left: 0;
+        top: 100%;
         display: flex;
         justify-content: center;
         width: 100%;
@@ -240,13 +255,12 @@
         white-space: nowrap;
         align-items: center;
         justify-content: center;
-        /* 가로로 쫙 펼쳐지는 애니메이션 핵심 */
         transition:
           max-width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
           opacity 0.4s ease;
         overflow-x: auto;
-        -ms-overflow-style: none; /* IE/Edge */
-        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none;
+        scrollbar-width: none;
       }
       .filter-options-container.open {
         max-width: 600px;
@@ -260,7 +274,6 @@
         background: rgba(255, 255, 255, 0.6);
         border: 1px solid rgba(255, 255, 255, 0.9);
         border-radius: 20px;
-        cursor: pointer;
         font-family: "Jua", sans-serif;
         color: #7d8ea8;
         font-size: 14px;
@@ -274,7 +287,6 @@
         border-color: transparent;
         box-shadow: 0 4px 10px rgba(108, 170, 255, 0.3);
       }
-
       .section {
         display: none;
         width: 100%;
@@ -314,7 +326,7 @@
           inset 0 -1px 1px rgba(255, 255, 255, 0.25),
           0 10px 28px rgba(17, 34, 64, 0.1);
         transition: all 0.25s ease;
-        caret-color: #4e8fd8;
+        caret-color: #ff69b4;
       }
       input.invalid {
         border: 2px solid red;
@@ -347,11 +359,6 @@
         color: #8a9bb3;
         font-weight: 500;
       }
-      #car_number,
-      #add_car_number {
-        padding: 20px;
-        font-weight: bold;
-      }
       .input-group {
         display: flex;
         gap: 10px;
@@ -369,7 +376,6 @@
         background-color: #c4e2f5;
         border: none;
         border-radius: 9999px;
-        cursor: pointer;
         margin: 0px auto 0;
       }
       .enter {
@@ -462,7 +468,6 @@
         font-size: 0.7em;
         font-family: "Jua", sans-serif;
         background-color: #c4e2f5;
-        cursor: pointer;
         color: rgb(255, 57, 57);
         padding: 0;
         margin-left: 5px;
@@ -564,7 +569,6 @@
         font-size: 1.1em;
         border-radius: 9999px;
         border: none;
-        cursor: pointer;
         font-family: "Pretendard", "Noto Sans KR", "Malgun Gothic", sans-serif;
         transition:
           transform 0.2s,
@@ -624,10 +628,9 @@
         }
         .header {
           font-size: 22px;
-          top: 12px;
-          left: 12px;
+          top: 0;
+          left: 0;
         }
-        /* 모바일 환경 대응 */
         #filter-btn {
           font-size: 13px;
         }
@@ -689,7 +692,6 @@
             searchCar();
           "
         >
-          <!-- 검색창 및 필터버튼을 감싸는 래퍼 -->
           <div class="search-input-wrapper">
             <input
               id="search_keyword"
@@ -698,10 +700,7 @@
             />
             <div id="filter-btn">전체 ▾</div>
           </div>
-
           <button type="submit" class="enter">Search</button>
-
-          <!-- 가로로 펼쳐지는 필터 옵션 -->
           <div class="filter-options-wrapper">
             <div class="filter-options-container" id="filter-options">
               <span class="filter-opt active" data-filter="all">전체</span>
@@ -745,8 +744,16 @@
       // --- 글로벌 상태 관리 (검색 데이터 & 필터링 상태) ---
       let currentSearchData = [];
       let currentFilter = "all";
-
       const header = document.querySelector(".header");
+      // --- ESC 키 누를 시 모든 Input 지우기 이벤트 추가 ---
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          document.querySelectorAll("input").forEach((input) => {
+            input.value = "";
+          });
+        }
+      });
+      // 원래 있던 클릭 시 헤더 색상 변경 (빈 공간 클릭 시 원래대로 복구)
       document.addEventListener("click", (e) => {
         if (e.target.tagName.toLowerCase() === "input") {
           header.classList.add("picked");
@@ -754,7 +761,12 @@
           header.classList.remove("picked");
         }
       });
-
+      // 입력창에 내용을 타이핑(입력)할 때 헤더 색상 변경
+      document.addEventListener("input", (e) => {
+        if (e.target.tagName.toLowerCase() === "input") {
+          header.classList.add("picked");
+        }
+      });
       // --- 필터 버튼 및 옵션 이벤트 리스너 ---
       document.getElementById("filter-btn").addEventListener("click", () => {
         document
@@ -762,27 +774,20 @@
           .classList.toggle("open");
         document.getElementById("filter-options").classList.toggle("open");
       });
-
       document.querySelectorAll(".filter-opt").forEach((opt) => {
         opt.addEventListener("click", (e) => {
-          // 활성화 UI 변경
           document
             .querySelectorAll(".filter-opt")
             .forEach((o) => o.classList.remove("active"));
           e.target.classList.add("active");
-
-          // 상태 및 텍스트 업데이트
           currentFilter = e.target.getAttribute("data-filter");
           document.getElementById("filter-btn").innerText =
             `${e.target.innerText} ▾`;
-
-          // 이미 검색해둔 데이터가 있다면 즉시 필터 적용해서 다시 그림
           if (currentSearchData.length > 0) {
             applyFilterAndRender();
           }
         });
       });
-
       // --- 커스텀 토스트 알림 함수 ---
       function showToast(message) {
         const toast = document.createElement("div");
@@ -797,7 +802,6 @@
           }, 350);
         }, 2500);
       }
-
       // --- 커스텀 컨펌(Confirm) 모달 함수 ---
       function showConfirm(message) {
         return new Promise((resolve) => {
@@ -834,34 +838,26 @@
           requestAnimationFrame(() => overlay.classList.add("show"));
         });
       }
-
       function escapeRegExp(string) {
         return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       }
-
       function highlightText(text, keyword) {
         if (!text || !keyword) return text || "";
         const safeKeyword = escapeRegExp(keyword);
         const regex = new RegExp(`(${safeKeyword})`, "gi");
         return String(text).replace(regex, '<span class="highlight">$1</span>');
       }
-
       // --- 실제 필터링 및 렌더링을 담당하는 함수 ---
       function applyFilterAndRender(silent = false) {
         const resultDiv = document.getElementById("result");
         const searchGroup = document.querySelector(".search-group");
         const keyword = document.getElementById("search_keyword").value.trim();
-
         resultDiv.classList.remove("show");
         resultDiv.innerHTML = "";
-
         let filteredData = currentSearchData;
-
-        // "전체"가 아니라면 해당 조건에 맞춰서 데이터 필터링
         if (currentFilter !== "all") {
           filteredData = currentSearchData.filter((car) => {
             const val = car[currentFilter] || "";
-            // 차주와 연락처는 2번째(owner_name2, phone_number2) 정보도 함께 확인
             if (currentFilter === "owner_name") {
               return (
                 val.includes(keyword) ||
@@ -877,8 +873,6 @@
             return val.includes(keyword);
           });
         }
-
-        // 결과 그리기
         if (Array.isArray(filteredData) && filteredData.length > 0) {
           filteredData.forEach((car) => renderCarItem(car, keyword));
           setTimeout(() => {
@@ -890,7 +884,6 @@
           if (!silent) showToast("필터 조건에 맞는 결과가 없어요.");
         }
       }
-
       async function searchCar(silent = false) {
         const keyword = document.getElementById("search_keyword").value.trim();
         const searchGroup = document.querySelector(".search-group");
@@ -902,15 +895,11 @@
           if (!silent) showToast("검색어를 입력해주세요.");
           return;
         }
-
         const params = new URLSearchParams();
         params.append("keyword", keyword);
-
         try {
           const res = await fetch(`/search?${params}`);
           const data = await res.json();
-
-          // 받아온 원본 데이터를 전역 변수에 저장 후 필터+렌더링 함수 실행
           currentSearchData = data;
           applyFilterAndRender(silent);
         } catch (err) {
@@ -918,7 +907,6 @@
           showToast("검색 중 오류가 발생했습니다.");
         }
       }
-
       async function addCar() {
         const requiredIds = [
           "add_car_number",
@@ -934,7 +922,6 @@
           showToast("필수 정보를 채워주세요");
           return;
         }
-
         const body = {
           car_number: document.getElementById("add_car_number").value,
           car_type: document.getElementById("add_car_type").value,
@@ -945,19 +932,16 @@
           phone_number2:
             document.getElementById("add_phone_number2").value || null,
         };
-
         const confirmMsg = `
           <div style="font-size: 0.9em; margin-bottom: 10px; line-height: 1.5;">
             <span style="color: #4e8fd8;">[차량]</span> ${body.car_number} / ${body.car_type} / ${body.car_color}<br>
             <span style="color: #4e8fd8;">[차주1]</span> ${body.owner_name} (${body.phone_number})<br>
             ${body.owner_name2 ? `<span style="color: #4e8fd8;">[차주2]</span> ${body.owner_name2} (${body.phone_number2})<br>` : ""}
           </div>
-          이대로 등록하시는 거 맞죠?
+          이대로 등록하실 건가요?
         `;
-
         const isConfirm = await showConfirm(confirmMsg);
         if (!isConfirm) return;
-
         try {
           const res = await fetch("/add", {
             method: "POST",
@@ -965,7 +949,6 @@
             body: JSON.stringify(body),
           });
           const data = await res.json();
-
           if (res.ok) {
             showToast("등록 성공!");
             [
@@ -988,11 +971,9 @@
           showToast("등록 중 오류가 발생했습니다.");
         }
       }
-
       function renderCarItem(car, keyword = "") {
         const item = document.createElement("div");
         item.className = "result-item";
-
         function renderViewMode() {
           item.innerHTML = `
           <div>
@@ -1017,7 +998,6 @@
             .querySelector(".edit-btn")
             .addEventListener("click", renderEditMode);
         }
-
         function renderEditMode() {
           item.innerHTML = `
           <div>
@@ -1046,29 +1026,35 @@
             </div>
           </div>
         `;
-
           item
             .querySelector(".save-btn")
             .addEventListener("click", async () => {
-              const isConfirm = await showConfirm("수정할거에요?");
+              // --- 수정 모달 데이터 및 멘트 변경 부분 ---
+              const updatedCar = {
+                owner_name: document.getElementById(`edit_owner_${car.id}`)
+                  .value,
+                phone_number: document.getElementById(`edit_phone_${car.id}`)
+                  .value,
+                owner_name2: document.getElementById(`edit_owner2_${car.id}`)
+                  .value,
+                phone_number2: document.getElementById(`edit_phone2_${car.id}`)
+                  .value,
+                car_number: document.getElementById(`edit_number_${car.id}`)
+                  .value,
+                car_type: document.getElementById(`edit_type_${car.id}`).value,
+                car_color: document.getElementById(`edit_color_${car.id}`)
+                  .value,
+              };
+              const confirmMsg = `
+                <div style="font-size: 0.9em; margin-bottom: 10px; line-height: 1.5;">
+                  <span style="color: #4e8fd8;">[차량]</span> ${updatedCar.car_number} / ${updatedCar.car_type} / ${updatedCar.car_color}<br>
+                  <span style="color: #4e8fd8;">[차주1]</span> ${updatedCar.owner_name} (${updatedCar.phone_number})<br>
+                  ${updatedCar.owner_name2 ? `<span style="color: #4e8fd8;">[차주2]</span> ${updatedCar.owner_name2} (${updatedCar.phone_number2})<br>` : ""}
+                </div>
+                이대로 등록하실 건가요?
+              `;
+              const isConfirm = await showConfirm(confirmMsg);
               if (isConfirm) {
-                const updatedCar = {
-                  owner_name: document.getElementById(`edit_owner_${car.id}`)
-                    .value,
-                  phone_number: document.getElementById(`edit_phone_${car.id}`)
-                    .value,
-                  owner_name2: document.getElementById(`edit_owner2_${car.id}`)
-                    .value,
-                  phone_number2: document.getElementById(
-                    `edit_phone2_${car.id}`,
-                  ).value,
-                  car_number: document.getElementById(`edit_number_${car.id}`)
-                    .value,
-                  car_type: document.getElementById(`edit_type_${car.id}`)
-                    .value,
-                  car_color: document.getElementById(`edit_color_${car.id}`)
-                    .value,
-                };
                 try {
                   const res = await fetch(`/update/${car.id}`, {
                     method: "PUT",
@@ -1092,7 +1078,6 @@
         renderViewMode();
         document.getElementById("result").appendChild(item);
       }
-
       async function deleteCar(id) {
         const isConfirm = await showConfirm("차량 정보를 삭제할거죠?");
         if (!isConfirm) return;
@@ -1106,7 +1091,6 @@
           showToast("삭제 중 오류가 발생했습니다.");
         }
       }
-
       document.querySelector(".header").addEventListener("click", function () {
         window.location.reload();
       });
@@ -1133,8 +1117,6 @@
         if (activeBtn) activeBtn.classList.add("active");
         const resultDiv = document.getElementById("result");
         setTimeout(() => {
-          if (tabName === "search")
-            document.getElementById("car_number")?.focus();
           if (tabName === "add")
             document.getElementById("add_car_number")?.focus();
         }, 0);
