@@ -442,7 +442,7 @@
       }
       #result.tab-switch {
         transition: margin-top 0.3s ease;
-        margin-top: 195px;
+        margin-top: 185px;
       }
       span.slash {
         color: #4e8fd8;
@@ -1280,7 +1280,7 @@
           return;
         }
         resultDiv.style.transition = "none";
-        resultDiv.style.marginTop = "195px";
+        resultDiv.style.marginTop = "185px";
         resultDiv.offsetHeight;
         resultDiv.style.transition = "margin-top .3s ease";
         requestAnimationFrame(() => {
@@ -1288,15 +1288,15 @@
           resultDiv.style.marginTop = "";
         });
       }
-      // --- 다크 모드 토글 기능 ---
+      // --- Dark mode toggle ---
       const themeToggle = document.getElementById("theme-toggle");
       themeToggle.addEventListener("click", (e) => {
         e.stopPropagation(); // 헤더 클릭 시 새로고침 방지
         document.body.classList.toggle("dark-mode");
         if (document.body.classList.contains("dark-mode")) {
-          themeToggle.innerText = "☀️"; // 다크모드일 땐 해 아이콘으로 변경
+          themeToggle.innerText = "☀️"; // Changing sun at Dark mode
         } else {
-          themeToggle.innerText = "🌙"; // 라이트모드일 땐 달 아이콘으로 변경
+          themeToggle.innerText = "🌙"; // Changing moon at Light mode
         }
       });
       // --- 입력 폼 자동 포맷팅 (전화번호 하이픈, 차량번호 띄어쓰기) ---
