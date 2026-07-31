@@ -292,7 +292,7 @@
         width: 100%;
         max-width: 550px;
         background: transparent;
-        padding: 0 20px 0px 20px;
+        padding: 0 20px 10px 20px;
         border-radius: 10px;
       }
       .section.active {
@@ -1251,7 +1251,10 @@
         );
         if (activeBtn) activeBtn.classList.add("active");
         const resultDiv = document.getElementById("result");
-        setTimeout(() => {}, 0);
+        setTimeout(() => {
+          if (tabName === "add")
+            document.getElementById("add_car_number")?.focus();
+        }, 0);
       }
       function goToAddTab() {
         const resultDiv = document.getElementById("result");
@@ -1259,78 +1262,41 @@
           showTab("add");
           return;
         }
-
-        // 1. 높이 차이 계산을 위해 미리 탭들의 높이를 측정
-        const searchHeight = document.getElementById("search").offsetHeight;
-        const addEl = document.getElementById("add");
-        addEl.style.display = "block";
-        addEl.style.visibility = "hidden";
-        const addHeight = addEl.offsetHeight;
-        addEl.style.display = "";
-        addEl.style.visibility = "";
-
-        const diff = addHeight - searchHeight;
-
-        // 2. ★핵심: 애니메이션 시작과 동시에 탭을 미리 변경하여 DOM 구조를 맞춤
-        showTab("add");
-
-        // 3. 탭이 바뀐 상태에서 시작 위치를 역으로 잡고, 부드럽게 0으로 내려오게 애니메이션 실행
-        resultDiv.style.transition = "none";
-        resultDiv.style.marginTop = -diff + "px";
-        resultDiv.offsetHeight; // Reflow 강제 실행
-
-        resultDiv.style.transition = "margin-top 0.3s ease";
-        resultDiv.style.marginTop = "35px"; // 원래의 기본 margin-top 값
-
+        resultDiv.classList.add("tab-switch");
         setTimeout(() => {
-          resultDiv.style.transition = "";
+          showTab("add");
+          resultDiv.style.transition = "none";
           resultDiv.style.marginTop = "";
+          resultDiv.classList.remove("tab-switch");
+          requestAnimationFrame(() => {
+            resultDiv.style.transition = "";
+          });
         }, 300);
       }
-
       function goToSearchTab() {
         const resultDiv = document.getElementById("result");
         if (!resultDiv || resultDiv.innerHTML.trim() === "") {
           showTab("search");
           return;
         }
-
-        const addHeight = document.getElementById("add").offsetHeight;
-        const searchEl = document.getElementById("search");
-        searchEl.style.display = "block";
-        searchEl.style.visibility = "hidden";
-        const searchHeight = searchEl.offsetHeight;
-        searchEl.style.display = "";
-        searchEl.style.visibility = "";
-
-        const diff = addHeight - searchHeight;
-
-        // 1. 애니메이션 시작과 동시에 검색 탭으로 전환
-        showTab("search");
-
-        // 2. 탭이 바뀐 상태에서 아래로 내려가 있는 상태부터 시작
         resultDiv.style.transition = "none";
-        resultDiv.style.marginTop = 35 + diff + "px";
-        resultDiv.offsetHeight; // Reflow 강제 실행
-
-        // 3. 원래 자리(35px)로 부드럽게 당겨오기
-        resultDiv.style.transition = "margin-top 0.3s ease";
-        resultDiv.style.marginTop = "35px";
-
-        setTimeout(() => {
-          resultDiv.style.transition = "";
+        resultDiv.style.marginTop = "200px";
+        resultDiv.offsetHeight;
+        resultDiv.style.transition = "margin-top .3s ease";
+        requestAnimationFrame(() => {
+          showTab("search");
           resultDiv.style.marginTop = "";
-        }, 300);
+        });
       }
-      // --- Dark mode toggle ---
+      // --- 다크 모드 토글 기능 ---
       const themeToggle = document.getElementById("theme-toggle");
       themeToggle.addEventListener("click", (e) => {
         e.stopPropagation(); // 헤더 클릭 시 새로고침 방지
         document.body.classList.toggle("dark-mode");
         if (document.body.classList.contains("dark-mode")) {
-          themeToggle.innerText = "☀️"; // Changing sun at Dark mode
+          themeToggle.innerText = "☀️"; // 다크모드일 땐 해 아이콘으로 변경
         } else {
-          themeToggle.innerText = "🌙"; // Changing moon at Light mode
+          themeToggle.innerText = "🌙"; // 라이트모드일 땐 달 아이콘으로 변경
         }
       });
       // --- 입력 폼 자동 포맷팅 (전화번호 하이픈, 차량번호 띄어쓰기) ---
