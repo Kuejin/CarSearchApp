@@ -442,7 +442,7 @@
       }
       #result.tab-switch {
         transition: margin-top 0.3s ease;
-        margin-top: 1000px;
+        margin-top: 200px;
       }
       span.slash {
         color: #4e8fd8;
@@ -1262,16 +1262,26 @@
           showTab("add");
           return;
         }
-        resultDiv.classList.add("tab-switch");
-        setTimeout(() => {
-          showTab("add");
-          resultDiv.style.transition = "none";
-          resultDiv.style.marginTop = "";
-          resultDiv.classList.remove("tab-switch");
-          requestAnimationFrame(() => {
+        // 1. 탭이 바뀌기 전 #result의 현재 위치 저장
+        const beforeY = resultDiv.getBoundingClientRect().top;
+        // 2. 탭을 즉시 전환 (깜빡임 없이 폼 높이가 바뀜)
+        showTab("add");
+        // 3. 탭이 바뀐 후 #result의 새로운 위치 확인
+        const afterY = resultDiv.getBoundingClientRect().top;
+        const deltaY = beforeY - afterY; // 얼마나 높이가 달라졌는지 자동 계산
+        // 4. 애니메이션을 잠시 끄고, 차이만큼 원래 위치로 눈속임 이동
+        resultDiv.style.transition = "none";
+        resultDiv.style.transform = `translateY(${deltaY}px) scale(1)`;
+        // 5. 바로 다음 프레임에 부드럽게 제자리로 찾아가도록 애니메이션 실행
+        requestAnimationFrame(() => {
+          resultDiv.style.transition =
+            "transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)";
+          resultDiv.style.transform = "translateY(0) scale(1)";
+          // 6. 애니메이션 끝난 후 스타일 초기화
+          setTimeout(() => {
             resultDiv.style.transition = "";
-          });
-        }, 300);
+          }, 300);
+        });
       }
       function goToSearchTab() {
         const resultDiv = document.getElementById("result");
@@ -1279,13 +1289,20 @@
           showTab("search");
           return;
         }
+        // 위와 똑같이 높이 차이를 자동 계산하여 역재생
+        const beforeY = resultDiv.getBoundingClientRect().top;
+        showTab("search");
+        const afterY = resultDiv.getBoundingClientRect().top;
+        const deltaY = beforeY - afterY;
         resultDiv.style.transition = "none";
-        resultDiv.style.marginTop = "1000px";
-        resultDiv.offsetHeight;
-        resultDiv.style.transition = "margin-top .3s ease";
+        resultDiv.style.transform = `translateY(${deltaY}px) scale(1)`;
         requestAnimationFrame(() => {
-          showTab("search");
-          resultDiv.style.marginTop = "";
+          resultDiv.style.transition =
+            "transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)";
+          resultDiv.style.transform = "translateY(0) scale(1)";
+          setTimeout(() => {
+            resultDiv.style.transition = "";
+          }, 300);
         });
       }
       // --- Dark mode toggle ---
