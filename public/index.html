@@ -1251,10 +1251,7 @@
         );
         if (activeBtn) activeBtn.classList.add("active");
         const resultDiv = document.getElementById("result");
-        setTimeout(() => {
-          if (tabName === "add")
-            document.getElementById("add_car_number")?.focus();
-        }, 0);
+        setTimeout(() => {}, 0);
       }
       function goToAddTab() {
         const resultDiv = document.getElementById("result");
@@ -1262,26 +1259,28 @@
           showTab("add");
           return;
         }
-        // 1. 탭이 바뀌기 전 #result의 현재 위치 저장
-        const beforeY = resultDiv.getBoundingClientRect().top;
-        // 2. 탭을 즉시 전환 (깜빡임 없이 폼 높이가 바뀜)
-        showTab("add");
-        // 3. 탭이 바뀐 후 #result의 새로운 위치 확인
-        const afterY = resultDiv.getBoundingClientRect().top;
-        const deltaY = beforeY - afterY; // 얼마나 높이가 달라졌는지 자동 계산
-        // 4. 애니메이션을 잠시 끄고, 차이만큼 원래 위치로 눈속임 이동
-        resultDiv.style.transition = "none";
-        resultDiv.style.transform = `translateY(${deltaY}px) scale(1)`;
-        // 5. 바로 다음 프레임에 부드럽게 제자리로 찾아가도록 애니메이션 실행
-        requestAnimationFrame(() => {
-          resultDiv.style.transition =
-            "transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)";
-          resultDiv.style.transform = "translateY(0) scale(1)";
-          // 6. 애니메이션 끝난 후 스타일 초기화
-          setTimeout(() => {
+        // 1. 현재 '차량 검색' 탭과 '차량 추가' 탭의 실제 높이 차이를 계산
+        const searchHeight = document.getElementById("search").offsetHeight;
+        const addEl = document.getElementById("add");
+        addEl.style.display = "block";
+        addEl.style.visibility = "hidden";
+        const addHeight = addEl.offsetHeight;
+        addEl.style.display = "";
+        addEl.style.visibility = "";
+        // 실제 높이 차이 계산 (오차 0)
+        const diff = addHeight - searchHeight;
+        // 2. 정확한 높이 차이만큼 CSS 애니메이션으로 밀어내기 (tab-switch 클래스 무시)
+        resultDiv.style.transition = "margin-top 0.3s ease";
+        resultDiv.style.marginTop = diff + "px";
+        // 3. 0.3초 애니메이션이 끝나면 탭을 교체하고 여백 원상복구
+        setTimeout(() => {
+          showTab("add");
+          resultDiv.style.transition = "none";
+          resultDiv.style.marginTop = "";
+          requestAnimationFrame(() => {
             resultDiv.style.transition = "";
-          }, 300);
-        });
+          });
+        }, 300);
       }
       function goToSearchTab() {
         const resultDiv = document.getElementById("result");
@@ -1289,19 +1288,28 @@
           showTab("search");
           return;
         }
-        // 위와 똑같이 높이 차이를 자동 계산하여 역재생
-        const beforeY = resultDiv.getBoundingClientRect().top;
-        showTab("search");
-        const afterY = resultDiv.getBoundingClientRect().top;
-        const deltaY = beforeY - afterY;
+
+        // 1. 높이 차이 계산
+        const addHeight = document.getElementById("add").offsetHeight;
+        const searchEl = document.getElementById("search");
+        searchEl.style.display = "block";
+        searchEl.style.visibility = "hidden";
+        const searchHeight = searchEl.offsetHeight;
+        searchEl.style.display = "";
+        searchEl.style.visibility = "";
+        const diff = addHeight - searchHeight;
+        // 2. 탭 교체 전, 시각적 위치를 그대로 유지하기 위해 역으로 여백을 줌
         resultDiv.style.transition = "none";
-        resultDiv.style.transform = `translateY(${deltaY}px) scale(1)`;
+        resultDiv.style.marginTop = diff + "px";
+        resultDiv.offsetHeight; // 브라우저에 변경사항 즉시 적용 (Reflow)
+        // 3. 탭 교체 후, 여백을 0으로 줄이면서 자연스럽게 위로 당겨지는 애니메이션
+        resultDiv.style.transition = "margin-top 0.3s ease";
         requestAnimationFrame(() => {
-          resultDiv.style.transition =
-            "transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)";
-          resultDiv.style.transform = "translateY(0) scale(1)";
+          showTab("search");
+          resultDiv.style.marginTop = "0px";
           setTimeout(() => {
             resultDiv.style.transition = "";
+            resultDiv.style.marginTop = "";
           }, 300);
         });
       }
