@@ -1259,7 +1259,8 @@
           showTab("add");
           return;
         }
-        // 1. 현재 '차량 검색' 탭과 '차량 추가' 탭의 실제 높이 차이를 계산
+
+        // 1. 높이 차이 계산을 위해 미리 탭들의 높이를 측정
         const searchHeight = document.getElementById("search").offsetHeight;
         const addEl = document.getElementById("add");
         addEl.style.display = "block";
@@ -1267,21 +1268,26 @@
         const addHeight = addEl.offsetHeight;
         addEl.style.display = "";
         addEl.style.visibility = "";
-        // 실제 높이 차이 계산 (오차 0)
+
         const diff = addHeight - searchHeight;
-        // 2. 정확한 높이 차이만큼 CSS 애니메이션으로 밀어내기 (tab-switch 클래스 무시)
+
+        // 2. ★핵심: 애니메이션 시작과 동시에 탭을 미리 변경하여 DOM 구조를 맞춤
+        showTab("add");
+
+        // 3. 탭이 바뀐 상태에서 시작 위치를 역으로 잡고, 부드럽게 0으로 내려오게 애니메이션 실행
+        resultDiv.style.transition = "none";
+        resultDiv.style.marginTop = -diff + "px";
+        resultDiv.offsetHeight; // Reflow 강제 실행
+
         resultDiv.style.transition = "margin-top 0.3s ease";
-        resultDiv.style.marginTop = diff + "px";
-        // 3. 0.3초 애니메이션이 끝나면 탭을 교체하고 여백 원상복구
+        resultDiv.style.marginTop = "35px"; // 원래의 기본 margin-top 값
+
         setTimeout(() => {
-          showTab("add");
-          resultDiv.style.transition = "none";
+          resultDiv.style.transition = "";
           resultDiv.style.marginTop = "";
-          requestAnimationFrame(() => {
-            resultDiv.style.transition = "";
-          });
         }, 300);
       }
+
       function goToSearchTab() {
         const resultDiv = document.getElementById("result");
         if (!resultDiv || resultDiv.innerHTML.trim() === "") {
@@ -1289,7 +1295,6 @@
           return;
         }
 
-        // 1. 높이 차이 계산
         const addHeight = document.getElementById("add").offsetHeight;
         const searchEl = document.getElementById("search");
         searchEl.style.display = "block";
@@ -1297,21 +1302,25 @@
         const searchHeight = searchEl.offsetHeight;
         searchEl.style.display = "";
         searchEl.style.visibility = "";
+
         const diff = addHeight - searchHeight;
-        // 2. 탭 교체 전, 시각적 위치를 그대로 유지하기 위해 역으로 여백을 줌
+
+        // 1. 애니메이션 시작과 동시에 검색 탭으로 전환
+        showTab("search");
+
+        // 2. 탭이 바뀐 상태에서 아래로 내려가 있는 상태부터 시작
         resultDiv.style.transition = "none";
-        resultDiv.style.marginTop = diff + "px";
-        resultDiv.offsetHeight; // 브라우저에 변경사항 즉시 적용 (Reflow)
-        // 3. 탭 교체 후, 여백을 0으로 줄이면서 자연스럽게 위로 당겨지는 애니메이션
+        resultDiv.style.marginTop = 35 + diff + "px";
+        resultDiv.offsetHeight; // Reflow 강제 실행
+
+        // 3. 원래 자리(35px)로 부드럽게 당겨오기
         resultDiv.style.transition = "margin-top 0.3s ease";
-        requestAnimationFrame(() => {
-          showTab("search");
-          resultDiv.style.marginTop = "0px";
-          setTimeout(() => {
-            resultDiv.style.transition = "";
-            resultDiv.style.marginTop = "";
-          }, 300);
-        });
+        resultDiv.style.marginTop = "35px";
+
+        setTimeout(() => {
+          resultDiv.style.transition = "";
+          resultDiv.style.marginTop = "";
+        }, 300);
       }
       // --- Dark mode toggle ---
       const themeToggle = document.getElementById("theme-toggle");
