@@ -589,6 +589,9 @@
         transform: translateY(-2px);
       }
       @media (max-width: 600px) {
+        .search-group {
+          animation: none !important;
+        }
         body {
           padding: 16px;
         }
@@ -1012,6 +1015,10 @@
           if (!silent) showToast("검색어를 입력해주세요.");
           return;
         }
+        if (/^\d+$/.test(keyword) && keyword.length < 3) {
+          if (!silent) showToast("숫자 검색의 경우 3자 이상 입력해 주세요.");
+          return;
+        }
         const params = new URLSearchParams();
         params.append("keyword", keyword);
         try {
@@ -1280,6 +1287,7 @@
         } else {
           themeToggle.innerText = "🌙"; // 라이트모드일 땐 달 아이콘으로 변경
         }
+        document.getElementById("search_keyword").focus();
       });
       // --- 입력 폼 자동 포맷팅 (전화번호 하이픈, 차량번호 띄어쓰기) ---
       document.addEventListener("input", (e) => {
