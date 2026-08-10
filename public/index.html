@@ -11,6 +11,7 @@
       href="https://fonts.googleapis.com/css2?family=Jua&display=swap"
       rel="stylesheet"
     />
+    <link rel="preload" href="Northern Lights.webp" as="image" />
     <title>Car Search</title>
     <style>
       /* --- 커스텀 커서 적용 (기본: 블루, 포인트: 퍼플) --- */
@@ -677,7 +678,7 @@
       }
       /* --- 다크 모드 (CSS 오로라 배경 및 유리 질감 네이비 테마) --- */
       body.dark-mode {
-        background: url("Northern Lights.jpg") center/cover no-repeat fixed !important;
+        background: url("Northern Lights.webp") center/cover no-repeat fixed !important;
         color: #facc15 !important;
       }
       body.dark-mode::before,
@@ -1001,7 +1002,7 @@
           }, 10);
         } else {
           searchGroup.classList.remove("searched");
-          if (!silent) showToast("필터 조건에 맞는 결과가 없어요.");
+          if (!silent) showToast("맞는 정보가 없어요.");
         }
       }
       async function searchCar(silent = false) {
