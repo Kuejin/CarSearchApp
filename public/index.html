@@ -962,13 +962,23 @@
       function escapeRegExp(string) {
         return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       }
-      function highlightText(text, keyword) {
-        if (!text || !keyword) return text || "";
-        const safeKeyword = escapeRegExp(keyword);
-        const regex = new RegExp(`(${safeKeyword})`, "gi");
-        return String(text).replace(regex, '<span class="highlight">$1</span>');
+      function escapeHTML(str) {
+        if (!str) return "";
+        return String(str)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
       }
-      // --- 실제 필터링 및 렌더링을 담당하는 함수 ---
+      function highlightText(text, keyword) {
+        if (!text) return "";
+        const escapedText = escapeHTML(text);
+        if (!keyword) return escapedText;
+        const safeKeyword = escapeRegExp(escapeHTML(keyword));
+        const regex = new RegExp(`(${safeKeyword})`, "gi");
+        return escapedText.replace(regex, '<span class="highlight">$1</span>');
+      }
       function applyFilterAndRender(silent = false) {
         const resultDiv = document.getElementById("result");
         const searchGroup = document.querySelector(".search-group");
@@ -1057,11 +1067,12 @@
           phone_number2:
             document.getElementById("add_phone_number2").value || null,
         };
+        // addCar 함수와 수정 완료(save-btn 클릭) 이벤트 안의 confirmMsg를 이렇게 수정해 줘
         const confirmMsg = `
           <div style="font-size: 0.9em; margin-bottom: 10px; line-height: 1.5;">
-            <span style="color: #4e8fd8;">[차량]</span> ${body.car_number} / ${body.car_type} / ${body.car_color}<br>
-            <span style="color: #4e8fd8;">[차주1]</span> ${body.owner_name} (${body.phone_number})<br>
-            ${body.owner_name2 ? `<span style="color: #4e8fd8;">[차주2]</span> ${body.owner_name2} (${body.phone_number2})<br>` : ""}
+            <span style="color: #4e8fd8;">[차량]</span> ${escapeHTML(body.car_number)} / ${escapeHTML(body.car_type)} / ${escapeHTML(body.car_color)}<br>
+            <span style="color: #4e8fd8;">[차주1]</span> ${escapeHTML(body.owner_name)} (${escapeHTML(body.phone_number)})<br>
+            ${body.owner_name2 ? `<span style="color: #4e8fd8;">[차주2]</span> ${escapeHTML(body.owner_name2)} (${escapeHTML(body.phone_number2)})<br>` : ""}
           </div>
           이대로 등록하실 건가요?
         `;
