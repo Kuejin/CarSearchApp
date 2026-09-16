@@ -868,6 +868,15 @@
       const header = document.querySelector(".header");
       // --- ESC 키 누를 시 모든 Input 지우기 이벤트 추가 ---
       document.addEventListener("keydown", (e) => {
+        // [추가] 모달(custom-confirm-overlay)이 화면에 띄워져 있을 때 Enter 키를 누르면 작동을 완전히 무시함 (마우스 클릭만 가능)
+        if (
+          e.key === "Enter" &&
+          document.querySelector(".custom-confirm-overlay")
+        ) {
+          e.preventDefault();
+          return;
+        }
+        // ESC 키 누를 시 모든 Input 지우기
         if (e.key === "Escape") {
           document.querySelectorAll("input").forEach((input) => {
             input.value = "";
@@ -925,6 +934,12 @@
       }
       // --- 커스텀 컨펌(Confirm) 모달 함수 ---
       function showConfirm(message) {
+        if (document.querySelector(".custom-confirm-overlay")) {
+          return Promise.resolve(false);
+        }
+        if (document.activeElement) {
+          document.activeElement.blur();
+        }
         return new Promise((resolve) => {
           const overlay = document.createElement("div");
           overlay.className = "custom-confirm-overlay";
