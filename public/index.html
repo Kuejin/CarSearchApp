@@ -1258,6 +1258,7 @@
         }, 0);
       }
       function goToAddTab() {
+        if (document.getElementById("add").classList.contains("active")) return;
         const resultDiv = document.getElementById("result");
         if (!resultDiv || resultDiv.innerHTML.trim() === "") {
           showTab("add");
@@ -1275,6 +1276,8 @@
         }, 300);
       }
       function goToSearchTab() {
+        if (document.getElementById("search").classList.contains("active"))
+          return;
         const resultDiv = document.getElementById("result");
         if (!resultDiv || resultDiv.innerHTML.trim() === "") {
           showTab("search");
