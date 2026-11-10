@@ -942,6 +942,7 @@
           noBtn.className = "custom-confirm-btn no";
           noBtn.innerText = "아니오";
           const closeOverlay = (result) => {
+            document.removeEventListener("keydown", handleModalKeydown);
             overlay.classList.remove("show");
             setTimeout(() => {
               if (document.body.contains(overlay))
@@ -949,6 +950,16 @@
               resolve(result);
             }, 300);
           };
+          const handleModalKeydown = (e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              closeOverlay(true);
+            } else if (e.key === "Escape") {
+              e.preventDefault();
+              closeOverlay(false);
+            }
+          };
+          document.addEventListener("keydown", handleModalKeydown);
           yesBtn.onclick = () => closeOverlay(true);
           noBtn.onclick = () => closeOverlay(false);
           btnGroup.appendChild(yesBtn);
