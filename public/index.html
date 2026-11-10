@@ -1162,17 +1162,20 @@
             </div>
           </div>
         `;
-          item.querySelectorAll(".inline-edit").forEach((input) => {
-            input.addEventListener("keydown", (e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                item.querySelector(".save-btn").click();
-              }
-            });
-          });
+          const handleKeyDown = (e) => {
+            if (e.key === "Enter") {
+              if (document.querySelector(".custom-confirm-overlay")) return;
+              e.preventDefault();
+              item.querySelector(".save-btn").click();
+            }
+          };
+          item.addEventListener("keydown", handleKeyDown);
+          const firstInput = item.querySelector(".inline-edit");
+          if (firstInput) firstInput.focus();
           item
             .querySelector(".save-btn")
             .addEventListener("click", async () => {
+              item.removeEventListener("keydown", handleKeyDown);
               const updatedCar = {
                 owner_name: document.getElementById(`edit_owner_${car.id}`)
                   .value,
@@ -1212,11 +1215,14 @@
                   console.error("❌ 수정 오류:", err);
                   showToast("수정 실패 :(");
                 }
+              } else {
+                item.addEventListener("keydown", handleKeyDown);
               }
             });
-          item
-            .querySelector(".cancel-btn")
-            .addEventListener("click", renderViewMode);
+          item.querySelector(".cancel-btn").addEventListener("click", () => {
+            item.removeEventListener("keydown", handleKeyDown);
+            renderViewMode();
+          });
         }
         renderViewMode();
         document.getElementById("result").appendChild(item);
