@@ -1162,6 +1162,8 @@
             </div>
           </div>
         `;
+          item.setAttribute("tabindex", "-1");
+          item.style.outline = "none";
           const handleKeyDown = (e) => {
             if (e.key === "Enter") {
               if (document.querySelector(".custom-confirm-overlay")) return;
@@ -1170,8 +1172,7 @@
             }
           };
           item.addEventListener("keydown", handleKeyDown);
-          const firstInput = item.querySelector(".inline-edit");
-          if (firstInput) firstInput.focus();
+          item.focus();
           item
             .querySelector(".save-btn")
             .addEventListener("click", async () => {
@@ -1217,6 +1218,7 @@
                 }
               } else {
                 item.addEventListener("keydown", handleKeyDown);
+                item.focus();
               }
             });
           item.querySelector(".cancel-btn").addEventListener("click", () => {
