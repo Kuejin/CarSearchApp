@@ -941,6 +941,10 @@
           const noBtn = document.createElement("button");
           noBtn.className = "custom-confirm-btn no";
           noBtn.innerText = "아니오";
+          let isReady = false;
+          setTimeout(() => {
+            isReady = true;
+          }, 100);
           const closeOverlay = (result) => {
             document.removeEventListener("keydown", handleModalKeydown);
             overlay.classList.remove("show");
@@ -953,9 +957,11 @@
           const handleModalKeydown = (e) => {
             if (e.key === "Enter") {
               e.preventDefault();
+              if (!isReady) return;
               closeOverlay(true);
             } else if (e.key === "Escape") {
               e.preventDefault();
+              if (!isReady) return;
               closeOverlay(false);
             }
           };
